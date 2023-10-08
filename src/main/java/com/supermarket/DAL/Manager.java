@@ -1,6 +1,4 @@
-package com.supermarket.main;
-
-import com.supermarket.DAL.MySQL;
+package com.supermarket.DAL;
 
 import java.io.IOException;
 import java.sql.SQLException;
