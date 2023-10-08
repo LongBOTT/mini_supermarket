@@ -1,15 +1,15 @@
 package com.supermarket.DTO;
 
-public class export_detail {
+public class Export_detail {
     private int export_id;
     private int shipment_id;
     private double quantity;
     private double total;
 
-    public export_detail() {
+    public Export_detail() {
     }
 
-    public export_detail(int export_id, int shipment_id, double quantity, double total) {
+    public Export_detail(int export_id, int shipment_id, double quantity, double total) {
         this.export_id = export_id;
         this.shipment_id = shipment_id;
         this.quantity = quantity;

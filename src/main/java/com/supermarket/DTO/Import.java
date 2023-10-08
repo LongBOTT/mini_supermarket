@@ -2,23 +2,23 @@ package com.supermarket.DTO;
 
 import com.supermarket.utils.Date;
 
-public class export {
+public class Import {
     private int id;
     private int staff_id;
-    private Date invoice_date;
+    private Date received_date;
     private double total;
-    private String reason;
+    private int supplier_id;
     private boolean deleted;
 
-    public export() {
+    public Import() {
     }
 
-    public export(int id, int staff_id, Date invoice_date, double total, String reason, boolean deleted) {
+    public Import(int id, int staff_id, Date received_date, double total, int supplier_id, boolean deleted) {
         this.id = id;
         this.staff_id = staff_id;
-        this.invoice_date = invoice_date;
+        this.received_date = received_date;
         this.total = total;
-        this.reason = reason;
+        this.supplier_id = supplier_id;
         this.deleted = deleted;
     }
 
@@ -38,12 +38,12 @@ public class export {
         this.staff_id = staff_id;
     }
 
-    public Date getInvoice_date() {
-        return invoice_date;
+    public Date getReceived_date() {
+        return received_date;
     }
 
-    public void setInvoice_date(Date invoice_date) {
-        this.invoice_date = invoice_date;
+    public void setReceived_date(Date received_date) {
+        this.received_date = received_date;
     }
 
     public double getTotal() {
@@ -54,12 +54,12 @@ public class export {
         this.total = total;
     }
 
-    public String getReason() {
-        return reason;
+    public int getSupplier_id() {
+        return supplier_id;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setSupplier_id(int supplier_id) {
+        this.supplier_id = supplier_id;
     }
 
     public boolean isDeleted() {
@@ -72,10 +72,10 @@ public class export {
 
     @Override
     public String toString() {
-        return id + " | " +
+        return id  + " | " +
             staff_id + " | " +
-            invoice_date + " | " +
+            received_date + " | " +
             total + " | " +
-            reason;
+            supplier_id;
     }
 }
