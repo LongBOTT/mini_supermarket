@@ -1,24 +1,26 @@
 package com.supermarket.DTO;
 
-public class Role {
+public class Category {
     private int id;
     private String name;
+    private double quantity;
     private boolean deleted;
 
-    public Role() {
+    public Category() {
     }
 
-    public Role(int id, String name, boolean deleted) {
+    public Category(int id, String name, double quantity, boolean deleted) {
         this.id = id;
         this.name = name;
+        this.quantity = quantity;
         this.deleted = deleted;
     }
 
-    public int getRoleID() {
+    public int getId() {
         return id;
     }
 
-    public void setRoleID(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -28,6 +30,14 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
     }
 
     public boolean isDeleted() {
@@ -41,6 +51,7 @@ public class Role {
     @Override
     public String toString() {
         return id + " | " +
-            name;
+            name + " | " +
+            quantity;
     }
 }

@@ -1,7 +1,7 @@
 package com.supermarket.DTO;
 
 public class Account {
-    private int accountID;
+    private int id;
     private String username;
     private String password;
     private int roleID;
@@ -11,8 +11,8 @@ public class Account {
     public Account() {
     }
 
-    public Account(int accountID, String username, String password, int roleID, int staffID, boolean deleted) {
-        this.accountID = accountID;
+    public Account(int id, String username, String password, int roleID, int staffID, boolean deleted) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.roleID = roleID;
@@ -21,11 +21,11 @@ public class Account {
     }
 
     public int getAccountID() {
-        return accountID;
+        return id;
     }
 
-    public void setAccountID(int accountID) {
-        this.accountID = accountID;
+    public void setAccountID(int id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -70,7 +70,7 @@ public class Account {
 
     @Override
     public String toString() {
-        return accountID + " | " +
+        return id + " | " +
             username + " | " +
             password + " | " +
             roleID + " | " +

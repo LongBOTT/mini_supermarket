@@ -1,24 +1,26 @@
 package com.supermarket.DTO;
 
-public class Role {
+public class Brand {
     private int id;
     private String name;
+    private int supplier_id;
     private boolean deleted;
 
-    public Role() {
+    public Brand() {
     }
 
-    public Role(int id, String name, boolean deleted) {
+    public Brand(int id, String name, int supplier_id, boolean deleted) {
         this.id = id;
         this.name = name;
+        this.supplier_id = supplier_id;
         this.deleted = deleted;
     }
 
-    public int getRoleID() {
+    public int getId() {
         return id;
     }
 
-    public void setRoleID(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -28,6 +30,14 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getSupplier_id() {
+        return supplier_id;
+    }
+
+    public void setSupplier_id(int supplier_id) {
+        this.supplier_id = supplier_id;
     }
 
     public boolean isDeleted() {
@@ -41,6 +51,7 @@ public class Role {
     @Override
     public String toString() {
         return id + " | " +
-            name;
+            name + " | " +
+            supplier_id;
     }
 }

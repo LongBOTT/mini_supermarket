@@ -1,24 +1,24 @@
 package com.supermarket.DTO;
 
-public class Role {
+public class Module {
     private int id;
     private String name;
     private boolean deleted;
 
-    public Role() {
+    public Module() {
     }
 
-    public Role(int id, String name, boolean deleted) {
+    public Module(int id, String name, boolean deleted) {
         this.id = id;
         this.name = name;
         this.deleted = deleted;
     }
 
-    public int getRoleID() {
+    public int getId() {
         return id;
     }
 
-    public void setRoleID(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
