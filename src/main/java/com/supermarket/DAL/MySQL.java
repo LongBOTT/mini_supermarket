@@ -44,6 +44,7 @@ public class MySQL {
             String formattedQuery = formatQuery(query, values);
             numOfRows = statement.executeUpdate(formattedQuery);
         }
+        System.out.println(query);
         Database.closeConnection(connection);
         return numOfRows;
     }

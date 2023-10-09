@@ -1,30 +1,35 @@
 package com.supermarket.DTO;
 
+import com.supermarket.utils.Date;
+import com.supermarket.utils.DateTime;
+
 public class Account {
     private int id;
     private String username;
     private String password;
     private int roleID;
     private int staffID;
+    private DateTime last_signed_in;
     private boolean deleted;
 
     public Account() {
     }
 
-    public Account(int id, String username, String password, int roleID, int staffID, boolean deleted) {
+    public Account(int id, String username, String password, int roleID, int staffID, DateTime last_signed_in, boolean deleted) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.roleID = roleID;
         this.staffID = staffID;
+        this.last_signed_in = last_signed_in;
         this.deleted = deleted;
     }
 
-    public int getAccountID() {
+    public int getId() {
         return id;
     }
 
-    public void setAccountID(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -60,6 +65,14 @@ public class Account {
         this.staffID = staffID;
     }
 
+    public DateTime getLast_signed_in() {
+        return last_signed_in;
+    }
+
+    public void setLast_signed_in(DateTime last_signed_in) {
+        this.last_signed_in = last_signed_in;
+    }
+
     public boolean isDeleted() {
         return deleted;
     }
@@ -74,6 +87,7 @@ public class Account {
             username + " | " +
             password + " | " +
             roleID + " | " +
+            last_signed_in + " | " +
             staffID;
     }
 }

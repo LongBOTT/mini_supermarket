@@ -1,5 +1,7 @@
 package com.supermarket.GUI;
 
+import com.supermarket.BLL.AccountBLL;
+import com.supermarket.DTO.Account;
 import com.supermarket.utils.Resource;
 import net.miginfocom.swing.MigLayout;
 
@@ -7,6 +9,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 
 import static java.lang.Thread.sleep;
 
@@ -51,13 +54,9 @@ public class LoginGUI extends JFrame {
         progressBar.setStringPainted(true);
         progressBar.setFont(new Font("open sans", Font.BOLD, 15));
         contentPane.add(progressBar, BorderLayout.SOUTH);
-        Thread threadProgress = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                progress();
-            }
-        });
+        Thread threadProgress = new Thread(this::progress);
         threadProgress.start();
+        dispose();
 
         header = new JPanel(new BorderLayout());
         header.setPreferredSize(new Dimension(700, 110));
@@ -107,9 +106,8 @@ public class LoginGUI extends JFrame {
         });
         jTextFieldUserName.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent keyEvent) {
-                if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER)
                     login();
-                }
             }
         });
         formLogin.add(jTextFieldUserName, "wrap,growx");
@@ -135,16 +133,15 @@ public class LoginGUI extends JFrame {
         });
         jTextFieldPassword.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent keyEvent) {
-                if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER)
                     login();
-                }
             }
         });
         formLogin.add(jTextFieldPassword, "wrap,growx");
 
         labelForgetPasswd = new JLabel("Quên mật khẩu?");
         labelForgetPasswd.setFont(new Font("Lexend", Font.PLAIN, 12));
-        labelForgetPasswd.setBorder(new EmptyBorder(0,0,0,0));
+        labelForgetPasswd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         formLogin.add(labelForgetPasswd, "span, right, wrap");
 
         jButtonLogin = new JButton("Đăng nhập");
@@ -153,12 +150,19 @@ public class LoginGUI extends JFrame {
         jButtonLogin.setFont(new Font("Lexend", Font.BOLD, 15));
         jButtonLogin.setPreferredSize(new Dimension(80, 50));
         jButtonLogin.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent mouseEvent) {
+            @Override
+            public void mousePressed(MouseEvent e) {
                 login();
             }
         });
+        jButtonLogin.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER)
+                    login();
+            }
+        });
         formLogin.add(jButtonLogin, "span, center, wrap");
-
 
     }
 
@@ -199,11 +203,6 @@ public class LoginGUI extends JFrame {
                 System.out.println(e.getMessage());
             }
         }
-        try {
-            sleep(200);
-        } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
-        }
         contentPane.removeAll();
         contentPane.add(header, BorderLayout.NORTH);
         contentPane.add(labelLogin, BorderLayout.CENTER);
@@ -213,6 +212,27 @@ public class LoginGUI extends JFrame {
     }
 
     public void login() {
+        String userName, passWord;
+        userName = jTextFieldUserName.getText();
+        passWord = new String(jTextFieldPassword.getPassword());
+        AccountBLL accountBLL = new AccountBLL();
+        List<Account> accountList = accountBLL.searchAccounts("username = '" + userName + "'", "deleted = 0");
+        if (accountList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!accountList.get(0).getPassword().equals(passWord)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Account account = accountList.get(0);
+        try {
+//            Thread thread = new Thread(() -> );
+//            thread.start();
+            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//            thread.join();
+        } catch (Exception ignored) {
 
+        }
     }
 }
