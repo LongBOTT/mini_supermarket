@@ -30,6 +30,7 @@ public class MySQL {
                 }
                 result.add(row);
             }
+            System.out.println(formattedQuery);
         }
         Database.closeConnection(connection);
         return result;
@@ -43,8 +44,8 @@ public class MySQL {
         try (Statement statement = connection.createStatement()) {
             String formattedQuery = formatQuery(query, values);
             numOfRows = statement.executeUpdate(formattedQuery);
+            System.out.println(formattedQuery);
         }
-        System.out.println(query);
         Database.closeConnection(connection);
         return numOfRows;
     }

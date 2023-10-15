@@ -22,15 +22,20 @@ public class AccountDAL extends Manager{
 
     public List<Account> convertToAccounts(List<List<String>> data) {
         return convert(data, row -> {
-            return new Account(
-                Integer.parseInt(row.get(0)), // id
-                row.get(1), // username
-                row.get(2), // password
-                Integer.parseInt(row.get(3)), // role_id
-                Integer.parseInt(row.get(4)), // staff_id
-                DateTime.parseDateTime(row.get(5)), //last_signed_in
-                Boolean.parseBoolean(row.get(5))    // deleted
-            );
+            try {
+                return new Account(
+                    Integer.parseInt(row.get(0)), // id
+                    row.get(1), // username
+                    row.get(2), // password
+                    Integer.parseInt(row.get(3)), // role_id
+                    Integer.parseInt(row.get(4)), // staff_id
+                    DateTime.parseDateTime(row.get(5)), //last_signed_in
+                    Boolean.parseBoolean(row.get(6))    // deleted
+                );
+            } catch (Exception e) {
+                System.out.println("Error occurred in AccountDAL.convertToAccounts(): " + e.getMessage());
+            }
+            return new Account();
         });
     }
 
@@ -79,7 +84,7 @@ public class AccountDAL extends Manager{
     }
     public int updateLast_signed_in(Account account, DateTime dateTime) {
         try {
-            String query = "UPDATE `" + getTableName() + "` SET last_signed_in = '" + dateTime + "' WHERE id = " + account.getId() + ";";
+            String query = "UPDATE `" + getTableName() + "` SET last_signed_in = '" + dateTime.toSQL() + "' WHERE id = " + account.getId() + ";";
             return executeUpdate(query);
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in AccountDAL.updateAccountLast_signed_in(): " + e.getMessage());

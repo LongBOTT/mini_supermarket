@@ -13,6 +13,12 @@ public class Date {
     public Date() {
     }
 
+    public Date(Date date) {
+        this.date = date.getDate();
+        this.month = date.getMonth();
+        this.year = date.getYear();
+    }
+
     public Date(int date, int month, int year) {
         this.date = date;
         this.month = month;
@@ -123,7 +129,7 @@ public class Date {
     }
 
     public static String now() {
-        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:ss a"));
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:ss"));
     }
 
     public String toString() {

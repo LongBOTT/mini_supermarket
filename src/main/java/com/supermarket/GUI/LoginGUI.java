@@ -1,7 +1,12 @@
 package com.supermarket.GUI;
 
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.formdev.flatlaf.ui.FlatProgressBarUI;
 import com.supermarket.BLL.AccountBLL;
 import com.supermarket.DTO.Account;
+import com.supermarket.main.Mini_supermarketManagement;
+import com.supermarket.utils.DateTime;
 import com.supermarket.utils.Resource;
 import net.miginfocom.swing.MigLayout;
 
@@ -28,31 +33,40 @@ public class LoginGUI extends JFrame {
     private JTextField jTextFieldUserName;
     private JPasswordField jTextFieldPassword;
     private JButton jButtonLogin;
-    private ImageIcon logo = Resource.loadImageIcon("img/logo.png");
-    private ImageIcon banner_header = Resource.loadImageIcon("img/banner_header.png");
     public LoginGUI() {
         initComponents();
         setVisible(true);
     }
 
     private void initComponents() {
+        UIManager.put("ProgressBar.selectionForeground", Color.black);
+        UIManager.put("ProgressBar.selectionBackground", Color.black);
         setSize(700, 500);
         setResizable(false);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cancel();
+            }
+        });
 
         contentPane = new JPanel(new BorderLayout());
+        contentPane.setBackground(new Color(0x02723A));
         setContentPane(contentPane);
 
-        labelLogo = new JLabel(logo);
-        Image imgScaled = logo.getImage().getScaledInstance(273, 267, Image.SCALE_DEFAULT | Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(imgScaled);
-        labelLogo.setIcon(scaledIcon);
+        labelLogo = new JLabel();
+        labelLogo.setHorizontalAlignment(SwingConstants.CENTER);
+        labelLogo.setIcon(new FlatSVGIcon("img/logo.svg"));
         contentPane.add(labelLogo, BorderLayout.CENTER);
 
         progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
         progressBar.setFont(new Font("open sans", Font.BOLD, 15));
+        progressBar.setBackground(new Color(0xFFFFFF));
+        progressBar.setForeground(new Color(0x97B4EA));
+        progressBar.setUI(new FlatProgressBarUI());
         contentPane.add(progressBar, BorderLayout.SOUTH);
         Thread threadProgress = new Thread(this::progress);
         threadProgress.start();
@@ -60,22 +74,23 @@ public class LoginGUI extends JFrame {
 
         header = new JPanel(new BorderLayout());
         header.setPreferredSize(new Dimension(700, 110));
-        header.setBorder(BorderFactory.createMatteBorder(0, 0, 5, 0, new Color(0x018847)));
+        header.setBackground(new Color(0x028948));
+        header.setBorder(BorderFactory.createMatteBorder(0, -60, 5, 0, new Color(0xF0F0F0FF)));
         header.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        labelBanner_Header = new JLabel(banner_header);
+        labelBanner_Header = new JLabel();
         labelBanner_Header.setSize(new Dimension(700, 100));
 
-        Image imgScaled1 = banner_header.getImage().getScaledInstance(labelBanner_Header.getWidth(), labelBanner_Header.getHeight(), Image.SCALE_DEFAULT | Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon1 = new ImageIcon(imgScaled1);
-        labelBanner_Header.setIcon(scaledIcon1);
 
+        labelBanner_Header.setIcon(new FlatSVGIcon("img/banner_header.svg"));
+        labelBanner_Header.setHorizontalAlignment(SwingConstants.CENTER);
         header.add(labelBanner_Header, BorderLayout.CENTER);
 
         labelLogin = new JLabel("Đăng Nhập", SwingConstants.CENTER);
-        labelLogin.setForeground(new Color(0x018847));
+        labelLogin.setBackground(new Color(0xF0F0F0FF));
+        labelLogin.setForeground(new Color(0x028948));
         labelLogin.setFont(new Font("Lexend", Font.BOLD, 30));
-        labelLogin.setBorder(new EmptyBorder(30,0,0,0));
+        labelLogin.setBorder(BorderFactory.createMatteBorder(5, 0, 0, 0, new Color(0x028948)));
 
         login = new JPanel(new FlowLayout());
 
@@ -142,6 +157,20 @@ public class LoginGUI extends JFrame {
         labelForgetPasswd = new JLabel("Quên mật khẩu?");
         labelForgetPasswd.setFont(new Font("Lexend", Font.PLAIN, 12));
         labelForgetPasswd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        labelForgetPasswd.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                labelForgetPasswd.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(0x018847)));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                labelForgetPasswd.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+            }
+            public void mousePressed(MouseEvent e) {
+                forgotPassword();
+            }
+        });
         formLogin.add(labelForgetPasswd, "span, right, wrap");
 
         jButtonLogin = new JButton("Đăng nhập");
@@ -203,7 +232,13 @@ public class LoginGUI extends JFrame {
                 System.out.println(e.getMessage());
             }
         }
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
         contentPane.removeAll();
+        contentPane.setBackground(new Color(0xF0F0F0));
         contentPane.add(header, BorderLayout.NORTH);
         contentPane.add(labelLogin, BorderLayout.CENTER);
         contentPane.add(login, BorderLayout.SOUTH);
@@ -216,7 +251,7 @@ public class LoginGUI extends JFrame {
         userName = jTextFieldUserName.getText();
         passWord = new String(jTextFieldPassword.getPassword());
         AccountBLL accountBLL = new AccountBLL();
-        List<Account> accountList = accountBLL.searchAccounts("username = '" + userName + "'", "deleted = 0");
+        List<Account> accountList = accountBLL.findAccounts("username", userName);
         if (accountList.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
@@ -227,12 +262,34 @@ public class LoginGUI extends JFrame {
         }
         Account account = accountList.get(0);
         try {
-//            Thread thread = new Thread(() -> );
-//            thread.start();
-            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-//            thread.join();
+            DateTime now = DateTime.parseDateTime(String.valueOf(new DateTime()));
+            accountBLL.updateAccountLast_signed_in( account, now);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        try {
+            Thread thread = new Thread(() -> Mini_supermarketManagement.homeGUI.setAccount(account));
+            thread.start();
+            thread.join();
         } catch (Exception ignored) {
 
         }
+        dispose();
+        Mini_supermarketManagement.homeGUI.setVisible(true);
     }
+
+    private void forgotPassword() {
+        new ForgotPasswordGUI();
+    }
+
+    private void cancel() {
+        String[] options = new String[]{"Huỷ", "Thoát chương trình"};
+        int choice = JOptionPane.showOptionDialog(null, "Bạn có muốn thoát chương trình?",
+            "Lỗi", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[0]);
+        if (choice == 1)
+            Mini_supermarketManagement.exit(1);
+    }
+
 }

@@ -14,7 +14,7 @@ public class AccountBLL extends Manager<Account> {
 
     public AccountBLL() {
         accountDAL = new AccountDAL();
-        accountList = searchAccounts("deleted = 0", "id != 0");
+        accountList = searchAccounts("deleted = 0");
     }
 
     public AccountDAL getAccountDAL() {
