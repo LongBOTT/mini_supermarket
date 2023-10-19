@@ -1,8 +1,6 @@
 package com.supermarket.DAL;
 
-import com.supermarket.DTO.Account;
 import com.supermarket.DTO.Category;
-import com.supermarket.utils.DateTime;
 
 import java.io.IOException;
 import java.sql.SQLException;
