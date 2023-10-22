@@ -267,6 +267,7 @@ public class ForgotPasswordGUI extends JDialog {
                 nothing.setText("(" + (seconds - temp) + "s)");
             }
             activeOtp = "";
+            nothing.setText("Mã OTP đã hết thời gian hiệu lực vui lòng chọn gửi lại.");
         });
         currentCountDownThread.start();
     }

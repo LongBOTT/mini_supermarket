@@ -87,7 +87,7 @@ public class LoginGUI extends JFrame {
         header.add(labelBanner_Header, BorderLayout.CENTER);
 
         labelLogin = new JLabel("Đăng Nhập", SwingConstants.CENTER);
-        labelLogin.setBackground(new Color(0xF0F0F0FF));
+        labelLogin.setBackground(new Color(0xFFFFFF));
         labelLogin.setForeground(new Color(0x028948));
         labelLogin.setFont(new Font("Lexend", Font.BOLD, 30));
         labelLogin.setBorder(BorderFactory.createMatteBorder(5, 0, 0, 0, new Color(0x028948)));
@@ -109,16 +109,7 @@ public class LoginGUI extends JFrame {
         jTextFieldUserName.setBackground(new Color(211,211,211));
         jTextFieldUserName.setPreferredSize(new Dimension(350, 40));
         jTextFieldUserName.setFont(new Font("open sans", Font.PLAIN, 15));
-        jTextFieldUserName.setText("Nhập tài khoản");
-        jTextFieldUserName.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent ignoredEvt) {
-                jTextFieldUserNameFocusGained(ignoredEvt);
-            }
-
-            public void focusLost(FocusEvent ignoredEvt) {
-                jTextFieldUserNameFocusLost(ignoredEvt);
-            }
-        });
+        jTextFieldUserName.putClientProperty("JTextField.placeholderText", "Nhập tài khoản");
         jTextFieldUserName.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent keyEvent) {
                 if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER)
@@ -136,16 +127,8 @@ public class LoginGUI extends JFrame {
         jTextFieldPassword = new JPasswordField();
         jTextFieldPassword.setBackground(new Color(211,211,211));
         jTextFieldPassword.setPreferredSize(new Dimension(350, 40));
-        jTextFieldPassword.setText("Password");
-        jTextFieldPassword.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent ignoredEvt) {
-                jTextFieldPasswordFocusGained(ignoredEvt);
-            }
-
-            public void focusLost(FocusEvent ignoredEvt) {
-                jTextFieldPasswordFocusLost(ignoredEvt);
-            }
-        });
+        jTextFieldPassword.setFont(new Font("open sans", Font.PLAIN, 15));
+        jTextFieldPassword.putClientProperty("JTextField.placeholderText", "Nhập mật khẩu");;
         jTextFieldPassword.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent keyEvent) {
                 if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER)
@@ -195,32 +178,6 @@ public class LoginGUI extends JFrame {
 
     }
 
-    private void jTextFieldUserNameFocusLost(FocusEvent ignoredEvt) {
-        if (jTextFieldUserName.getText().isEmpty()) {
-            jTextFieldUserName.setText("Nhập tài khoản");
-        }
-    }
-
-    private void jTextFieldUserNameFocusGained(FocusEvent ignoredEvt) {
-        if (jTextFieldUserName.getText().equals("Nhập tài khoản")) {
-            jTextFieldUserName.setText("");
-        }
-    }
-
-    private void jTextFieldPasswordFocusGained(FocusEvent ignoredEvt) {
-        String password = new String(jTextFieldPassword.getPassword());
-        if (password.equals("Password")) {
-            jTextFieldPassword.setText("");
-        }
-    }
-
-    private void jTextFieldPasswordFocusLost(FocusEvent ignoredEvt) {
-        String password = new String(jTextFieldPassword.getPassword());
-        if (password.isEmpty()) {
-            jTextFieldPassword.setText("Password");
-        }
-    }
-
     private void progress() {
         int i = 0;
         while (i <= 100){
@@ -252,6 +209,14 @@ public class LoginGUI extends JFrame {
         passWord = new String(jTextFieldPassword.getPassword());
         AccountBLL accountBLL = new AccountBLL();
         List<Account> accountList = accountBLL.findAccounts("username", userName);
+        if (userName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tài khoản!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (passWord.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         if (accountList.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;

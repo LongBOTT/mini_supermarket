@@ -3,10 +3,11 @@ package com.supermarket.GUI;
 import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DTO.Account;
 import com.supermarket.DTO.Staff;
-import com.supermarket.GUI.components.RoundedPanel;
+import com.supermarket.GUI.components.*;
 import com.supermarket.main.Mini_supermarketManagement;
 import com.supermarket.utils.Date;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.supermarket.utils.DateTime;
 
 
 import javax.swing.*;
@@ -16,6 +17,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class HomeGUI extends JFrame {
@@ -36,11 +39,14 @@ public class HomeGUI extends JFrame {
     private JLabel staffName;
     private JLabel iconLogout;
     private JLabel[] moduleNames = new JLabel[15];
+    public List<JLabel> banners = new ArrayList<>(0);
     private boolean over = false;
     private boolean pressover;
     private Color color;
     private Color colorOver;
     private int currentPanel = 0;
+    private int currentBanner = 0;
+    private Thread autoRenderBanner;
     public HomeGUI () {
     }
 
@@ -69,7 +75,9 @@ public class HomeGUI extends JFrame {
         setTitle("Hệ thống quản lý siêu thị mini Bách Hoá Xanh");
         setResizable(false);
         setPreferredSize(new Dimension(1440, 850));
+        setMinimumSize(new Dimension());
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        pack();
         setLocationRelativeTo(null);
         addWindowListener(new WindowAdapter() {
             @Override
@@ -93,6 +101,9 @@ public class HomeGUI extends JFrame {
         for (int i = 0; i < modules.length; i++) {
             modules[i] = new RoundedPanel();
             moduleNames[i] = new JLabel();
+        }
+        for (int i = 0; i<3; i++) {
+            banners.add(new JLabel());
         }
         color = new Color(0xFFFFFF);
         colorOver = new Color(0x8EBCDA);
@@ -122,8 +133,6 @@ public class HomeGUI extends JFrame {
         infor.setPreferredSize(new Dimension(1040, 30));
         header.add(infor, BorderLayout.CENTER);
 
-
-
         staffName.setIcon(new FlatSVGIcon("icon/avatar.svg"));
         staffName.setBorder(new EmptyBorder(0, 0,0,20));
         staffName.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -152,7 +161,7 @@ public class HomeGUI extends JFrame {
 
         center.add(left, BorderLayout.WEST);
 
-        right.setLayout(new FlowLayout());
+        right.setLayout(new BorderLayout());
         right.setBackground(new Color(0xFFFFFF));
         right.setPreferredSize(new Dimension(1100, 770));
         center.add(right, BorderLayout.CENTER);
@@ -164,16 +173,26 @@ public class HomeGUI extends JFrame {
 
         left.add(menu);
 
-        content.setBackground(new Color(0x8EBCDA));
+        content.setLayout(new BorderLayout());
+        content.setBorder(new EmptyBorder(5,0,5,10));
+        content.setBackground(new Color(0xFFFFFF));
         content.setPreferredSize(new Dimension(1160, 770));;
-        right.add(content);
+        right.add(content, BorderLayout.CENTER);
 
-        function.setBackground(new Color(0xFFFFFF));
-        function.setPreferredSize(new Dimension(1140, 760));
-        function.setBorder(new EmptyBorder(10,10,10,10));
-        content.add(function);
+        banners.get(0).setIcon(new FlatSVGIcon("img/banner1.svg"));
+        banners.get(1).setIcon(new FlatSVGIcon("img/banner2.svg"));
+        banners.get(2).setIcon(new FlatSVGIcon("img/banner3.svg"));
 
-        pack();
+        for (JLabel label : banners) {
+            label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                        new ManageBannersGUI();
+                }
+            });
+        }
     }
 
     private void initMenu() {
@@ -313,53 +332,92 @@ public class HomeGUI extends JFrame {
         module.setBackground(colorOver);
     }
 
-    private void selectRoundPanel(int index) {
+    public void selectRoundPanel(int index) {
         Active(modules[index]);
-        System.out.println(index);
         JPanel panel = switch (index) {
-//            case 0 -> home();
-//            case 1 -> ;
-//            case 2 -> ;
-//            case 3 -> ;
-//            case 4 -> ;
-//            case 5 -> ;
-//            case 6 -> ;
-//            case 7 -> ;
-//            case 8 -> ;
-//            case 9 -> ;
-//            case 10 -> ;
-//            case 11 -> ;
-//            case 12 -> ;
-//            case 13 -> ;
-//            case 14 -> ;
+            case 0 -> home();
+            case 1 -> new SalePanel();
+            case 2 -> new Layout1();
+            case 3 -> new StatisticPanel();
+            case 4 -> new Layout3();
+            case 5 -> new Layout3();
+            case 6 -> new Layout2();
+            case 7 -> new Layout2();
+            case 8 -> new Layout2();
+            case 9 -> new Layout4();
+            case 10 -> new Layout1();
+            case 11 -> new Layout1();
+            case 12 -> new Layout1();
+            case 13 -> new Layout1();
+            case 14 -> new Layout4();
             default -> null;
         };
         currentPanel = index;
-        OpenChildForm();
+        OpenChildForm(panel);
     }
 
     private JPanel home() {
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.white);
-        panel.setPreferredSize(new Dimension(1140, 760));
-
-
-        JLabel label = new JLabel();
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setPreferredSize(new Dimension(1140, 760));
-        label.setIcon(new FlatSVGIcon("img/banner_header.svg"));
-        panel.add(label);
-
+        RoundedPanel panel = new RoundedPanel();
+        panel.setLayout(new BorderLayout());
+        panel.setBackground(new Color(0x8EBCDA));
+        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                new ManageBannersGUI();
+            }
+        });
+        renderBanners(panel);
         return panel;
     }
 
-    private void OpenChildForm() {
-        function.removeAll();
-        if (currentPanel==0)
-            function.add(home());
-        function.repaint();
-        function.revalidate();
-        content.add(function);
+    public void renderBanners(JPanel panel){
+        if (autoRenderBanner != null)
+            autoRenderBanner.interrupt();
+        panel.removeAll();
+        if (!banners.isEmpty()) {
+            currentBanner = 0;
+            panel.add(banners.get(currentBanner), BorderLayout.CENTER);
+        } else {
+            currentBanner = -1;
+        }
+        panel.repaint();
+        panel.revalidate();
+        content.add(panel);
+        autoRenderBanner = new Thread(() -> {
+        DateTime start = new DateTime();
+            while (!Thread.currentThread().isInterrupted()) {
+                if (!banners.isEmpty()) {
+                    if (DateTime.calculateTime(start, new DateTime()) == 3) {
+                        if (currentBanner == banners.size()-1)
+                            currentBanner = 0;
+                        else
+                            currentBanner += 1;
+                        panel.removeAll();
+                        panel.add(banners.get(currentBanner), BorderLayout.CENTER);
+                        panel.repaint();
+                        panel.revalidate();
+
+                        start = new DateTime();
+                    }
+                } else {
+                    currentBanner = -1;
+                    panel.removeAll();
+                    panel.repaint();
+                    panel.revalidate();
+                    start = new DateTime();
+                }
+            }
+        });
+        autoRenderBanner.start();
+    }
+
+    private void OpenChildForm(JPanel panel) {
+        content.removeAll();
+        content.add(panel, BorderLayout.CENTER);
+        content.repaint();
+        content.revalidate();
+        right.add(content);
     }
 
     public void setTime() {
