@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2023 at 07:10 PM
+-- Generation Time: Oct 11, 2023 at 11:30 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -42,7 +42,7 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`id`, `username`, `password`, `role_id`, `staff_id`, `last_signed_in`, `deleted`) VALUES
-(1, 'admin', 'Admin123', 1, 1, '1000-01-01 00:00:00.000000', b'0');
+(1, 'admin', 'Admin123', 1, 1, '2023-10-10 12:52:38.000000', b'0');
 
 -- --------------------------------------------------------
 
@@ -236,7 +236,7 @@ CREATE TABLE `discount_detail` (
 CREATE TABLE `export` (
   `id` bigint(20) NOT NULL,
   `staff_id` bigint(20) DEFAULT NULL,
-  `invoice_date` datetime(6) DEFAULT NULL,
+  `invoice_date` date DEFAULT NULL,
   `total` double DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
@@ -286,7 +286,7 @@ INSERT INTO `function` (`id`, `name`, `deleted`) VALUES
 CREATE TABLE `import` (
   `id` bigint(20) NOT NULL,
   `staff_id` bigint(20) DEFAULT NULL,
-  `received_date` datetime(6) DEFAULT NULL,
+  `received_date` date DEFAULT NULL,
   `total` double DEFAULT NULL,
   `supplier_id` bigint(20) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
@@ -437,7 +437,7 @@ CREATE TABLE `receipt` (
   `id` bigint(20) NOT NULL,
   `staff_id` bigint(20) DEFAULT NULL,
   `customer_id` bigint(20) DEFAULT NULL,
-  `invoice_date` datetime(6) DEFAULT NULL,
+  `invoice_date` date DEFAULT NULL,
   `total` double DEFAULT NULL,
   `received` double DEFAULT NULL,
   `excess` double DEFAULT NULL,

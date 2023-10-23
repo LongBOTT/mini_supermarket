@@ -3,7 +3,7 @@ package com.supermarket.DTO;
 import com.supermarket.utils.Date;
 
 public class Staff {
-    private int id;;
+    private int id;
     private String name;
     private boolean gender;
     private Date birthday;

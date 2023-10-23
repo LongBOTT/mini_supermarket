@@ -14,11 +14,11 @@ public class Role {
         this.deleted = deleted;
     }
 
-    public int getRoleID() {
+    public int getId() {
         return id;
     }
 
-    public void setRoleID(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
