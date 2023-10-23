@@ -16,7 +16,7 @@ public class Email {
     }
     public static void sendOTP(String toEmail, String emailSubject, String emailBody) {
         String email ="colong30082003@gmail.com";
-        String password = "bqmqnkgczvputblk";
+        String password = "thplhvvpcfrtkboj";
         String host = "smtp.gmail.com";
         String port = "587";
 
