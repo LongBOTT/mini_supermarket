@@ -56,16 +56,16 @@ public class Promotion_giftDAL extends Manager{
         return 0;
     }
 
-    public int deletePromotion_gift(String... conditions) {
-        try {
-            List<Object> updateValues = new ArrayList<>();
-            updateValues.add(true);
-            return update(updateValues, conditions);
-        } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in Promotion_giftDAL.deletePromotion_gift(): " + e.getMessage());
-        }
-        return 0;
-    }
+//    public int deletePromotion_gift(String... conditions) {
+//        try {
+//            List<Object> updateValues = new ArrayList<>();
+//            updateValues.add(true);
+//            return update(updateValues, conditions);
+//        } catch (SQLException | IOException e) {
+//            System.out.println("Error occurred in Promotion_giftDAL.deletePromotion_gift(): " + e.getMessage());
+//        }
+//        return 0;
+//    }
 
     public List<Promotion_gift> searchPromotion_gifts(String... conditions) {
         try {

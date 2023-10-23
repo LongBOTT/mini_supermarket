@@ -13,6 +13,7 @@ public class Promotion_giftBLL extends Manager<Promotion_gift>{
 
     public Promotion_giftBLL() {
         promotion_giftDAL = new Promotion_giftDAL();
+        promotion_giftList = searchPromotion_gifts();
     }
 
     public Promotion_giftDAL getPromotion_giftDAL() {

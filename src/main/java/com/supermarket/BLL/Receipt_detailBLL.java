@@ -13,6 +13,7 @@ public class Receipt_detailBLL extends Manager<Receipt_detail>{
 
     public Receipt_detailBLL() {
         receipt_detailDAL = new Receipt_detailDAL();
+        receipt_detailList = searchReceipt_details();
     }
 
     public Receipt_detailDAL getReceipt_detailDAL() {
@@ -43,11 +44,6 @@ public class Receipt_detailBLL extends Manager<Receipt_detail>{
     public boolean updateReceipt_detail(Receipt_detail receipt_detail) {
         receipt_detailList.set(getIndex(receipt_detail, "receipt_id", receipt_detailList), receipt_detail);
         return receipt_detailDAL.updateReceipt_detail(receipt_detail) != 0;
-    }
-
-    public boolean deleteReceipt_detail(Receipt_detail receipt_detail) {
-        receipt_detailList.remove(getIndex(receipt_detail, "receipt_id", receipt_detailList));
-        return receipt_detailDAL.deleteReceipt_detail("receipt_id = " + receipt_detail.getReceipt_id()) != 0;
     }
 
     public List<Receipt_detail> searchReceipt_details(String... conditions) {
