@@ -46,7 +46,7 @@ public class AccountDAL extends Manager{
                 account.getPassword(),
                 account.getRoleID(),
                 account.getStaffID(),
-                account.getLast_signed_in(),
+                account.getLast_signed_in().toSQL(),
                 false
             ); // account khi tạo mặc định deleted = 0
         } catch (SQLException | IOException e) {
@@ -63,7 +63,7 @@ public class AccountDAL extends Manager{
             updateValues.add(account.getPassword());
             updateValues.add(account.getRoleID());
             updateValues.add(account.getStaffID());
-            updateValues.add(account.getLast_signed_in());
+            updateValues.add(account.getLast_signed_in().toSQL());
             updateValues.add(account.isDeleted());
             return update(updateValues, "id = " + account.getId());
         } catch (SQLException | IOException e) {
