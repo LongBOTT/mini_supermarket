@@ -1,7 +1,6 @@
 package com.supermarket.DAL;
 
-import com.supermarket.BLL.Manager;
-import com.supermarket.DTO.Staff;
+import com.supermarket.DTO.Receipt;
 import com.supermarket.utils.Date;
 
 import java.io.IOException;
@@ -13,90 +12,86 @@ public class ReceiptDAL extends Manager {
     public ReceiptDAL() {
         super("receipt",
             List.of("id",
-                "name",
-                "gender",
-                "birthday",
-                "phone",
-                "
-                "email",
-                "entry_date",
+                "staff_id",
+                "customer_id",
+                "invoice_date",
+                "total",
+                "received",
+                "excess",
                 "deleted"));
     }
 
-    public List<Staff> convertToStaffs(List<List<String>> data) {
+    public List<Receipt> convertToReceipts(List<List<String>> data) {
         return convert(data, row -> {
             try {
-                return new Staff(
+                return new Receipt(
                     Integer.parseInt(row.get(0)), // id
-                    row.get(1), // name
-                    Boolean.parseBoolean(row.get(2)), // gender
-                    Date.parseDate(row.get(3)), // birthday
-                    row.get(4), // phone
-                    row.get(5), // address
-                    row.get(6), // email
-                    Date.parseDate(row.get(7)), // entry_date
-                    Boolean.parseBoolean(row.get(8))    // deleted
+                    Integer.parseInt(row.get(1)), // staff_id
+                    Integer.parseInt(row.get(2)), // customer_id
+                    Date.parseDate(row.get(3)), // invoice_date
+                    Double.parseDouble(row.get(4)), // total
+                    Double.parseDouble(row.get(5)), // received
+                    Double.parseDouble(row.get(6)), // excess
+                    Boolean.parseBoolean(row.get(7))    // deleted
                 );
             } catch (Exception e) {
-                System.out.println("Error occurred in StaffDAL.convertToStaffs(): " + e.getMessage());
+                System.out.println("Error occurred in ReceiptDAL.convertToReceipts(): " + e.getMessage());
             }
-            return new Staff();
+            return new Receipt();
         });
     }
 
-    public int addStaff(Staff staff) {
+    public int addReceipt(Receipt receipt) {
         try {
-            return create(staff.getId(),
-                staff.getName(),
-                staff.getGender(),
-                staff.getBirthday(),
-                staff.getPhone(),
-                staff.getAddress(),
-                staff.getEmail(),
-                staff.getEntry_date(),
+            return create(receipt.getId(),
+                receipt.getStaff_id(),
+                receipt.getCustomer_id(),
+                receipt.getInvoice_date(),
+                receipt.getTotal(),
+                receipt.getReceived(),
+                receipt.getExcess(),
                 false
             ); // staff khi tạo mặc định deleted = 0
         } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in StaffDAL.addStaff(): " + e.getMessage());
+            System.out.println("Error occurred in ReceiptDAL.addReceipt(): " + e.getMessage());
         }
         return 0;
     }
 
-    public int updateStaff(Staff staff) {
+    public int updateReceipt(Receipt receipt) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(staff.getId());
-            updateValues.add(staff.getName());
-            updateValues.add(staff.getGender());
-            updateValues.add(staff.getBirthday());
-            updateValues.add(staff.getPhone());
-            updateValues.add(staff.getAddress());
-            updateValues.add(staff.getEmail());
-            updateValues.add(staff.getEntry_date());
-            updateValues.add(staff.isDeleted());
-            return update(updateValues, "id = " + staff.getId());
+            updateValues.add(receipt.getId());
+            updateValues.add(receipt.getStaff_id());
+            updateValues.add(receipt.getCustomer_id());
+            updateValues.add(receipt.getInvoice_date());
+            updateValues.add(receipt.getTotal());
+            updateValues.add(receipt.getReceived());
+            updateValues.add(receipt.getExcess());
+            updateValues.add(receipt.isDeleted());
+            return update(updateValues, "id = " + receipt.getId());
         } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in StaffDAL.updateStaff(): " + e.getMessage());
+            System.out.println("Error occurred in ReceiptDAL.updateReceipt(): " + e.getMessage());
         }
         return 0;
     }
 
-    public int deleteStaff(String... conditions) {
+    public int deleteReceipt(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
         } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in StaffDAL.deleteStaff(): " + e.getMessage());
+            System.out.println("Error occurred in ReceiptDAL.deleteReceipt(): " + e.getMessage());
         }
         return 0;
     }
 
-    public List<Staff> searchStaffs(String... conditions) {
+    public List<Receipt> searchReceipts(String... conditions) {
         try {
-            return convertToStaffs(read(conditions));
+            return convertToReceipts(read(conditions));
         } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in StaffDAL.searchStaffs(): " + e.getMessage());
+            System.out.println("Error occurred in ReceiptDAL.searchReceipts(): " + e.getMessage());
         }
         return new ArrayList<>();
     }
