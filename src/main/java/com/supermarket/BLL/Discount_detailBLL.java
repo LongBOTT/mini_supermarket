@@ -45,7 +45,7 @@ public class Discount_detailBLL extends Manager<Discount_detail> {
         discount_detailList.set(getIndex(discount_detail, List.of("discount_id","product_id"), discount_detailList), discount_detail);
         return discount_detailDAL.updateDiscountDetail(discount_detail) != 0;
     }
-    
+
     public List<Discount_detail> searchDiscount_details(String... conditions) {
         return discount_detailDAL.searchDiscountDetails(conditions);
     }
