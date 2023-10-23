@@ -3,7 +3,6 @@ package com.supermarket.main;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.AccountBLL;
-import com.supermarket.DTO.Account;
 import com.supermarket.GUI.HomeGUI;
 import com.supermarket.GUI.LoginGUI;
 

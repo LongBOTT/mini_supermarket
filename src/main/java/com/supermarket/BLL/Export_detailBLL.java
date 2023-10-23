@@ -20,7 +20,7 @@ public class Export_detailBLL extends Manager<Export_detail>{
         return exportDetailDAL;
     }
 
-    public void setExportDetailDAL(Export_detailDAL exprotDetailDAl) {
+    public void setExportDetailDAL(Export_detailDAL exportDetailDAL) {
         this.exportDetailDAL = exportDetailDAL;
     }
 
