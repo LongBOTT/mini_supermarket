@@ -13,7 +13,6 @@ public class Promotion_itemBLL extends Manager<Promotion_item>{
 
     public Promotion_itemBLL() {
         promotion_itemDAL = new Promotion_itemDAL();
-        promotion_itemList = searchPromotion_items("deleted = 0");
     }
 
     public Promotion_itemDAL getPromotion_itemDAL() {

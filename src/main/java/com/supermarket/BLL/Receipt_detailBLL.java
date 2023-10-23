@@ -13,7 +13,6 @@ public class Receipt_detailBLL extends Manager<Receipt_detail>{
 
     public Receipt_detailBLL() {
         receipt_detailDAL = new Receipt_detailDAL();
-        receipt_detailList = searchReceipt_details("deleted = 0");
     }
 
     public Receipt_detailDAL getReceipt_detailDAL() {
