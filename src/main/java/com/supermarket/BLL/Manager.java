@@ -42,5 +42,18 @@ public abstract class Manager<T> {
             .orElse(-1);
     }
 
+    public int getIndex(T object, List<String> keys, List<T> objectList) {
+        return IntStream.range(0, objectList.size())
+            .filter(i -> {
+                boolean have = false;
+                for(String key : keys){
+                    have = have && Objects.equals(getValueByKey(objectList.get(i), key), getValueByKey(object, key));
+                }
+                return have;
+            })
+            .findFirst()
+            .orElse(-1);
+    }
+
     public abstract Object getValueByKey(T object, String key);
 }
