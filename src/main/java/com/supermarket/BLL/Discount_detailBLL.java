@@ -13,7 +13,7 @@ public class Discount_detailBLL extends Manager<Discount_detail> {
 
     public Discount_detailBLL() {
         discount_detailDAL = new Discount_detailDAL();
-        discount_detailList = searchDiscount_details("deleted = 0");
+        discount_detailList = searchDiscount_details();
     }
 
     public Discount_detailDAL getDiscount_detailDAL() {
@@ -46,10 +46,10 @@ public class Discount_detailBLL extends Manager<Discount_detail> {
         return discount_detailDAL.updateDiscountDetail(discount_detail) != 0;
     }
 
-    public boolean deleteDiscount_detail(Discount_detail discount_detail) {
-        discount_detailList.remove(getIndex(discount_detail, List.of("discount_id","product_id"), discount_detailList));
-        return discount_detailDAL.deleteDiscountDetail("discount_id = " + discount_detail.getDiscount_id(),"product_id = "+discount_detail.getProduct_id()) != 0;
-    }
+//    public boolean deleteDiscount_detail(Discount_detail discount_detail) {
+//        discount_detailList.remove(getIndex(discount_detail, List.of("discount_id","product_id"), discount_detailList));
+//        return discount_detailDAL.deleteDiscountDetail("discount_id = " + discount_detail.getDiscount_id(),"product_id = "+discount_detail.getProduct_id()) != 0;
+//    }
 
     public List<Discount_detail> searchDiscount_details(String... conditions) {
         return discount_detailDAL.searchDiscountDetails(conditions);
