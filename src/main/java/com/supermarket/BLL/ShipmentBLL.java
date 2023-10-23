@@ -65,14 +65,14 @@ public class ShipmentBLL extends Manager<Shipment>{
 
     public boolean exists(Shipment shipment) {
         return !findShipmentsBy(Map.of(
-            "product id", shipment.getProduct_id(),
-            "unit price", shipment.getUnit_price(),
+            "product_id", shipment.getProduct_id(),
+            "unit_price", shipment.getUnit_price(),
             "quantity", shipment.getQuantity(),
             "remain", shipment.getRemain(),
             "mfg", shipment.getMfg(),
             "exp", shipment.getExp(),
             "sku", shipment.getSku(),
-            "import note id",shipment.getImport_id()
+            "import_note_id",shipment.getImport_id()
         )).isEmpty();
     }
 
@@ -84,14 +84,14 @@ public class ShipmentBLL extends Manager<Shipment>{
     public Object getValueByKey(Shipment shipment, String key) {
         return switch (key) {
             case "id" -> shipment.getId();
-            case "product id" -> shipment.getProduct_id();
-            case "unit price" -> shipment.getUnit_price();
+            case "product_id" -> shipment.getProduct_id();
+            case "unit_price" -> shipment.getUnit_price();
             case "quantity" -> shipment.getQuantity();
             case "remain" -> shipment.getRemain();
             case "mfg" -> shipment.getMfg();
             case "exp" -> shipment.getExp();
             case "sku" -> shipment.getSku();
-            case "import note id"-> shipment.getImport_id();
+            case "import_note_id"-> shipment.getImport_id();
             default -> null;
         };
     }
