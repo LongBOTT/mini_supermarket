@@ -6,11 +6,11 @@ import com.supermarket.DTO.Import;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-public class Import_noteBLL extends Manager<Import> {
+public class ImportBLL extends Manager<Import> {
     private ImportDAL importNoteDAL;
     private List<Import> importList;
 
-    public Import_noteBLL() {
+    public ImportBLL() {
         importNoteDAL = new ImportDAL();
         importList = searchImport("deleted = 0");
     }
@@ -47,11 +47,11 @@ public class Import_noteBLL extends Manager<Import> {
 
     public boolean deleteImport(Import importnote) {
         importList.remove(getIndex(importnote, "id", importList));
-        return importNoteDAL.deleteImport_note("id = " + importnote.getId()) != 0;
+        return importNoteDAL.deleteImport("id = " + importnote.getId()) != 0;
     }
 
     public List<Import> searchImport(String... conditions) {
-        return importNoteDAL.searchImport_note(conditions);
+        return importNoteDAL.searchImport(conditions);
     }
 
     public List<Import> findImport(String key, String value) {

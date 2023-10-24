@@ -1,6 +1,5 @@
 package com.supermarket.DTO;
 
-import com.supermarket.utils.Date;
 import com.supermarket.utils.DateTime;
 
 public class Account {

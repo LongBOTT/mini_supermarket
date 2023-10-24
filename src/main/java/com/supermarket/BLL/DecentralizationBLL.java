@@ -1,8 +1,6 @@
 package com.supermarket.BLL;
 import com.supermarket.DAL.DecentralizationDAL;
-import com.supermarket.DAL.Discount_detailDAL;
 import com.supermarket.DTO.Decentralization;
-import com.supermarket.DTO.Discount_detail;
 
 import java.util.ArrayList;
 import java.util.List;

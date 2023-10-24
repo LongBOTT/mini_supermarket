@@ -2,44 +2,15 @@ package com.supermarket.test;
 
 import java.util.List;
 
+import javax.management.relation.Role;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 
-import com.supermarket.BLL.AccountBLL;
-import com.supermarket.BLL.BrandBLL;
-import com.supermarket.BLL.CategoryBLL;
-import com.supermarket.BLL.CustomerBLL;
-import com.supermarket.BLL.DecentralizationBLL;
-import com.supermarket.BLL.DiscountBLL;
-import com.supermarket.BLL.Discount_detailBLL;
-import com.supermarket.BLL.Export_detailBLL;
-import com.supermarket.BLL.Export_noteBLL;
-import com.supermarket.BLL.FunctionBLL;
-import com.supermarket.BLL.Import_noteBLL;
-import com.supermarket.BLL.ModuleBLL;
-import com.supermarket.BLL.ProductBLL;
-import com.supermarket.BLL.PromotionBLL;
-import com.supermarket.BLL.Promotion_giftBLL;
-import com.supermarket.BLL.Promotion_itemBLL;
-import com.supermarket.BLL.ReceiptBLL;
-import com.supermarket.BLL.Receipt_detailBLL;
-import com.supermarket.BLL.RoleBLL;
-import com.supermarket.BLL.ShipmentBLL;
-import com.supermarket.BLL.StaffBLL;
-import com.supermarket.BLL.StatisticBLL;
-import com.supermarket.BLL.SupplierBLL;
-import com.supermarket.DTO.Account;
-import com.supermarket.DTO.Brand;
-import com.supermarket.DTO.Category;
-import com.supermarket.DTO.Customer;
-import com.supermarket.DTO.Decentralization;
-import com.supermarket.DTO.Discount;
-import com.supermarket.DTO.Discount_detail;
-import com.supermarket.DTO.Export;
-import com.supermarket.DTO.Export_detail;
-import com.supermarket.DTO.Function;
-import com.supermarket.DTO.Import;
+import com.supermarket.BLL.*;
+import com.supermarket.DTO.*;
 import com.supermarket.DTO.Module;
+
 class TestClass{
     Class<?> BLLClass;
     Class<?> DTOClass;
@@ -68,19 +39,17 @@ public class BLLTest {
         new TestClass(FunctionBLL.class,Function.class),
         new TestClass(ImportBLL.class,Import.class),
         new TestClass(ModuleBLL.class,Module.class),
-        new TestClass(ProductBLL.class,
-        new TestClass(Promotion_giftBLL.class,
-        new TestClass(Promotion_itemBLL.class,
-        new TestClass(PromotionBLL.class,
-        new TestClass(Receipt_detailBLL.class,
-        new TestClass(ReceiptBLL.class,
-        new TestClass(RoleBLL.class,
-        new TestClass(ShipmentBLL.class,
-        new TestClass(StaffBLL.class,
-        new TestClass(StatisticBLL.class,
-        new TestClass(RoleBLL.class,
-        new TestClass(StatisticBLL.class,
-        new TestClass(SupplierBLL.class
+        new TestClass(ProductBLL.class,Product.class),
+        new TestClass(Promotion_giftBLL.class, Promotion_gift.class),
+        new TestClass(Promotion_itemBLL.class, Promotion_item.class),
+        new TestClass(PromotionBLL.class, Promotion.class),
+        new TestClass(Receipt_detailBLL.class, Receipt_detail.class),
+        new TestClass(ReceiptBLL.class, Receipt.class),
+        new TestClass(RoleBLL.class, Role.class),
+        new TestClass(ShipmentBLL.class,Shipment.class),
+        new TestClass(StaffBLL.class,Staff.class),
+        new TestClass(StatisticBLL.class,Statistic.class),
+        new TestClass(SupplierBLL.class,Supplier.class)
         );
     }
     public BLLTest(){

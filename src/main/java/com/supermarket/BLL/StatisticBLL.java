@@ -1,7 +1,5 @@
 package com.supermarket.BLL;
-import com.supermarket.DAL.DiscountDAL;
 import com.supermarket.DAL.StatisticDAL;
-import com.supermarket.DTO.Discount;
 import com.supermarket.DTO.Statistic;
 
 import java.util.ArrayList;

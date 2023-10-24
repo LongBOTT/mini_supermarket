@@ -1,10 +1,6 @@
 package com.supermarket.DAL;
 
-import com.supermarket.DTO.Export;
 import com.supermarket.DTO.Export_detail;
-import com.supermarket.DTO.Export_detail;
-import com.supermarket.DTO.Staff;
-import com.supermarket.utils.Date;
 
 import java.io.IOException;
 import java.sql.SQLException;
