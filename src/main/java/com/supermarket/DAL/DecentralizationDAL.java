@@ -1,6 +1,5 @@
 package com.supermarket.DAL;
 import com.supermarket.DTO.Decentralization;
-import com.supermarket.DTO.Discount_detail;
 
 import java.io.IOException;
 import java.sql.SQLException;

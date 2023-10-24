@@ -1,25 +1,25 @@
 package com.supermarket.BLL;
 
-import com.supermarket.DAL.Import_noteDAL;
+import com.supermarket.DAL.ImportDAL;
 import com.supermarket.DTO.Import;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 public class Import_noteBLL extends Manager<Import> {
-    private Import_noteDAL importNoteDAL;
+    private ImportDAL importNoteDAL;
     private List<Import> importList;
 
     public Import_noteBLL() {
-        importNoteDAL = new Import_noteDAL();
+        importNoteDAL = new ImportDAL();
         importList = searchImport("deleted = 0");
     }
 
-    public Import_noteDAL getImportNoteDAL() {
+    public ImportDAL getImportNoteDAL() {
         return importNoteDAL;
     }
 
-    public void setImportNoteDAL(Import_noteDAL importNoteDAL) {
+    public void setImportNoteDAL(ImportDAL importNoteDAL) {
         this.importNoteDAL = importNoteDAL;
     }
 
