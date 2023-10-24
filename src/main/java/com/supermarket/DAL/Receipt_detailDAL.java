@@ -1,7 +1,6 @@
 package com.supermarket.DAL;
 
 import com.supermarket.DTO.Receipt_detail;
-import com.supermarket.utils.Date;
 
 import java.io.IOException;
 import java.sql.SQLException;

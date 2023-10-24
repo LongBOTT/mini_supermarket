@@ -43,9 +43,9 @@ class AccountBLLTest {
         boolean success = accountBLL.updateAccount(newAccount);
         assertTrue(success);
     }
-    @Test void testSearch(){
-        List<Account> list = accountBLL.findAccountsBy(Map.of("username","testAccount"));
-        for(Account account : list){
+    @Test void testSearch() {
+        List<Account> list = accountBLL.findAccountsBy(Map.of("username", "testAccount"));
+        for (Account account : list) {
             System.out.println(account.getId() + " " + account.getUsername());
         }
     }
