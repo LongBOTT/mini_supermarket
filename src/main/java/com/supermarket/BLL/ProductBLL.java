@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ProductBLL extends Manager<Product> {
+
     private ProductDAL productDAL;
     private List<Product> productList;
 

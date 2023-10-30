@@ -29,7 +29,8 @@ public class DecentralizationDAL extends Manager{
     }
     public int addDecentralization(Decentralization decentralization) {
         try {
-            return create(decentralization.getRole_id(),
+            return create(
+                decentralization.getRole_id(),
                 decentralization.getModule_id(),
                 decentralization.getFunction_id()
             );

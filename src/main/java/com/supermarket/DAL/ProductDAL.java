@@ -68,6 +68,7 @@ public class ProductDAL extends Manager{
             updateValues.add(product.getId());
             updateValues.add(product.getName());
             updateValues.add(product.getBrand_id());
+            updateValues.add(product.getCategory_id());
             updateValues.add(product.getUnit());
             updateValues.add(product.getCost());
             updateValues.add(product.getQuantity());
