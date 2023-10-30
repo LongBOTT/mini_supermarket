@@ -13,7 +13,7 @@ public class Promotion_giftBLL extends Manager<Promotion_gift>{
 
     public Promotion_giftBLL() {
         promotion_giftDAL = new Promotion_giftDAL();
-        promotion_giftList = searchPromotion_gifts("deleted = 0");
+        promotion_giftList = searchPromotion_gifts();
     }
 
     public Promotion_giftDAL getPromotion_giftDAL() {
@@ -46,10 +46,10 @@ public class Promotion_giftBLL extends Manager<Promotion_gift>{
         return promotion_giftDAL.updatePromotion_gift(promotion_gift) != 0;
     }
 
-    public boolean deletePromotion_gift(Promotion_gift promotion_gift) {
-        promotion_giftList.remove(getIndex(promotion_gift, "promotion_id", promotion_giftList));
-        return promotion_giftDAL.deletePromotion_gift("promotion_id = " + promotion_gift.getPromotion_id()) != 0;
-    }
+//    public boolean deletePromotion_gift(Promotion_gift promotion_gift) {
+//        promotion_giftList.remove(getIndex(promotion_gift, "promotion_id", promotion_giftList));
+//        return promotion_giftDAL.deletePromotion_gift("promotion_id = " + promotion_gift.getPromotion_id()) != 0;
+//    }
 
     public List<Promotion_gift> searchPromotion_gifts(String... conditions) {
         return promotion_giftDAL.searchPromotion_gifts(conditions);

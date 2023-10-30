@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CustomerDAL extends Manager{
     public CustomerDAL() {
-        super("staff",
+        super("customer",
             List.of("id",
                 "name",
                 "gender",

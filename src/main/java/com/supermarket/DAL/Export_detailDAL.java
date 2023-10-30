@@ -1,10 +1,6 @@
 package com.supermarket.DAL;
 
-import com.supermarket.DTO.Export;
 import com.supermarket.DTO.Export_detail;
-import com.supermarket.DTO.Export_detail;
-import com.supermarket.DTO.Staff;
-import com.supermarket.utils.Date;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -63,16 +59,16 @@ public class Export_detailDAL extends Manager{
         return 0;
     }
 
-    public int deleteExport_detail(String... conditions) {
-        try {
-            List<Object> updateValues = new ArrayList<>();
-            updateValues.add(true);
-            return  update(updateValues,conditions);
-        } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in Export_detailDAL.deleteExport_detail(): " + e.getMessage());
-        }
-        return 0;
-    }
+//    public int deleteExport_detail(String... conditions) {
+//        try {
+//            List<Object> updateValues = new ArrayList<>();
+//            updateValues.add(true);
+//            return  update(updateValues,conditions);
+//        } catch (SQLException | IOException e) {
+//            System.out.println("Error occurred in Export_detailDAL.deleteExport_detail(): " + e.getMessage());
+//        }
+//        return 0;
+//    }
 
     public List<Export_detail> searchExport_detail(String... conditions) {
         try {

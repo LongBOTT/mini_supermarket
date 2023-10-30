@@ -45,7 +45,7 @@ public abstract class Manager<T> {
     public int getIndex(T object, List<String> keys, List<T> objectList) {
         return IntStream.range(0, objectList.size())
             .filter(i -> {
-                boolean have = false;
+                boolean have = true;
                 for(String key : keys){
                     have = have && Objects.equals(getValueByKey(objectList.get(i), key), getValueByKey(object, key));
                 }

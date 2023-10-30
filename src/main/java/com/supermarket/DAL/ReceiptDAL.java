@@ -51,7 +51,7 @@ public class ReceiptDAL extends Manager {
                 receipt.getReceived(),
                 receipt.getExcess(),
                 false
-            ); // staff khi tạo mặc định deleted = 0
+            ); // receipt khi tạo mặc định deleted = 0
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in ReceiptDAL.addReceipt(): " + e.getMessage());
         }

@@ -1,7 +1,6 @@
 package com.supermarket.DAL;
 
 import com.supermarket.DTO.Promotion_item;
-import com.supermarket.utils.Date;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -56,16 +55,16 @@ public class Promotion_itemDAL extends Manager{
         return 0;
     }
 
-    public int deletePromotion_item(String... conditions) {
-        try {
-            List<Object> updateValues = new ArrayList<>();
-            updateValues.add(true);
-            return update(updateValues, conditions);
-        } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in Promotion_itemDAL.deletePromotion_item(): " + e.getMessage());
-        }
-        return 0;
-    }
+//    public int deletePromotion_item(String... conditions) {
+//        try {
+//            List<Object> updateValues = new ArrayList<>();
+//            updateValues.add(true);
+//            return update(updateValues, conditions);
+//        } catch (SQLException | IOException e) {
+//            System.out.println("Error occurred in Promotion_itemDAL.deletePromotion_item(): " + e.getMessage());
+//        }
+//        return 0;
+//    }
 
     public List<Promotion_item> searchPromotion_items(String... conditions) {
         try {

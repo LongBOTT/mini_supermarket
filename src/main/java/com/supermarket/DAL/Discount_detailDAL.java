@@ -59,16 +59,16 @@ public class Discount_detailDAL extends Manager{
     }
 
 
-    public int deleteDiscountDetail(String... conditions) {
-        try {
-            List<Object> updateValues = new ArrayList<>();
-            updateValues.add(true);
-            return update(updateValues, conditions);
-        } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in Discount_detailDAL.deleteDiscountDetail(): " + e.getMessage());
-        }
-        return 0;
-    }
+//    public int deleteDiscountDetail(String... conditions) {
+//        try {
+//            List<Object> updateValues = new ArrayList<>();
+//            updateValues.add(true);
+//            return update(updateValues, conditions);
+//        } catch (SQLException | IOException e) {
+//            System.out.println("Error occurred in Discount_detailDAL.deleteDiscountDetail(): " + e.getMessage());
+//        }
+//        return 0;
+//    }
 
     public List<Discount_detail> searchDiscountDetails(String... conditions) {
         try {

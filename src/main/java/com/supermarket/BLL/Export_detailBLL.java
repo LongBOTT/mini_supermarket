@@ -13,14 +13,14 @@ public class Export_detailBLL extends Manager<Export_detail>{
 
     public Export_detailBLL() {
         exportDetailDAL = new Export_detailDAL();
-        exportList = searchExport("deleted = 0");
+        exportList = searchExport();
     }
 
     public Export_detailDAL getExportDetailDAL() {
         return exportDetailDAL;
     }
 
-    public void setExportDetailDAL(Export_detailDAL exprotDetailDAl) {
+    public void setExportDetailDAL(Export_detailDAL exportDetailDAL) {
         this.exportDetailDAL = exportDetailDAL;
     }
 
@@ -36,20 +36,16 @@ public class Export_detailBLL extends Manager<Export_detail>{
         return getData(exportList);
     }
 
-    public boolean addExport(Export_detail export) {
-        exportList.add(export);
-        return exportDetailDAL.addExport_detail(export) != 0;
+    public boolean addExport(Export_detail exportDetail) {
+        exportList.add(exportDetail);
+        return exportDetailDAL.addExport_detail(exportDetail) != 0;
     }
 
-    public boolean updateExport(Export_detail export) {
-        exportList.set(getIndex(export, "id", exportList), export);
-        return exportDetailDAL.updateExport_detail(export) != 0;
+    public boolean updateExport(Export_detail exportDetail) {
+        exportList.set(getIndex(exportDetail,List.of("export_note_id","shipment_id"), exportList), exportDetail);
+        return exportDetailDAL.updateExport_detail(exportDetail) != 0;
     }
 
-    public boolean deleteExport(Export_detail exportDetail) {
-        exportList.remove(getIndex(exportDetail, "id", exportList));
-        return exportDetailDAL.deleteExport_detail("id = " + exportDetail.getExport_id()) != 0;
-    }
 
     public List<Export_detail> searchExport(String... conditions) {
         return exportDetailDAL.searchExport_detail(conditions);
@@ -74,7 +70,8 @@ public class Export_detailBLL extends Manager<Export_detail>{
 
     public boolean exists(Export_detail exports) {
         return !findExportBy(Map.of(
-            "shipment id", exports.getShipment_id(),
+            "export_note_id",exports.getExport_id(),
+            "shipment_id", exports.getShipment_id(),
             "quantity", exports.getQuantity(),
             "total", exports.getTotal()
         )).isEmpty();

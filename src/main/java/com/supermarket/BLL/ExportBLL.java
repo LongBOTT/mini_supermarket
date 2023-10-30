@@ -1,26 +1,26 @@
 package com.supermarket.BLL;
 
-import com.supermarket.DAL.Export_noteDAL;
+import com.supermarket.DAL.ExportDAL;
 import com.supermarket.DTO.Export;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-public class Export_noteBLL extends Manager<Export> {
-    private Export_noteDAL exportNoteDAL;
+public class ExportBLL extends Manager<Export> {
+    private ExportDAL exportDAL;
     private List<Export> exportList;
 
-    public Export_noteBLL() {
-        exportNoteDAL = new Export_noteDAL();
+    public ExportBLL() {
+        exportDAL = new ExportDAL();
         exportList = searchExport("deleted = 0");
     }
 
-    public Export_noteDAL getExportNoteDAL() {
-        return exportNoteDAL;
+    public ExportDAL getExportNoteDAL() {
+        return exportDAL;
     }
 
-    public void setExportNoteDAL(Export_noteDAL exportNoteDAL) {
-        this.exportNoteDAL = exportNoteDAL;
+    public void setExportNoteDAL(ExportDAL exportDAL) {
+        this.exportDAL = exportDAL;
     }
 
     public List<Export> getImportList() {
@@ -37,21 +37,21 @@ public class Export_noteBLL extends Manager<Export> {
 
     public boolean addExport(Export export) {
         exportList.add(export);
-        return exportNoteDAL.addExport(export) != 0;
+        return exportDAL.addExport(export) != 0;
     }
 
     public boolean updateExport(Export export) {
         exportList.set(getIndex(export, "id", exportList), export);
-        return exportNoteDAL.updateExport_note(export) != 0;
+        return exportDAL.updateExport(export) != 0;
     }
 
     public boolean deleteExport(Export export) {
         exportList.remove(getIndex(export, "id",exportList));
-        return exportNoteDAL.deleteExport_note("id = " + export.getId()) != 0;
+        return exportDAL.deleteExport("id = " + export.getId()) != 0;
     }
 
     public List<Export> searchExport(String... conditions) {
-        return exportNoteDAL.searchExport_note(conditions);
+        return exportDAL.searchExport(conditions);
     }
 
     public List<Export> findExport(String key, String value) {

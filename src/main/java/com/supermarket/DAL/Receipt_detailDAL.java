@@ -1,7 +1,6 @@
 package com.supermarket.DAL;
 
 import com.supermarket.DTO.Receipt_detail;
-import com.supermarket.utils.Date;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -64,16 +63,16 @@ public class Receipt_detailDAL extends Manager{
         return 0;
     }
 
-    public int deleteReceipt_detail(String... conditions) {
-        try {
-            List<Object> updateValues = new ArrayList<>();
-            updateValues.add(true);
-            return update(updateValues, conditions);
-        } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in Receipt_detailDAL.deleteReceipt_detail(): " + e.getMessage());
-        }
-        return 0;
-    }
+//    public int deleteReceipt_detail(String... conditions) {
+//        try {
+//            List<Object> updateValues = new ArrayList<>();
+//            updateValues.add(true);
+//            return update(updateValues, conditions);
+//        } catch (SQLException | IOException e) {
+//            System.out.println("Error occurred in Receipt_detailDAL.deleteReceipt_detail(): " + e.getMessage());
+//        }
+//        return 0;
+//    }
 
     public List<Receipt_detail> searchReceipt_details(String... conditions) {
         try {
