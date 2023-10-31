@@ -3,12 +3,12 @@ import com.supermarket.utils.Date;
 public class Statistic {
     private int id;
     private Date date;
-    private int  amount;
-    private int  expenses;
+    private double  amount;
+    private double  expenses;
     private boolean deleted;
     public Statistic() {
     }
-    public Statistic(int id, Date date, int amount, int expenses, boolean deleted) {
+    public Statistic(int id, Date date, double amount, double expenses, boolean deleted) {
         this.id = id;
         this.date = date;
         this.amount = amount;
@@ -31,19 +31,19 @@ public class Statistic {
         this.date = date;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
-    public int getExpenses() {
+    public double getExpenses() {
         return expenses;
     }
 
-    public void setExpenses(int expenses) {
+    public void setExpenses(double expenses) {
         this.expenses = expenses;
     }
 

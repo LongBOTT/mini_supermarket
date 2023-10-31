@@ -38,7 +38,6 @@ public class PromotionDAL extends Manager{
     public int addPromotion(Promotion promotion) {
         try {
             return create(promotion.getId(),
-                promotion.getId(),
                 promotion.getStart_date(),
                 promotion.getEnd_date(),
                 promotion.isStatus(),

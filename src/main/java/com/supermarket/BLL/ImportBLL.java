@@ -15,11 +15,11 @@ public class ImportBLL extends Manager<Import> {
         importList = searchImport("deleted = 0");
     }
 
-    public ImportDAL getImportNoteDAL() {
+    public ImportDAL getImportDAL() {
         return importNoteDAL;
     }
 
-    public void setImportNoteDAL(ImportDAL importNoteDAL) {
+    public void setImportDAL(ImportDAL importNoteDAL) {
         this.importNoteDAL = importNoteDAL;
     }
 

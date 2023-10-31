@@ -56,6 +56,10 @@ public class SupplierDAL extends Manager{
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(supplier.getId());
             updateValues.add(supplier.getName());
+            updateValues.add(supplier.getPhone());
+            updateValues.add(supplier.getAddress());
+            updateValues.add(supplier.getEmail());
+            updateValues.add(supplier.isDeleted());
             return update(updateValues, "id = " + supplier.getId());
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in SupplierDAL.updateSupplier(): " + e.getMessage());
