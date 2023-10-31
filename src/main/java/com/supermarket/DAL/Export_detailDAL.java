@@ -9,7 +9,7 @@ import java.util.List;
 public class Export_detailDAL extends Manager{
     public Export_detailDAL() {
         super("export_detail",
-            List.of("export_note_id",
+            List.of("export_id",
                 "shipment_id",
                 "quantity",
                 "total"));
@@ -36,8 +36,7 @@ public class Export_detailDAL extends Manager{
             return create(exportDetail.getExport_id(),
                 exportDetail.getShipment_id(),
                 exportDetail.getQuantity(),
-                exportDetail.getTotal(),
-                false
+                exportDetail.getTotal()
             ); // export_detail khi tạo mặc định deleted = 0
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in Export_datailDAL.addExport_datail(): " + e.getMessage());
@@ -52,7 +51,7 @@ public class Export_detailDAL extends Manager{
             updateValues.add(export.getShipment_id());
             updateValues.add(export.getQuantity());
             updateValues.add(export.getTotal());
-            return update(updateValues, "id = " + export.getExport_id());
+            return update(updateValues, "export_id = " + export.getExport_id());
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in Export_noteDAL.updateExport_note(): " + e.getMessage());
         }

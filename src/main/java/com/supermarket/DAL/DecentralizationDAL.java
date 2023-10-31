@@ -48,7 +48,7 @@ public class DecentralizationDAL extends Manager{
             return update(updateValues,
                 "role_id = " + decentralization.getRole_id(),
                 "Module_id = " +decentralization.getModule_id(),
-                "function_id" + decentralization.getFunction_id());
+                "function_id =  " + decentralization.getFunction_id());
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in DecentralizationDAL.updateDecentralization() " + e.getMessage());
         }

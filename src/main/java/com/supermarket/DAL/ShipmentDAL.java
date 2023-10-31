@@ -19,7 +19,7 @@ public class ShipmentDAL extends Manager{
                 "mfg",
                 "exp",
                 "sku",
-                "import_note_id",
+                "import_id",
                 "deleted"));
     }
 
@@ -75,6 +75,7 @@ public class ShipmentDAL extends Manager{
             updateValues.add(shipment.getMfg());
             updateValues.add(shipment.getExp());
             updateValues.add(shipment.getSku());
+            updateValues.add(shipment.getImport_id());
             updateValues.add(shipment.isDeleted());
             return update(updateValues, "id = " + shipment.getId());
         } catch (SQLException | IOException e) {
