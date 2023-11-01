@@ -61,6 +61,7 @@ public class ExportDAL extends Manager{
             updateValues.add(export.getInvoice_date());
             updateValues.add(export.getTotal());
             updateValues.add(export.getReason());
+            updateValues.add(export.isDeleted());
             return update(updateValues, "id = " + export.getId());
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in ExportDAL.updateExport(): " + e.getMessage());

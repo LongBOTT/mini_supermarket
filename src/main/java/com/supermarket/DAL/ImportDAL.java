@@ -60,6 +60,7 @@ public class ImportDAL extends Manager{
             updateValues.add(importnote.getReceived_date());
             updateValues.add(importnote.getTotal());
             updateValues.add(importnote.getSupplier_id());
+            updateValues.add(importnote.isDeleted());
             return update(updateValues, "id = " + importnote.getId());
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in ImportDAL.updateImportnote(): " + e.getMessage());

@@ -23,8 +23,8 @@ public class StatisticDAL extends Manager {
                 return new Statistic(
                     Integer.parseInt(row.get(0)), // id
                     Date.parseDate(row.get(1)), // date
-                    Integer.parseInt(row.get(2)), // amount
-                    Integer.parseInt(row.get(3)), // expenses
+                    Double.parseDouble(row.get(2)), // amount
+                    Double.parseDouble(row.get(3)), // expenses
                     Boolean.parseBoolean(row.get(4)) //deleted
                 );
             } catch (Exception e) {
@@ -39,8 +39,7 @@ public class StatisticDAL extends Manager {
                 statistic.getDate(),
                 statistic.getAmount(),
                 statistic.getExpenses(),
-                statistic.isDeleted(),
-                false
+                statistic.isDeleted()
             ); // discount khi tạo mặc định deleted = 0
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in StatisticDAL.addStatistic(): " + e.getMessage());
@@ -53,6 +52,7 @@ public class StatisticDAL extends Manager {
             updateValues.add(statistic.getId());
             updateValues.add(statistic.getDate());
             updateValues.add(statistic.getAmount());
+            updateValues.add(statistic.getExpenses());
             updateValues.add(statistic.isDeleted());
             return update(updateValues, "id = " + statistic.getId());
         } catch (SQLException | IOException e) {

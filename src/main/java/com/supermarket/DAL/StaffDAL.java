@@ -14,7 +14,7 @@ public class StaffDAL extends Manager{
             List.of("id",
                 "name",
                 "gender",
-                "birthday",
+                "birthdate",
                 "phone",
                 "address",
                 "email",

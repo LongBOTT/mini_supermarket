@@ -14,7 +14,7 @@ public class CustomerDAL extends Manager{
             List.of("id",
                 "name",
                 "gender",
-                "birthday",
+                "birthdate",
                 "phone",
                 "membership",
                 "signed_up_date",

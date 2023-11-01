@@ -1,5 +1,6 @@
 package com.supermarket.BLL;
 import com.supermarket.DAL.StatisticDAL;
+import com.supermarket.DTO.Receipt;
 import com.supermarket.DTO.Statistic;
 
 import java.util.ArrayList;
@@ -36,6 +37,12 @@ public class StatisticBLL extends Manager<Statistic> {
         statisticList.add(statistic);
         return statisticDAL.addStatistic(statistic) != 0;
     }
+
+    public boolean updateStatistic(Statistic statistic) {
+        statisticList.set(getIndex(statistic, "id", statisticList), statistic);
+        return statisticDAL.updateStatistic(statistic) != 0;
+    }
+
     public boolean deleteStatistic(Statistic statistic) {
         statisticList.remove(getIndex(statistic, "id", statisticList));
         return statisticDAL.deleteStatistic("id = " + statistic.getId()) != 0;

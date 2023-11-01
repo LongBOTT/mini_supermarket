@@ -31,4 +31,8 @@ public class DecentralizationBLLTest{
         boolean success = decentralizationBLL.updateDecentralization(decentralization);
         assertTrue(success);
     }
+
+    @Test
+    public void deleteTest(){
+    }
 }

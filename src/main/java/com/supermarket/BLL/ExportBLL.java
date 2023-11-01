@@ -23,7 +23,7 @@ public class ExportBLL extends Manager<Export> {
         this.exportDAL = exportDAL;
     }
 
-    public List<Export> getImportList() {
+    public List<Export> getExportList() {
         return exportList;
     }
 
