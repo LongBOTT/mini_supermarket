@@ -35,9 +35,11 @@ public class HomeGUI extends JFrame {
     private RoundedPanel function;
     private RoundedPanel[] modules = new RoundedPanel[15];
     private RoundedPanel currentModule;
+    private RoundedPanel addBanner;
     private JLabel time;
     private JLabel staffName;
     private JLabel iconLogout;
+    private JLabel addIcon;
     private JLabel[] moduleNames = new JLabel[15];
     public List<JLabel> banners = new ArrayList<>(0);
     private boolean over = false;
@@ -72,6 +74,7 @@ public class HomeGUI extends JFrame {
     }
 
     public void initComponents() {
+        setIconImage(new FlatSVGIcon("img/logo.svg").getImage());
         setTitle("Hệ thống quản lý siêu thị mini Bách Hoá Xanh");
         setResizable(false);
         setPreferredSize(new Dimension(1440, 850));
@@ -95,9 +98,11 @@ public class HomeGUI extends JFrame {
         menu = new RoundedPanel();
         content = new RoundedPanel();
         function = new RoundedPanel();
+        addBanner = new RoundedPanel();
         time = new JLabel();
         staffName = new JLabel();
         iconLogout = new JLabel();
+        addIcon = new JLabel();
         for (int i = 0; i < modules.length; i++) {
             modules[i] = new RoundedPanel();
             moduleNames[i] = new JLabel();
@@ -193,6 +198,21 @@ public class HomeGUI extends JFrame {
                 }
             });
         }
+
+        addBanner.setLayout(new GridBagLayout());
+
+        addIcon.setIcon(new FlatSVGIcon("icon/addBanner.svg"));
+        addIcon.setBackground(new Color(0xF3DA9B));
+        addIcon.setPreferredSize(new Dimension(70, 70));
+        addIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        addIcon.setHorizontalAlignment(SwingConstants.CENTER);
+        addIcon.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                new ManageBannersGUI();
+            }
+        });
+        addBanner.add(addIcon);
     }
 
     private void initMenu() {
@@ -336,7 +356,7 @@ public class HomeGUI extends JFrame {
         Active(modules[index]);
         JPanel panel = switch (index) {
             case 0 -> home();
-            case 1 -> new SalePanel();
+            case 1 -> new SaleGUI();
             case 2 -> new Layout1();
             case 3 -> new StatisticPanel();
             case 4 -> new Layout3();
@@ -358,15 +378,15 @@ public class HomeGUI extends JFrame {
 
     private JPanel home() {
         RoundedPanel panel = new RoundedPanel();
-        panel.setLayout(new BorderLayout());
+        panel.setLayout(new GridBagLayout());
         panel.setBackground(new Color(0x8EBCDA));
-        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        panel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                new ManageBannersGUI();
-            }
-        });
+//        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//        panel.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent e) {
+//                new ManageBannersGUI();
+//            }
+//        });
         renderBanners(panel);
         return panel;
     }
@@ -377,9 +397,10 @@ public class HomeGUI extends JFrame {
         panel.removeAll();
         if (!banners.isEmpty()) {
             currentBanner = 0;
-            panel.add(banners.get(currentBanner), BorderLayout.CENTER);
+            panel.add(banners.get(currentBanner));
         } else {
             currentBanner = -1;
+            panel.add(addBanner);
         }
         panel.repaint();
         panel.revalidate();
@@ -394,7 +415,7 @@ public class HomeGUI extends JFrame {
                         else
                             currentBanner += 1;
                         panel.removeAll();
-                        panel.add(banners.get(currentBanner), BorderLayout.CENTER);
+                        panel.add(banners.get(currentBanner));
                         panel.repaint();
                         panel.revalidate();
 
@@ -403,9 +424,10 @@ public class HomeGUI extends JFrame {
                 } else {
                     currentBanner = -1;
                     panel.removeAll();
+                    panel.add(addBanner);
                     panel.repaint();
                     panel.revalidate();
-                    start = new DateTime();
+                    autoRenderBanner.interrupt();
                 }
             }
         });

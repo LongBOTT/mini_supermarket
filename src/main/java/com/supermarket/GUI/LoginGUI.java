@@ -39,8 +39,8 @@ public class LoginGUI extends JFrame {
     }
 
     private void initComponents() {
-        UIManager.put("ProgressBar.selectionForeground", Color.black);
-        UIManager.put("ProgressBar.selectionBackground", Color.black);
+        setIconImage(new FlatSVGIcon("img/logo.svg").getImage());
+
         setSize(700, 500);
         setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
