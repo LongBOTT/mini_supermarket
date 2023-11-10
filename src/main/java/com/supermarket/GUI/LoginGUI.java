@@ -1,20 +1,18 @@
 package com.supermarket.GUI;
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.ui.FlatProgressBarUI;
 import com.supermarket.BLL.AccountBLL;
 import com.supermarket.DTO.Account;
 import com.supermarket.main.Mini_supermarketManagement;
 import com.supermarket.utils.DateTime;
-import com.supermarket.utils.Resource;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Thread.sleep;
 
@@ -39,7 +37,7 @@ public class LoginGUI extends JFrame {
     }
 
     private void initComponents() {
-        setIconImage(new FlatSVGIcon("img/logo.svg").getImage());
+        setIconImage(new FlatSVGIcon("img/application_logo.svg").getImage());
 
         setSize(700, 500);
         setResizable(false);
@@ -208,7 +206,7 @@ public class LoginGUI extends JFrame {
         userName = jTextFieldUserName.getText();
         passWord = new String(jTextFieldPassword.getPassword());
         AccountBLL accountBLL = new AccountBLL();
-        List<Account> accountList = accountBLL.findAccounts("username", userName);
+        List<Account> accountList = accountBLL.findAccountsBy(Map.of("username", userName));
         if (userName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập tài khoản!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;

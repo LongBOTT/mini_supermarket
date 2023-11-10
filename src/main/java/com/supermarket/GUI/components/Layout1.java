@@ -35,12 +35,10 @@ public class Layout1 extends RoundedPanel {
         add(bottom, BorderLayout.SOUTH);
 
         leftMenu.setLayout(new FlowLayout(FlowLayout.CENTER));
-        leftMenu.setBackground(new Color(0xA8A8AF));
         leftMenu.setPreferredSize(new Dimension(650, 50));
         top.add(leftMenu, BorderLayout.WEST);
 
-        rightMenu.setLayout(new BorderLayout());
-        rightMenu.setBackground(new Color(0xA8A8AF));
+        rightMenu.setLayout(new FlowLayout(FlowLayout.CENTER));
         rightMenu.setPreferredSize(new Dimension(490, 50));
         top.add(rightMenu, BorderLayout.EAST);
     }

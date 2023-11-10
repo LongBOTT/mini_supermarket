@@ -1,7 +1,9 @@
 package com.supermarket.GUI;
 
+import com.supermarket.BLL.RoleBLL;
 import com.supermarket.DTO.Account;
 import com.supermarket.BLL.StaffBLL;
+import com.supermarket.DTO.Role;
 import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.components.*;
 import com.supermarket.main.Mini_supermarketManagement;
@@ -19,11 +21,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public class HomeGUI extends JFrame {
+    private final StaffBLL staffBLL = new StaffBLL();
+    private final RoleBLL roleBLL = new RoleBLL();
     private Account account;
-    private Staff staff;
     private JPanel contentPanel;
     private JPanel header;
     private JPanel center;
@@ -66,15 +70,13 @@ public class HomeGUI extends JFrame {
 
 
     public void getUser() {
-        staff = new StaffBLL().findStaffs("id", String.valueOf(account.getStaffID()))
-            .get(0);
-
-        staffName.setText("Nguyễn Hoàng Long - Nhân viên bán hàng");
-//        staffName.setText(staff.getName() + " - " + " Nhân viên bán hàng");
+        Staff staff = staffBLL.findStaffsBy(Map.of("id", account.getStaffID())).get(0);
+        Role role = roleBLL.findRolesBy(Map.of("id", account.getRoleID())).get(0);
+        staffName.setText(staff.getName() + " - " + role.getName());
     }
 
     public void initComponents() {
-        setIconImage(new FlatSVGIcon("img/logo.svg").getImage());
+        setIconImage(new FlatSVGIcon("img/application_logo.svg").getImage());
         setTitle("Hệ thống quản lý siêu thị mini Bách Hoá Xanh");
         setResizable(false);
         setPreferredSize(new Dimension(1440, 850));
@@ -356,7 +358,7 @@ public class HomeGUI extends JFrame {
         Active(modules[index]);
         JPanel panel = switch (index) {
             case 0 -> home();
-            case 1 -> new SaleGUI();
+            case 1 -> new SaleGUI(account);
             case 2 -> new Layout1();
             case 3 -> new StatisticPanel();
             case 4 -> new Layout3();
@@ -368,7 +370,7 @@ public class HomeGUI extends JFrame {
             case 10 -> new Layout1();
             case 11 -> new Layout1();
             case 12 -> new Layout1();
-            case 13 -> new Layout1();
+            case 13 -> new AccountGUI();
             case 14 -> new Layout4();
             default -> null;
         };
