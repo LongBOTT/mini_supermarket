@@ -196,9 +196,11 @@ public class FormAddAccountGUI extends DialogForm{
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);
 
-        Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(5).getText()))).get(0);
-        int index = staffBLL.getIndex(staff, "id", staffBLL.getStaffList());
-        dataTable.setRowSelectionInterval(index, index);
+        if (!jTextFieldAccount.get(3).getText().isEmpty()) {
+            Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(5).getText()))).get(0);
+            int index = staffBLL.getIndex(staff, "id", staffBLL.getStaffList());
+            dataTable.setRowSelectionInterval(index, index);
+            }
 
         containerTable.repaint();
         containerTable.revalidate();
@@ -212,9 +214,12 @@ public class FormAddAccountGUI extends DialogForm{
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);
 
-        Role role = roleBLL.findRolesBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(3).getText()))).get(0);
-        int index = roleBLL.getIndex(role, "id", roleBLL.getRoleList());
-        dataTable.setRowSelectionInterval(index, index);
+        if (!jTextFieldAccount.get(3).getText().isEmpty()) {
+            Role role = roleBLL.findRolesBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(3).getText()))).get(0);
+            int index = roleBLL.getIndex(role, "id", roleBLL.getRoleList());
+            dataTable.setRowSelectionInterval(index, index);
+        }
+
 
         containerTable.repaint();
         containerTable.revalidate();
