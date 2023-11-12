@@ -3,10 +3,10 @@ package com.supermarket.GUI.components;
 import java.awt.*;
 
 public class Layout3 extends Layout1{
-    private RoundedPanel leftContent;
-    private RoundedPanel rightContent;
-    private RoundedPanel topContent;
-    private RoundedPanel bottomContent;
+    public RoundedPanel leftContent;
+    public RoundedPanel rightContent;
+    public RoundedPanel topContent;
+    public RoundedPanel bottomContent;
     public Layout3() {
         super();
         initComponents();
