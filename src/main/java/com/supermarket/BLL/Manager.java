@@ -14,6 +14,16 @@ public abstract class Manager<T> {
         return data;
     }
 
+    public int getAutoID( List<T> objectList) {
+        if (objectList.isEmpty()) {
+            return 1;
+        }
+        T lastObject = objectList.get(objectList.size() - 1);
+        String lastID = lastObject.toString().split(" \\| ")[0];
+        int id = Integer.parseInt(lastID);
+        return id+1;
+    }
+
     public String formatNumberToString(int number, int digits) {
         String format = "%0" + digits + "d";
         return String.format(format, number);

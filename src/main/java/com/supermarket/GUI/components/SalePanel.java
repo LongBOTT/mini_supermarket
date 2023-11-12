@@ -42,7 +42,6 @@ public class SalePanel extends RoundedPanel{
         scrollPane[2] = new RoundedScrollPane(Bill_detailPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         for (RoundedScrollPane roundedScrollPane: scrollPane) {
             roundedScrollPane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-            roundedScrollPane.getVerticalScrollBar().setUnitIncrement(30);
         }
 
         left.setLayout(new BorderLayout());
@@ -65,8 +64,6 @@ public class SalePanel extends RoundedPanel{
         left.add(bottom, BorderLayout.SOUTH);
 
         Bill_detailPanel.setLayout(new BorderLayout());
-//        Bill_detailPanel.setPreferredSize(new Dimension(800, 500));
-        Bill_detailPanel.setBackground(new Color(0x8D302C));
         bottom.add(scrollPane[2], BorderLayout.CENTER);
 
         ContainerButtonsBill_detail.setBackground(new Color(0xFFFFFF));
@@ -75,24 +72,17 @@ public class SalePanel extends RoundedPanel{
         SearchPanel.setBackground(new Color(0xFFFFFF));
         top.add(SearchPanel, BorderLayout.NORTH);
 
+        scrollPane[0].setPreferredSize(new Dimension(395, 500));
         ProductPanel.setLayout(new BorderLayout());
-        ProductPanel.setBackground(new Color(0xF39BF2));
         top.add(scrollPane[0], BorderLayout.WEST);
 
         Product_detailPanel.setLayout(new BorderLayout());
-        Product_detailPanel.setBackground(new Color(0xAB870E));
         top.add(scrollPane[1], BorderLayout.EAST);
 
         BillPanel.setLayout(new BorderLayout());
         BillPanel.setPreferredSize(new Dimension(350, 760));
-        BillPanel.setBackground(new Color(0x346077));
+        BillPanel.setBackground(new Color(0x8959BBE1, true));
         right.add(BillPanel, BorderLayout.CENTER);
-
-//        RoundedPanel panel = new RoundedPanel();
-//        panel.setLayout(new BorderLayout());
-//        panel.setPreferredSize(new Dimension(800, 800));
-//        panel.setBackground(new Color(0xC6F39B));
-//        Product_detailPanel.add(panel);
 
     }
 

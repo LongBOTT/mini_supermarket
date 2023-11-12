@@ -7,6 +7,7 @@ public class RoundedScrollPane extends JScrollPane {
     public RoundedScrollPane(Component view, int vsbPolicy, int hsbPolicy) {
         super(view,vsbPolicy, hsbPolicy);
         getViewport().setBackground(new Color(0xFFFFFF));
+        getVerticalScrollBar().setUnitIncrement(30);
     }
 
     @Override

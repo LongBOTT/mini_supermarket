@@ -118,6 +118,8 @@ public class Date {
         return formatter.parse(date + "/" + month + "/" + year);
     }
 
+
+
     public java.util.Date toJDateSafe() {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         formatter.setLenient(false);
@@ -130,6 +132,10 @@ public class Date {
 
     public static String now() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:ss"));
+    }
+
+    public static String dateNow() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
     public String toString() {

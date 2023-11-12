@@ -69,7 +69,7 @@ public class AccountBLL extends Manager<Account> {
     public List<Account> findAccounts(String key, String value) {
         List<Account> list = new ArrayList<>();
         for (Account account : accountList) {
-            if (getValueByKey(account, key).toString().equals(value)) {
+            if (getValueByKey(account, key).toString().toLowerCase().contains(value.toLowerCase())) {
                 list.add(account);
             }
         }

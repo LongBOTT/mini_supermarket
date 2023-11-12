@@ -37,7 +37,7 @@ public class Mini_supermarketManagement {
         UIManager.put("TitlePane.iconMargins", new Insets(3, 5, 0, 20));
 
         homeGUI = new HomeGUI();
-        homeGUI.setAccount(new AccountBLL().getAccountList().get(0));
+        homeGUI.setAccount(new AccountBLL().getAccountList().get(1));
         homeGUI.setVisible(true);
 //        loginGUI = new LoginGUI();
 //        CustomerBLL customerBLL = new CustomerBLL();
