@@ -8,6 +8,7 @@ import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DTO.Role;
 import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.DialogGUI.FormAddAccountGUI;
+import com.supermarket.GUI.DialogGUI.FormAddCustomerGUI;
 import com.supermarket.GUI.DialogGUI.FormDetailCustomerGUI;
 import com.supermarket.GUI.DialogGUI.FormUpdateAccountGUI;
 import com.supermarket.GUI.components.DataTable;
@@ -204,7 +205,7 @@ public class CustomerGUI extends Layout1 {
     }
 
     private void addAccount() {
-        new FormAddAccountGUI();
+        new FormAddCustomerGUI();
     }
 
     private void showDetailAccount() {
