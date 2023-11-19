@@ -12,7 +12,8 @@ import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
 import com.supermarket.utils.Date;
-import com.supermarket.utils.DateTime;
+import com.supermarket.utils.swing_utils.TextPrompt;
+
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -109,6 +110,12 @@ public class FormAddCustomerGUI extends DialogForm{
                     }
                 });
             }
+            if (string.equals("Ngày sinh:")) {
+                //hiện placeholder
+                TextPrompt textPrompt = new TextPrompt("Nhập theo định dạng: yyyy-mm-dd", textField);
+                textPrompt.changeAlpha(0.5f);
+                textPrompt.setFont(new Font("Arial", Font.ITALIC, 14));
+            }
             if (string.equals("Thành viên:")) {//chưa làm để chọn combo box là Có hoặc Không
                 textField.setText("Có");
                 textField.setEnabled(false);
@@ -138,7 +145,7 @@ public class FormAddCustomerGUI extends DialogForm{
                 });
             }
             if (string.equals("Lần đăng nhập cuối:")) {
-                textField.setText(new Date().toString());
+                textField.setText(new Date(01,01,1000).toString());
                 textField.setEnabled(false);
             }
             if (string.equals("Điểm thưởng:")) {
@@ -226,17 +233,12 @@ public class FormAddCustomerGUI extends DialogForm{
     }
 
     private void refresh() {
-        jTextFieldCustomer.get(0).setEnabled(true);
-        jTextFieldCustomer.get(0).setText(String.valueOf(customerBLL.getAutoID(customerBLL.searchCustomers())));
-        jTextFieldCustomer.get(0).setEnabled(false);
         jTextFieldCustomer.get(1).setText("");
-        jTextFieldCustomer.get(2).setText("");
-        jTextFieldCustomer.get(3).setEnabled(true);
         jTextFieldCustomer.get(3).setText("");
+        jTextFieldCustomer.get(4).setText("");
+        jTextFieldCustomer.get(1).setEnabled(false);
         jTextFieldCustomer.get(3).setEnabled(false);
-        jTextFieldCustomer.get(5).setEnabled(true);
-        jTextFieldCustomer.get(5).setText("");
-        jTextFieldCustomer.get(5).setEnabled(false);
+        jTextFieldCustomer.get(4).setEnabled(false);
     }
 
     public void selectRowTable() {
