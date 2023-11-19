@@ -147,7 +147,7 @@ public class FormAddCustomerGUI extends DialogForm{
                 });
             }
             if (string.equals("Lần đăng nhập cuối:")) {
-                textField.setText(new Date().toString());
+                textField.setText(new Date(01,01,1000).toString());
                 textField.setEnabled(false);
             }
             if (string.equals("Điểm thưởng:")) {
