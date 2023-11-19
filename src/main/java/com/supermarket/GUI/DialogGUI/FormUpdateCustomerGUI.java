@@ -117,7 +117,6 @@ public class FormUpdateCustomerGUI extends DialogForm {
             }
             if (string.equals("Số điện thoại:")) {
                 textField.setText(customer.getPhone());
-                System.out.println(customer.getPhone());
             }
             if (string.equals("Thành viên:")) {
                 String membership = customer.isMembership() ? "Có":"Không";
