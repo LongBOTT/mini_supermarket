@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class FormUpdateCustomerGUI extends DialogForm{
+public class FormUpdateCustomerGUI extends DialogForm {
     private final CustomerBLL customerBLL = new CustomerBLL();
     private final StaffBLL staffBLL = new StaffBLL();
     private final RoleBLL roleBLL = new RoleBLL();
@@ -67,7 +67,7 @@ public class FormUpdateCustomerGUI extends DialogForm{
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[]{"Mã khách hàng:", "Tên khách hàng:", "Giới tính:", "Ngày sinh:", "Số điện thoại","Lần đăng nhập cuối:","Điểm thưởng"}) {
+        for (String string : new String[]{"Mã khách hàng:", "Tên khách hàng:", "Giới tính:", "Ngày sinh:", "Số điện thoại", "Thành viên:", "Lần đăng nhập cuối:", "Điểm thưởng:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -84,10 +84,10 @@ public class FormUpdateCustomerGUI extends DialogForm{
                 textField.setText(customer.getName());
             }
             if (string.equals("Giới tính:")) {
-                String gender = customer.isGender()? "Nam":"Nữ";
+                String gender = customer.isGender() ? "Nam":"Nữ";
                 textField.setText(gender);
-                textField.setEnabled(false);
                 textField.addMouseListener(new MouseListener() {
+
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         if(textField.getText().equals("Nam")){
@@ -97,50 +97,63 @@ public class FormUpdateCustomerGUI extends DialogForm{
                             textField.setText("Nam");
                         }
                     }
-
                     @Override
                     public void mousePressed(MouseEvent e) {
-
                     }
-
                     @Override
                     public void mouseReleased(MouseEvent e) {
-
                     }
-
                     @Override
                     public void mouseEntered(MouseEvent e) {
-
                     }
-
                     @Override
                     public void mouseExited(MouseEvent e) {
-
                     }
                 });
+                textField.setEnabled(false);
             }
             if (string.equals("Ngày sinh:")) {
                 textField.setText(String.valueOf(customer.getBirthday()));
             }
-            if (string.equals("Số điện thoại:")){
+            if (string.equals("Số điện thoại:")) {
                 textField.setText(customer.getPhone());
+                System.out.println(customer.getPhone());
             }
             if (string.equals("Thành viên:")) {
-                String isMembership = customer.isMembership() ? "Có":"Không";
-                textField.setText(String.valueOf(isMembership));
-                textField.addMouseListener(new MouseAdapter() {
+                String membership = customer.isMembership() ? "Có":"Không";
+                textField.setText(membership);
+                textField.addMouseListener(new MouseListener() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if(textField.getText().equals("Có")){
+                            textField.setText("Không");
+                        }
+                        else{
+                            textField.setText("Có");
+                        }
+                    }
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        loadTableStaff();
+                    }
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                    }
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                    }
+                    @Override
+                    public void mouseExited(MouseEvent e) {
                     }
                 });
                 textField.setEnabled(false);
             }
             if (string.equals("Lần đăng nhập cuối:")) {
-                textField.setText(customer.getSigned_up_date().toString());
+                textField.setText(String.valueOf(customer.getSigned_up_date()));
                 textField.setEnabled(false);
             }
-
+            if (string.equals("Điểm thưởng:")) {
+                textField.setText(String.valueOf(customer.getPoint()));
+            }
             textField.setPreferredSize(new Dimension(400, 50));
             textField.setFont((new Font("FlatLaf.style", Font.BOLD, 14)));
             jTextFieldCustomer.add(textField);
@@ -181,39 +194,36 @@ public class FormUpdateCustomerGUI extends DialogForm{
 
     private void updateCustomer() {
         for (int i = 0; i < jTextFieldCustomer.size(); i++) {
-            if (i != 4 && jTextFieldCustomer.get(i).getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin tài khoản.",
+            if (i != 6 && jTextFieldCustomer.get(i).getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin khách hàng.",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
 
+
         try{
             int id = Integer.parseInt(jTextFieldCustomer.get(0).getText());
             String customerName = jTextFieldCustomer.get(1).getText();
             boolean gender = jTextFieldCustomer.get(2).getText().equals("Nam")?true:false;
-            String[] dateParts = jTextFieldCustomer.get(3).getText().split("-");
-            int year = Integer.parseInt(dateParts[0]);
-            int month = Integer.parseInt(dateParts[1]);
-            int day = Integer.parseInt(dateParts[2]);
-            Date customDate = new Date(year, month, day);
+            Date birthDate = Date.parseDate(jTextFieldCustomer.get(3).getText());
             String phoneNumber = jTextFieldCustomer.get(4).getText();
             boolean isMember = jTextFieldCustomer.get(5).getText().equals("Không")?false:true;
             Date lastSignedIn = Date.parseDate(jTextFieldCustomer.get(6).getText());
             int bonusPoint = Integer.parseInt(jTextFieldCustomer.get(7).getText());
 
-            Customer customer = new Customer(id,customerName,gender,customDate,phoneNumber,isMember,lastSignedIn,bonusPoint,false);
+            Customer customer = new Customer(id,customerName,gender,birthDate,phoneNumber,isMember,lastSignedIn,bonusPoint,false);
 
             String[] options = new String[]{"Huỷ", "Xác nhận"};
             int choice = JOptionPane.showOptionDialog(null, "Xác nhận cập nhật khách hàng?",
                 "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
             if (choice == 1) {
-                if (customerBLL.addCustomer(customer)) {
+                if (customerBLL.updateCustomer(customer)) {
                     JOptionPane.showMessageDialog(null, "Cập nhật khách hàng thành công!",
                         "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
                     CustomerGUI.loadDataTable(customerBLL.getData());
-                    refresh();
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Cập nhật khách hàng không thành công!",
                         "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -223,21 +233,15 @@ public class FormUpdateCustomerGUI extends DialogForm{
         catch(Exception e){
             System.out.println(e.getLocalizedMessage());
         }
-
     }
 
     private void refresh() {
-        jTextFieldCustomer.get(0).setEnabled(true);
-        jTextFieldCustomer.get(0).setText(String.valueOf(customerBLL.getAutoID(customerBLL.searchCustomers())));
-        jTextFieldCustomer.get(0).setEnabled(false);
         jTextFieldCustomer.get(1).setText("");
-        jTextFieldCustomer.get(2).setText("");
-        jTextFieldCustomer.get(3).setEnabled(true);
         jTextFieldCustomer.get(3).setText("");
+        jTextFieldCustomer.get(4).setText("");
+        jTextFieldCustomer.get(1).setEnabled(false);
         jTextFieldCustomer.get(3).setEnabled(false);
-        jTextFieldCustomer.get(5).setEnabled(true);
-        jTextFieldCustomer.get(5).setText("");
-        jTextFieldCustomer.get(5).setEnabled(false);
+        jTextFieldCustomer.get(4).setEnabled(false);
     }
 
     private void loadTableStaff() {

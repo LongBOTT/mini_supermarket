@@ -11,6 +11,7 @@ import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.DialogGUI.FormAddCustomerGUI;
 import com.supermarket.GUI.DialogGUI.FormAddCustomerGUI;
 import com.supermarket.GUI.DialogGUI.FormDetailCustomerGUI;
+import com.supermarket.GUI.DialogGUI.FormUpdateCustomerGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout1;
 import com.supermarket.GUI.components.RoundedScrollPane;
@@ -88,12 +89,12 @@ public class CustomerGUI extends Layout1 {
 
         iconEdit.setIcon(new FlatSVGIcon("icon/edit.svg"));
         iconEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//        iconEdit.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                updateCustomer();
-//            }
-//        });
+        iconEdit.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                updateCustomer();
+            }
+        });
         leftMenu.add(iconEdit);
 
         iconDelete.setIcon(new FlatSVGIcon("icon/remove.svg"));
@@ -207,6 +208,7 @@ public class CustomerGUI extends Layout1 {
     private void addCustomer() {
         new FormAddCustomerGUI();
     }
+//    private void updateCustomer(){ new FormUpdateCustomerGUI();}
 
     private void showDetailCustomer() {
         customerBLL = new CustomerBLL();
@@ -219,17 +221,17 @@ public class CustomerGUI extends Layout1 {
         new FormDetailCustomerGUI(customerBLL.findCustomersBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
     }
 
-//    private void updateCustomer() {
-//        customerBLL = new CustomerBLL();
-//        if (dataTable.getSelectedRow() == -1) {
-//            JOptionPane.showMessageDialog(null, "Vui lòng chọn tài khoản cần cập nhật.",
-//                "Lỗi", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-//        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-//        new FormUpdateCustomerGUI(customerBLL.findCustomersBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
-//
-//    }
+    private void updateCustomer() {
+        customerBLL = new CustomerBLL();
+        if (dataTable.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn tài khoản cần cập nhật.",
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        new FormUpdateCustomerGUI(customerBLL.findCustomersBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
+
+    }
 
     private void deleteCustomer() {
         if (dataTable.getSelectedRow() == -1) {
