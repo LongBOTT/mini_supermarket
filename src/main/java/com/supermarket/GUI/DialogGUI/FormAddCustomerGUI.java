@@ -227,17 +227,13 @@ public class FormAddCustomerGUI extends DialogForm{
             int id = Integer.parseInt(jTextFieldCustomer.get(0).getText());
             String customerName = jTextFieldCustomer.get(1).getText();
             boolean gender = jTextFieldCustomer.get(2).getText().equals("Nam")?true:false;
-            String[] dateParts = jTextFieldCustomer.get(3).getText().split("-");
-            int year = Integer.parseInt(dateParts[0]);
-            int month = Integer.parseInt(dateParts[1]);
-            int day = Integer.parseInt(dateParts[2]);
-            Date customDate = new Date(year, month, day);
+            Date birthDate = Date.parseDate(jTextFieldCustomer.get(3).getText());
             String phoneNumber = jTextFieldCustomer.get(4).getText();
             boolean isMember = jTextFieldCustomer.get(5).getText().equals("Không")?false:true;
             Date lastSignedIn = Date.parseDate(jTextFieldCustomer.get(6).getText());
             int bonusPoint = Integer.parseInt(jTextFieldCustomer.get(7).getText());
 
-            Customer customer = new Customer(id,customerName,gender,customDate,phoneNumber,isMember,lastSignedIn,bonusPoint,false);
+            Customer customer = new Customer(id,customerName,gender,birthDate,phoneNumber,isMember,lastSignedIn,bonusPoint,false);
 
             String[] options = new String[]{"Huỷ", "Xác nhận"};
             int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm khách hàng?",
@@ -261,17 +257,12 @@ public class FormAddCustomerGUI extends DialogForm{
     }
 
     private void refresh() {
-        jTextFieldCustomer.get(0).setEnabled(true);
-        jTextFieldCustomer.get(0).setText(String.valueOf(customerBLL.getAutoID(customerBLL.searchCustomers())));
-        jTextFieldCustomer.get(0).setEnabled(false);
         jTextFieldCustomer.get(1).setText("");
-        jTextFieldCustomer.get(2).setText("");
-        jTextFieldCustomer.get(3).setEnabled(true);
         jTextFieldCustomer.get(3).setText("");
+        jTextFieldCustomer.get(4).setText("");
+        jTextFieldCustomer.get(1).setEnabled(false);
         jTextFieldCustomer.get(3).setEnabled(false);
-        jTextFieldCustomer.get(5).setEnabled(true);
-        jTextFieldCustomer.get(5).setText("");
-        jTextFieldCustomer.get(5).setEnabled(false);
+        jTextFieldCustomer.get(4).setEnabled(false);
     }
 
     public void selectRowTable() {
