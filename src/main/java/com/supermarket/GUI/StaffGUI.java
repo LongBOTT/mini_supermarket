@@ -1,17 +1,12 @@
 package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.CustomerBLL;
-import com.supermarket.BLL.CustomerBLL;
-import com.supermarket.BLL.RoleBLL;
+import com.supermarket.BLL.*;
 import com.supermarket.BLL.StaffBLL;
-import com.supermarket.DTO.Customer;
+import com.supermarket.DTO.Staff;
 import com.supermarket.DTO.Role;
 import com.supermarket.DTO.Staff;
-import com.supermarket.GUI.DialogGUI.FormAddCustomerGUI;
-import com.supermarket.GUI.DialogGUI.FormAddCustomerGUI;
-import com.supermarket.GUI.DialogGUI.FormDetailCustomerGUI;
-import com.supermarket.GUI.DialogGUI.FormUpdateCustomerGUI;
+import com.supermarket.GUI.DialogGUI.FormDetailStaffGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout1;
 import com.supermarket.GUI.components.RoundedScrollPane;
@@ -29,7 +24,7 @@ import java.util.Objects;
 public class StaffGUI extends Layout1 {
     private RoleBLL roleBLL = new RoleBLL();
     private StaffBLL staffBLL = new StaffBLL();
-    private CustomerBLL customerBLL = new CustomerBLL();
+    private AccountBLL accountBLL = new AccountBLL();
     private JLabel iconDetail;
     private JLabel iconAdd;
     private JLabel iconEdit;
@@ -42,7 +37,7 @@ public class StaffGUI extends Layout1 {
     private JComboBox cbbAttributeProduct;
     private JComboBox cbbGender;
     private JComboBox cbbMembership;
-    private Object[][] customerList;
+    private Object[][] staffList;
 
     public StaffGUI() {
         super();
@@ -51,9 +46,9 @@ public class StaffGUI extends Layout1 {
     }
 
     public void init() {
-        customerList = new Object[0][0];
+        staffList = new Object[0][0];
         dataTable = new DataTable(new Object[][] {},
-            new String[] {"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Số điện thoại", "Thành viên","Lần đăng nhập cuối","Điểm thưởng"}, e -> {});
+            new String[] {"Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày sinh", "Số điện thoại","Địa chỉ","Email","Ngày vào làm", "Chức vụ"}, e -> {});
         scrollPane = new RoundedScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         iconDetail = new JLabel();
         iconAdd = new JLabel();
@@ -62,7 +57,7 @@ public class StaffGUI extends Layout1 {
         iconPDF = new JLabel();
         iconExcel = new JLabel();
         jTextFieldSearch = new JTextField();
-        cbbAttributeProduct = new JComboBox(new String[] {"Tên khách hàng", "Giới tính", "KH thành viên"});
+        cbbAttributeProduct = new JComboBox(new String[] {"Tên nhân viên", "Giới tính", "Chức vụ"});
         cbbGender = new JComboBox<>();
         cbbMembership = new JComboBox<>();
 //
@@ -72,7 +67,7 @@ public class StaffGUI extends Layout1 {
         iconDetail.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                showDetailCustomer();
+                showDetailStaff();
             }
         });
         leftMenu.add(iconDetail);
@@ -82,7 +77,7 @@ public class StaffGUI extends Layout1 {
         iconAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                addCustomer();
+                addStaff();
             }
         });
         leftMenu.add(iconAdd);
@@ -92,7 +87,7 @@ public class StaffGUI extends Layout1 {
         iconEdit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                updateCustomer();
+                updateStaff();
             }
         });
         leftMenu.add(iconEdit);
@@ -102,7 +97,7 @@ public class StaffGUI extends Layout1 {
         iconDelete.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                deleteCustomer();
+                deleteStaff();
             }
         });
         leftMenu.add(iconDelete);
@@ -134,31 +129,31 @@ public class StaffGUI extends Layout1 {
         jTextFieldSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                searchCustomers();
+                searchStaffs();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                searchCustomers();
+                searchStaffs();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                searchCustomers();
+                searchStaffs();
             }
         });
         rightMenu.add(jTextFieldSearch);
 
         bottom.add(scrollPane, BorderLayout.CENTER);
 
-        loadDataTable(customerBLL.getData());
+        loadDataTable(staffBLL.getData());
     }
 
-    private void searchCustomers() {
+    private void searchStaffs() {
         if (jTextFieldSearch.getText().isEmpty()) {
-            loadDataTable(customerBLL.getData());
+            loadDataTable(staffBLL.getData());
         } else {
-            loadDataTable(customerBLL.getData(customerBLL.findCustomers("name", jTextFieldSearch.getText())));
+            loadDataTable(staffBLL.getData(staffBLL.findStaffs("name", jTextFieldSearch.getText())));
         }
     }
 
@@ -166,9 +161,9 @@ public class StaffGUI extends Layout1 {
         String isMale = "Nam";
         String isFamele = "Nữ";
         if(isMale.equals(cbbGender.getSelectedItem())){
-            loadDataTable(customerBLL.getData(customerBLL.findCustomersBy(Map.of("gender", true))));
+            loadDataTable(staffBLL.getData(staffBLL.findStaffsBy(Map.of("gender", true))));
         }else{
-            loadDataTable(customerBLL.getData(customerBLL.findCustomersBy(Map.of("gender", false))));
+            loadDataTable(staffBLL.getData(staffBLL.findStaffsBy(Map.of("gender", false))));
         }
     }
 
@@ -176,9 +171,9 @@ public class StaffGUI extends Layout1 {
         String isMembership = "Là thành viên";
         String isntMembership = "Không là thành viên";
         if(isMembership.equals(cbbMembership.getSelectedItem())){
-            loadDataTable(customerBLL.getData(customerBLL.findCustomersBy(Map.of("membership", true))));
+            loadDataTable(staffBLL.getData(staffBLL.findStaffsBy(Map.of("membership", true))));
         }else{
-            loadDataTable(customerBLL.getData(customerBLL.findCustomersBy(Map.of("membership", false))));
+            loadDataTable(staffBLL.getData(staffBLL.findStaffsBy(Map.of("membership", false))));
         }
 
     }
@@ -200,40 +195,40 @@ public class StaffGUI extends Layout1 {
             cbbGender.setVisible(false);
             cbbMembership.setVisible(false);
             jTextFieldSearch.setVisible(true);
-            searchCustomers();
+            searchStaffs();
         }
 
     }
 
-    private void addCustomer() {
-        new FormAddCustomerGUI();
+    private void addStaff() {
+//        new FormAddStaffGUI();
     }
-//    private void updateCustomer(){ new FormUpdateCustomerGUI();}
+//    private void updateStaff(){ new FormUpdateStaffGUI();}
 
-    private void showDetailCustomer() {
-        customerBLL = new CustomerBLL();
+    private void showDetailStaff() {
+        staffBLL = new StaffBLL();
         if (dataTable.getSelectedRow() == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng cần xem chi tiết.",
                 "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        new FormDetailCustomerGUI(customerBLL.findCustomersBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
+        new FormDetailStaffGUI(staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
     }
 
-    private void updateCustomer() {
-        customerBLL = new CustomerBLL();
+    private void updateStaff() {
+        staffBLL = new StaffBLL();
         if (dataTable.getSelectedRow() == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn tài khoản cần cập nhật.",
                 "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        new FormUpdateCustomerGUI(customerBLL.findCustomersBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
+//        new FormUpdateStaffGUI(staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
 
     }
 
-    private void deleteCustomer() {
+    private void deleteStaff() {
         if (dataTable.getSelectedRow() == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng cần xoá.",
                 "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -245,11 +240,11 @@ public class StaffGUI extends Layout1 {
         int choice = JOptionPane.showOptionDialog(null, "Xác nhận xoá khách hàng?",
             "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == 1) {
-            if (customerBLL.deleteCustomer(customerBLL.findCustomersBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0))) {
+            if (staffBLL.deleteStaff(staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0))) {
                 JOptionPane.showMessageDialog(null, "Xoá khách hàng thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
-                loadDataTable(customerBLL.getData());
+                loadDataTable(staffBLL.getData());
             } else {
                 JOptionPane.showMessageDialog(null, "Xoá khách hàng không thành công!",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -259,13 +254,17 @@ public class StaffGUI extends Layout1 {
 
     public static void loadDataTable(Object[][] objects) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-//        CustomerBLL customerBLL = new CustomerBLL();
-//        for (Object[] object : objects) {
+        AccountBLL accountBLL = new AccountBLL();
+        StaffBLL staffBLL = new StaffBLL();
+        RoleBLL roleBLL = new RoleBLL();
+        for (Object[] object : objects) {
+            int staffId = Integer.parseInt(object[0].toString());
 //            int roleId = Integer.parseInt(object[3].toString());
 //            int staffId = Integer.parseInt(object[5].toString());
 //            object[3] = roleBLL.findRolesBy(Map.of("id", roleId)).get(0).getName();
 //            object[5] = staffBLL.findStaffsBy(Map.of("id", staffId)).get(0).getName();
-//        }
+//            object[8] = accountBLL.findAccountsBy(Map.of("staff_id",staffId)).get(0).;
+        }
 
         model.setRowCount(0);
         for (Object[] object : objects) {
