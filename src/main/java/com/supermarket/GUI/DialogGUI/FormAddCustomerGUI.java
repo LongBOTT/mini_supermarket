@@ -1,5 +1,9 @@
 package com.supermarket.GUI.DialogGUI;
 
+
+import java.time.format.DateTimeFormatter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import com.supermarket.BLL.CustomerBLL;
 import com.supermarket.BLL.RoleBLL;
 import com.supermarket.BLL.StaffBLL;
@@ -21,6 +25,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +34,7 @@ import java.util.Map;
 
 public class FormAddCustomerGUI extends DialogForm{
     private final CustomerBLL customerBLL = new CustomerBLL();
-    
+
     private DataTable dataTable;
     private RoundedPanel formDetail;
     private RoundedScrollPane scrollPaneFormDetail;
@@ -109,6 +115,9 @@ public class FormAddCustomerGUI extends DialogForm{
                     }
                 });
             }
+            if(string.equals("Ngày sinh:")){
+                addPlaceholder(textField, "yyyy-mm-dd");
+            }
             if (string.equals("Thành viên:")) {//chưa làm để chọn combo box là Có hoặc Không
                 textField.setText("Có");
                 textField.setEnabled(false);
@@ -182,6 +191,28 @@ public class FormAddCustomerGUI extends DialogForm{
         containerButton.add(buttonAdd);
 
     }
+    private static void addPlaceholder(JTextField textField, String placeholder) {
+        textField.setForeground(Color.GRAY);
+        textField.setText(placeholder);
+
+        textField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textField.getText().equals(placeholder)) {
+                    textField.setText("");
+                    textField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    textField.setForeground(Color.GRAY);
+                    textField.setText(placeholder);
+                }
+            }
+        });
+    }
 
     private void addCustomer() {
         for (int i = 0; i < jTextFieldCustomer.size(); i++) {
@@ -196,13 +227,17 @@ public class FormAddCustomerGUI extends DialogForm{
             int id = Integer.parseInt(jTextFieldCustomer.get(0).getText());
             String customerName = jTextFieldCustomer.get(1).getText();
             boolean gender = jTextFieldCustomer.get(2).getText().equals("Nam")?true:false;
-            Date birthDate = Date.parseDate(jTextFieldCustomer.get(3).getText());
+            String[] dateParts = jTextFieldCustomer.get(3).getText().split("-");
+            int year = Integer.parseInt(dateParts[0]);
+            int month = Integer.parseInt(dateParts[1]);
+            int day = Integer.parseInt(dateParts[2]);
+            Date customDate = new Date(year, month, day);
             String phoneNumber = jTextFieldCustomer.get(4).getText();
             boolean isMember = jTextFieldCustomer.get(5).getText().equals("Không")?false:true;
             Date lastSignedIn = Date.parseDate(jTextFieldCustomer.get(6).getText());
             int bonusPoint = Integer.parseInt(jTextFieldCustomer.get(7).getText());
 
-            Customer customer = new Customer(id,customerName,gender,birthDate,phoneNumber,isMember,lastSignedIn,bonusPoint,false);
+            Customer customer = new Customer(id,customerName,gender,customDate,phoneNumber,isMember,lastSignedIn,bonusPoint,false);
 
             String[] options = new String[]{"Huỷ", "Xác nhận"};
             int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm khách hàng?",
