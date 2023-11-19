@@ -1,16 +1,16 @@
 package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.AccountBLL;
+import com.supermarket.BLL.CustomerBLL;
 import com.supermarket.BLL.CustomerBLL;
 import com.supermarket.BLL.RoleBLL;
 import com.supermarket.BLL.StaffBLL;
+import com.supermarket.DTO.Customer;
 import com.supermarket.DTO.Role;
 import com.supermarket.DTO.Staff;
-import com.supermarket.GUI.DialogGUI.FormAddAccountGUI;
+import com.supermarket.GUI.DialogGUI.FormAddCustomerGUI;
 import com.supermarket.GUI.DialogGUI.FormAddCustomerGUI;
 import com.supermarket.GUI.DialogGUI.FormDetailCustomerGUI;
-import com.supermarket.GUI.DialogGUI.FormUpdateAccountGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout1;
 import com.supermarket.GUI.components.RoundedScrollPane;
@@ -28,7 +28,6 @@ import java.util.Objects;
 public class CustomerGUI extends Layout1 {
     private RoleBLL roleBLL = new RoleBLL();
     private StaffBLL staffBLL = new StaffBLL();
-    private AccountBLL accountBLL = new AccountBLL();
     private CustomerBLL customerBLL = new CustomerBLL();
     private JLabel iconDetail;
     private JLabel iconAdd;
@@ -40,9 +39,9 @@ public class CustomerGUI extends Layout1 {
     private RoundedScrollPane scrollPane;
     private JTextField jTextFieldSearch;
     private JComboBox cbbAttributeProduct;
-    private JComboBox cbbRole;
-    private JComboBox cbbStaff;
-    private Object[][] accountList;
+    private JComboBox cbbGender;
+    private JComboBox cbbMembership;
+    private Object[][] customerList;
 
     public CustomerGUI() {
         super();
@@ -51,7 +50,7 @@ public class CustomerGUI extends Layout1 {
     }
 
     public void init() {
-        accountList = new Object[0][0];
+        customerList = new Object[0][0];
         dataTable = new DataTable(new Object[][] {},
             new String[] {"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Số điện thoại", "Thành viên","Lần đăng nhập cuối","Điểm thưởng"}, e -> {});
         scrollPane = new RoundedScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -62,9 +61,9 @@ public class CustomerGUI extends Layout1 {
         iconPDF = new JLabel();
         iconExcel = new JLabel();
         jTextFieldSearch = new JTextField();
-        cbbAttributeProduct = new JComboBox(new String[] {"Tên khách hàng", "Số điện thoại"});
-        cbbRole = new JComboBox<>();
-        cbbStaff = new JComboBox<>();
+        cbbAttributeProduct = new JComboBox(new String[] {"Tên khách hàng", "Giới tính", "KH thành viên"});
+        cbbGender = new JComboBox<>();
+        cbbMembership = new JComboBox<>();
 //
 
         iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
@@ -72,7 +71,7 @@ public class CustomerGUI extends Layout1 {
         iconDetail.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                showDetailAccount();
+                showDetailCustomer();
             }
         });
         leftMenu.add(iconDetail);
@@ -82,19 +81,19 @@ public class CustomerGUI extends Layout1 {
         iconAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                addAccount();
+                addCustomer();
             }
         });
         leftMenu.add(iconAdd);
 
         iconEdit.setIcon(new FlatSVGIcon("icon/edit.svg"));
         iconEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconEdit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                updateAccount();
-            }
-        });
+//        iconEdit.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent e) {
+//                updateCustomer();
+//            }
+//        });
         leftMenu.add(iconEdit);
 
         iconDelete.setIcon(new FlatSVGIcon("icon/remove.svg"));
@@ -102,11 +101,10 @@ public class CustomerGUI extends Layout1 {
         iconDelete.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                deleteAccount();
+                deleteCustomer();
             }
         });
         leftMenu.add(iconDelete);
-
 
         iconPDF.setIcon(new FlatSVGIcon("icon/pdf.svg"));
         iconPDF.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -120,34 +118,32 @@ public class CustomerGUI extends Layout1 {
         cbbAttributeProduct.addActionListener(e -> selectSearchFilter());
         rightMenu.add(cbbAttributeProduct);
 
-        for (Role role : roleBLL.getRoleList()) {
-            cbbRole.addItem(role.getName());
-        }
-        rightMenu.add(cbbRole);
-        cbbRole.setVisible(false);
-        cbbRole.addActionListener(e -> searchByRole());
-
-        for (Staff staff : staffBLL.getStaffList()) {
-            cbbStaff.addItem(staff.getName());
-        }
-        rightMenu.add(cbbStaff);
-        cbbStaff.setVisible(false);
-        cbbStaff.addActionListener(e -> searchByStaff());
+        cbbGender.addItem("Nam");
+        cbbGender.addItem("Nữ");
+        rightMenu.add(cbbGender);
+        cbbGender.setVisible(false);
+        cbbGender.addActionListener(e -> searchByGender());
+//
+        cbbMembership.addItem("Là thành viên");
+        cbbMembership.addItem("Không là thành viên");
+        rightMenu.add(cbbMembership);
+        cbbMembership.setVisible(false);
+        cbbMembership.addActionListener(e -> searchByMembership());
         jTextFieldSearch.setPreferredSize(new Dimension(200, 30));
         jTextFieldSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                searchAccounts();
+                searchCustomers();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                searchAccounts();
+                searchCustomers();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                searchAccounts();
+                searchCustomers();
             }
         });
         rightMenu.add(jTextFieldSearch);
@@ -157,58 +153,62 @@ public class CustomerGUI extends Layout1 {
         loadDataTable(customerBLL.getData());
     }
 
-    private void searchAccounts() {
+    private void searchCustomers() {
         if (jTextFieldSearch.getText().isEmpty()) {
-            loadDataTable(accountBLL.getData());
+            loadDataTable(customerBLL.getData());
         } else {
-            loadDataTable(accountBLL.getData(accountBLL.findAccounts("username", jTextFieldSearch.getText())));
+            loadDataTable(customerBLL.getData(customerBLL.findCustomers("name", jTextFieldSearch.getText())));
         }
     }
 
-    private void searchByStaff() {
-        for (Staff staff : staffBLL.getStaffList()) {
-            if (staff.getName().equals(cbbStaff.getSelectedItem())) {
-                loadDataTable(accountBLL.getData(accountBLL.findAccountsBy(Map.of("staff_id", staff.getId()))));
-                return;
-            }
+    private void searchByGender() {
+        String isMale = "Nam";
+        String isFamele = "Nữ";
+        if(isMale.equals(cbbGender.getSelectedItem())){
+            loadDataTable(customerBLL.getData(customerBLL.findCustomersBy(Map.of("gender", true))));
+        }else{
+            loadDataTable(customerBLL.getData(customerBLL.findCustomersBy(Map.of("gender", false))));
         }
     }
 
-    private void searchByRole() {
-        for (Role role : roleBLL.getRoleList()) {
-            if (role.getName().equals(cbbRole.getSelectedItem())) {
-                loadDataTable(accountBLL.getData(accountBLL.findAccountsBy(Map.of("role_id", role.getId()))));
-                return;
-            }
+    private void searchByMembership() {
+        String isMembership = "Là thành viên";
+        String isntMembership = "Không là thành viên";
+        if(isMembership.equals(cbbMembership.getSelectedItem())){
+            loadDataTable(customerBLL.getData(customerBLL.findCustomersBy(Map.of("membership", true))));
+        }else{
+            loadDataTable(customerBLL.getData(customerBLL.findCustomersBy(Map.of("membership", false))));
         }
+
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Chức vụ")) {
+        if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("KH thành viên")) {
             jTextFieldSearch.setVisible(false);
-            cbbStaff.setVisible(false);
-            cbbRole.setSelectedIndex(0);
-            cbbRole.setVisible(true);
-            searchByRole();
-        } else if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Nhân viên")) {
+            cbbGender.setVisible(false);
+            cbbMembership.setSelectedIndex(0);
+            cbbMembership.setVisible(true);
+            searchByMembership();
+        }else if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Giới tính")) {
             jTextFieldSearch.setVisible(false);
-            cbbRole.setVisible(false);
-            cbbStaff.setSelectedIndex(0);
-            cbbStaff.setVisible(true);
-            searchByStaff();
+            cbbMembership.setVisible(false);
+            cbbGender.setSelectedIndex(0);
+            cbbGender.setVisible(true);
+            searchByGender();
         } else {
-            cbbRole.setVisible(false);
-            cbbStaff.setVisible(false);
+            cbbGender.setVisible(false);
+            cbbMembership.setVisible(false);
             jTextFieldSearch.setVisible(true);
-            searchAccounts();
+            searchCustomers();
         }
+
     }
 
-    private void addAccount() {
+    private void addCustomer() {
         new FormAddCustomerGUI();
     }
 
-    private void showDetailAccount() {
+    private void showDetailCustomer() {
         customerBLL = new CustomerBLL();
         if (dataTable.getSelectedRow() == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng cần xem chi tiết.",
@@ -219,37 +219,37 @@ public class CustomerGUI extends Layout1 {
         new FormDetailCustomerGUI(customerBLL.findCustomersBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
     }
 
-    private void updateAccount() {
-        accountBLL = new AccountBLL();
-        if (dataTable.getSelectedRow() == -1) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn tài khoản cần cập nhật.",
-                "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        new FormUpdateAccountGUI(accountBLL.findAccountsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
+//    private void updateCustomer() {
+//        customerBLL = new CustomerBLL();
+//        if (dataTable.getSelectedRow() == -1) {
+//            JOptionPane.showMessageDialog(null, "Vui lòng chọn tài khoản cần cập nhật.",
+//                "Lỗi", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+//        new FormUpdateCustomerGUI(customerBLL.findCustomersBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
+//
+//    }
 
-    }
-
-    private void deleteAccount() {
+    private void deleteCustomer() {
         if (dataTable.getSelectedRow() == -1) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn tài khoản cần xoá.",
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng cần xoá.",
                 "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
 
         String[] options = new String[]{"Huỷ", "Xác nhận"};
-        int choice = JOptionPane.showOptionDialog(null, "Xác nhận xoá tài khoản?",
+        int choice = JOptionPane.showOptionDialog(null, "Xác nhận xoá khách hàng?",
             "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == 1) {
-            if (accountBLL.deleteAccount(accountBLL.findAccountsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0))) {
-                JOptionPane.showMessageDialog(null, "Xoá tài khoản thành công!",
+            if (customerBLL.deleteCustomer(customerBLL.findCustomersBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0))) {
+                JOptionPane.showMessageDialog(null, "Xoá khách hàng thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
-                loadDataTable(accountBLL.getData());
+                loadDataTable(customerBLL.getData());
             } else {
-                JOptionPane.showMessageDialog(null, "Xoá khoản không thành công!",
+                JOptionPane.showMessageDialog(null, "Xoá khách hàng không thành công!",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         }
