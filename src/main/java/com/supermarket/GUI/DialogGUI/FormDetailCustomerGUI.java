@@ -97,15 +97,6 @@ public class FormDetailCustomerGUI extends DialogForm{
             if (string.equals("Điểm thưởng:")) {
                 textField.setText(String.valueOf(customer.getPoint()));
             }
-//            if (string.equals("Mã nhân viên:")) {
-//                textField.setText(String.valueOf(account.getStaffID()));
-//                textField.addMouseListener(new MouseAdapter() {
-//                    @Override
-//                    public void mousePressed(MouseEvent e) {
-//                        loadTableStaff();
-//                    }
-//                });
-//            }
             textField.setEditable(false);
             textField.setPreferredSize(new Dimension(400, 50));
             textField.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));

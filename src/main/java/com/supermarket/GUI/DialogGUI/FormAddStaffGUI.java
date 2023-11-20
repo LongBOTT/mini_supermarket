@@ -4,13 +4,13 @@ package com.supermarket.GUI.DialogGUI;
 import java.time.format.DateTimeFormatter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import com.supermarket.BLL.CustomerBLL;
+import com.supermarket.BLL.StaffBLL;
 import com.supermarket.BLL.RoleBLL;
 import com.supermarket.BLL.StaffBLL;
-import com.supermarket.DTO.Customer;
+import com.supermarket.DTO.Staff;
 import com.supermarket.DTO.Role;
 import com.supermarket.DTO.Staff;
-import com.supermarket.GUI.CustomerGUI;
+import com.supermarket.GUI.StaffGUI;
 import com.supermarket.GUI.LoginGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
@@ -32,22 +32,22 @@ import java.util.List;
 import java.util.Map;
 
 
-public class FormAddCustomerGUI extends DialogForm{
-    private final CustomerBLL customerBLL = new CustomerBLL();
+public class FormAddStaffGUI extends DialogForm{
+    private final StaffBLL staffBLL = new StaffBLL();
 
     private DataTable dataTable;
     private RoundedPanel formDetail;
     private RoundedScrollPane scrollPaneFormDetail;
     private RoundedScrollPane scrollPaneDatatable;
-    private List<JLabel> attributeCustomer;
-    private List<JTextField> jTextFieldCustomer;
+    private List<JLabel> attributeStaff;
+    private List<JTextField> jTextFieldStaff;
     private JButton buttonCancel;
     private JButton buttonAdd;
     private boolean flag;
 
-    public FormAddCustomerGUI() {
+    public FormAddStaffGUI() {
         super();
-        super.setTitle("Quản lý khách hàng");
+        super.setTitle("Thêm nhân viên");
         init();
         containerButton.setBackground(new Color(0xFFFFFF));
         setVisible(true);
@@ -56,8 +56,8 @@ public class FormAddCustomerGUI extends DialogForm{
     public void init() {
         dataTable = new DataTable(new Object[][] {}, new String[] {}, e -> {});
         formDetail = new RoundedPanel();
-        attributeCustomer = new ArrayList<>();
-        jTextFieldCustomer = new ArrayList<>();
+        attributeStaff = new ArrayList<>();
+        jTextFieldStaff = new ArrayList<>();
         buttonCancel = new JButton("Huỷ");
         buttonAdd = new JButton("Thêm");
         scrollPaneDatatable = new RoundedScrollPane(containerTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -74,17 +74,17 @@ public class FormAddCustomerGUI extends DialogForm{
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[]{"Mã khách hàng:", "Tên khách hàng:", "Giới tính:", "Ngày sinh:", "Số điện thoại:", "Thành viên:", "Lần đăng nhập cuối:", "Điểm thưởng:"}) {
+        for (String string : new String[]{"Mã nhân viên:", "Tên nhân viên:", "Giới tính:", "Ngày sinh:", "Số điện thoại:", "Địa chỉ:","Email:","Ngày vào làm:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
             label.setFont((new Font("FlatLaf.style", Font.PLAIN, 16)));
-            attributeCustomer.add(label);
+            attributeStaff.add(label);
             formDetail.add(label);
 
             JTextField textField = new JTextField();
-            if (string.equals("Mã khách hàng:")) {
-                textField.setText(String.valueOf(customerBLL.getAutoID(customerBLL.searchCustomers())));
+            if (string.equals("Mã nhân viên:")) {
+                textField.setText(String.valueOf(staffBLL.getAutoID(staffBLL.searchStaffs())));
                 textField.setEnabled(false);
             }
             if (string.equals("Giới tính:")) {//click vào textbox thì đổi giữa Nam hoặc Nữ
@@ -146,17 +146,13 @@ public class FormAddCustomerGUI extends DialogForm{
                     }
                 });
             }
-            if (string.equals("Lần đăng nhập cuối:")) {
-                textField.setText(new Date(01,01,1000).toString());
-                textField.setEnabled(false);
-            }
-            if (string.equals("Điểm thưởng:")) {
-                textField.setText("0");
-                textField.setEnabled(false);
+            if (string.equals("Ngày vào làm:")) {
+//                textField.setText(String.valueOf(java.sql.Date.valueOf(LocalDate.now())));
+                addPlaceholder(textField, "yyyy-mm-dd");
             }
             textField.setPreferredSize(new Dimension(400, 50));
             textField.setFont((new Font("FlatLaf.style", Font.BOLD, 14)));
-            jTextFieldCustomer.add(textField);
+            jTextFieldStaff.add(textField);
             formDetail.add(textField, "wrap");
         }
 
@@ -185,7 +181,7 @@ public class FormAddCustomerGUI extends DialogForm{
         buttonAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                addCustomer();
+                addStaff();
             }
         });
         containerButton.add(buttonAdd);
@@ -214,39 +210,39 @@ public class FormAddCustomerGUI extends DialogForm{
         });
     }
 
-    private void addCustomer() {
-        for (int i = 0; i < jTextFieldCustomer.size(); i++) {
-            if (i != 6 && jTextFieldCustomer.get(i).getText().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin khách hàng.",
+    private void addStaff() {
+        for (int i = 0; i < jTextFieldStaff.size(); i++) {
+            if (i != 6 && jTextFieldStaff.get(i).getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin nhân viên.",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
 
         try{
-            int id = Integer.parseInt(jTextFieldCustomer.get(0).getText());
-            String customerName = jTextFieldCustomer.get(1).getText();
-            boolean gender = jTextFieldCustomer.get(2).getText().equals("Nam")?true:false;
-            Date birthDate = Date.parseDate(jTextFieldCustomer.get(3).getText());
-            String phoneNumber = jTextFieldCustomer.get(4).getText();
-            boolean isMember = jTextFieldCustomer.get(5).getText().equals("Không")?false:true;
-            Date lastSignedIn = Date.parseDate(jTextFieldCustomer.get(6).getText());
-            int bonusPoint = Integer.parseInt(jTextFieldCustomer.get(7).getText());
+            int id = Integer.parseInt(jTextFieldStaff.get(0).getText());
+            String staffName = jTextFieldStaff.get(1).getText();
+            boolean gender = jTextFieldStaff.get(2).getText().equals("Nam")?true:false;
+            Date birthDate = Date.parseDate(jTextFieldStaff.get(3).getText());
+            String phoneNumber = jTextFieldStaff.get(4).getText();
+            String address = jTextFieldStaff.get(5).getText();
+            String email = jTextFieldStaff.get(6).getText();
+            Date entry_date = Date.parseDate(jTextFieldStaff.get(7).getText());
 
-            Customer customer = new Customer(id,customerName,gender,birthDate,phoneNumber,isMember,lastSignedIn,bonusPoint,false);
+            Staff staff = new Staff(id,staffName,gender,birthDate,phoneNumber,address,email,entry_date,false);
 
             String[] options = new String[]{"Huỷ", "Xác nhận"};
-            int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm khách hàng?",
+            int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm nhân viên?",
                 "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
             if (choice == 1) {
-                if (customerBLL.addCustomer(customer)) {
-                    JOptionPane.showMessageDialog(null, "Thêm khách hàng thành công!",
+                if (staffBLL.addStaff(staff)) {
+                    JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công!",
                         "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
-                    CustomerGUI.loadDataTable(customerBLL.getData());
+                    StaffGUI.loadDataTable(staffBLL.getData());
                     refresh();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Thêm khách hàng không thành công!",
+                    JOptionPane.showMessageDialog(null, "Thêm nhân viên không thành công!",
                         "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -257,12 +253,16 @@ public class FormAddCustomerGUI extends DialogForm{
     }
 
     private void refresh() {
-        jTextFieldCustomer.get(1).setText("");
-        jTextFieldCustomer.get(3).setText("");
-        jTextFieldCustomer.get(4).setText("");
-        jTextFieldCustomer.get(1).setEnabled(false);
-        jTextFieldCustomer.get(3).setEnabled(false);
-        jTextFieldCustomer.get(4).setEnabled(false);
+        jTextFieldStaff.get(1).setText("");
+        jTextFieldStaff.get(3).setText("");
+        addPlaceholder(jTextFieldStaff.get(3),"yyyy-mm-dd");
+        jTextFieldStaff.get(4).setText("");
+        jTextFieldStaff.get(5).setText("");
+        jTextFieldStaff.get(6).setText("");
+        jTextFieldStaff.get(7).setText("");
+        addPlaceholder(jTextFieldStaff.get(7),"yyyy-mm-dd");
+        jTextFieldStaff.get(0).setEnabled(false);
+        jTextFieldStaff.get(2).setEnabled(false);
     }
 
     public void selectRowTable() {
@@ -271,13 +271,13 @@ public class FormAddCustomerGUI extends DialogForm{
         int indexRow = dataTable.getSelectedRow();
         id = model.getDataVector().elementAt(indexRow).get(0).toString();
         if (flag) {
-            jTextFieldCustomer.get(3).setEnabled(true);
-            jTextFieldCustomer.get(3).setText(id);
-            jTextFieldCustomer.get(3).setEnabled(false);
+            jTextFieldStaff.get(3).setEnabled(true);
+            jTextFieldStaff.get(3).setText(id);
+            jTextFieldStaff.get(3).setEnabled(false);
         } else {
-            jTextFieldCustomer.get(5).setEnabled(true);
-            jTextFieldCustomer.get(5).setText(id);
-            jTextFieldCustomer.get(5).setEnabled(false);
+            jTextFieldStaff.get(5).setEnabled(true);
+            jTextFieldStaff.get(5).setText(id);
+            jTextFieldStaff.get(5).setEnabled(false);
         }
     }
 }
