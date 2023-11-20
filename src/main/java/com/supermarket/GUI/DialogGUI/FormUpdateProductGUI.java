@@ -1,16 +1,11 @@
 package com.supermarket.GUI.DialogGUI;
 
-import com.supermarket.BLL.ProductBLL;
-import com.supermarket.BLL.CategoryBLL;
-import com.supermarket.BLL.BrandBLL;
-import com.supermarket.DTO.Product;
-import com.supermarket.DTO.Brand;
-import com.supermarket.DTO.Category;
+import com.supermarket.BLL.*;
+import com.supermarket.DTO.*;
 import com.supermarket.GUI.ProductGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
-import com.supermarket.utils.DateTime;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -22,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class FormAddProductGUI extends DialogForm{
+public class FormUpdateProductGUI extends DialogForm {
     private final ProductBLL productBLL = new ProductBLL();
     private final BrandBLL brandBLL = new BrandBLL();
     private final CategoryBLL categoryBLL = new CategoryBLL();
@@ -30,14 +25,16 @@ public class FormAddProductGUI extends DialogForm{
     private RoundedPanel formDetail;
     private RoundedScrollPane scrollPaneFormDetail;
     private RoundedScrollPane scrollPaneDatatable;
-    private List<JLabel> attributeAccount;
+    private java.util.List<JLabel> attributeProduct;
     private List<JTextField> jTextFieldProduct;
     private JButton buttonCancel;
-    private JButton buttonAdd;
+    private JButton buttonUpdate;
+    private Product product;
     private boolean flag;
 
-    public FormAddProductGUI() {
+    public FormUpdateProductGUI(Product product) {
         super();
+        this.product = product;
         super.setTitle("Quản lý sản phẩm");
         init();
         containerButton.setBackground(new Color(0xFFFFFF));
@@ -47,10 +44,10 @@ public class FormAddProductGUI extends DialogForm{
     public void init() {
         dataTable = new DataTable(new Object[][] {}, new String[] {}, e -> {});
         formDetail = new RoundedPanel();
-        attributeAccount = new ArrayList<>();
+        attributeProduct = new ArrayList<>();
         jTextFieldProduct = new ArrayList<>();
         buttonCancel = new JButton("Huỷ");
-        buttonAdd = new JButton("Thêm");
+        buttonUpdate = new JButton("Cập nhật");
         scrollPaneDatatable = new RoundedScrollPane(containerTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPaneFormDetail = new RoundedScrollPane(formDetail, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -70,31 +67,45 @@ public class FormAddProductGUI extends DialogForm{
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
             label.setFont((new Font("FlatLaf.style", Font.PLAIN, 16)));
-            attributeAccount.add(label);
+            attributeProduct.add(label);
             formDetail.add(label);
 
             JTextField textField = new JTextField();
             if (string.equals("Id sản phẩm:")) {
-                textField.setText(String.valueOf(productBLL.getAutoID(productBLL.searchProducts())));
+                textField.setText(String.valueOf(product.getId()));
                 textField.setEnabled(false);
             }
-            if (string.equals("Mã nhãn hàng:")){
+            if (string.equals("Tên sản phẩm:")) {
+                textField.setText(product.getName());
+            }
+            if (string.equals("Mã nhãn hàng:")) {
+                textField.setText(String.valueOf(product.getBrand_id()));
                 textField.addMouseListener(new MouseAdapter() {
                     @Override
-                    public void mousePressed(MouseEvent e){
-                        loadTableBrand();;
+                    public void mousePressed(MouseEvent e) {
+                        loadTableBrand();
                     }
                 });
                 textField.setEnabled(false);
             }
-            if (string.equals("Mã loại:")){
+            if (string.equals("Mã loại:")) {
+                textField.setText(String.valueOf(product.getCategory_id()));
                 textField.addMouseListener(new MouseAdapter() {
                     @Override
-                    public void mousePressed(MouseEvent e){
-                        loadTableCategory();;
+                    public void mousePressed(MouseEvent e) {
+                        loadTableCategory();
                     }
                 });
                 textField.setEnabled(false);
+            }
+            if (string.equals("Đơn vị:")) {
+                textField.setText(product.getUnit());
+            }
+            if (string.equals("Giá bán:")) {
+                textField.setText(String.valueOf(product.getCost()));
+            }
+            if (string.equals("Số lượng:")) {
+                textField.setText(String.valueOf(product.getQuantity()));
             }
             textField.setPreferredSize(new Dimension(400, 50));
             textField.setFont((new Font("FlatLaf.style", Font.BOLD, 14)));
@@ -121,20 +132,20 @@ public class FormAddProductGUI extends DialogForm{
         });
         containerButton.add(buttonCancel);
 
-        buttonAdd.setPreferredSize(new Dimension(100,40));
-        buttonAdd.setFont(new Font("FlatLaf.style", Font.BOLD, 15));
-        buttonAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        buttonAdd.addMouseListener(new MouseAdapter() {
+        buttonUpdate.setPreferredSize(new Dimension(100,40));
+        buttonUpdate.setFont(new Font("FlatLaf.style", Font.BOLD, 15));
+        buttonUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        buttonUpdate.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                addProduct();
+                updateProduct();
             }
         });
-        containerButton.add(buttonAdd);
+        containerButton.add(buttonUpdate);
 
     }
 
-    private void addProduct() {
+    private void updateProduct() {
         for (int i = 0; i < jTextFieldProduct.size(); i++) {
             if (i != 4 && jTextFieldProduct.get(i).getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin sản phẩm.",
@@ -150,21 +161,20 @@ public class FormAddProductGUI extends DialogForm{
         String unit = jTextFieldProduct.get(4).getText();
         double cost = Double.parseDouble((jTextFieldProduct.get(5).getText()));
         double quantity = Double.parseDouble((jTextFieldProduct.get(6).getText()));
-
         Product product = new Product(id, name,brandID,categoryID,unit,cost,quantity,"","",false);
 
         String[] options = new String[]{"Huỷ", "Xác nhận"};
-        int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm sản phẩm?",
+        int choice = JOptionPane.showOptionDialog(null, "Xác nhận cập nhật sản phẩm?",
             "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == 1) {
-            if (productBLL.addProduct(product)) {
-                JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công!",
+            if (productBLL.updateProduct(product)) {
+                JOptionPane.showMessageDialog(null, "Cập nhật sản phẩm thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
                 ProductGUI.loadDataTable(productBLL.getData());
-                refresh();
+                dispose();
             } else {
-                JOptionPane.showMessageDialog(null, "Thêm sản phẩm không thành công!",
+                JOptionPane.showMessageDialog(null, "Cập nhật sản phẩm không thành công!",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -192,7 +202,7 @@ public class FormAddProductGUI extends DialogForm{
     }
 
     private void loadTableCategory() {
-        flag = false;
+        flag=false;
         dataTable = new DataTable(categoryBLL.getData(), new String[] {"Id", "Họ tên", "Số lượng"}, e -> selectRowTable());
         dataTable.setPreferredSize(new Dimension(50, 700));
         containerTable.removeAll();
@@ -211,18 +221,16 @@ public class FormAddProductGUI extends DialogForm{
     }
 
     private void loadTableBrand() {
-        flag = true;
+        flag=true;
         dataTable = new DataTable(brandBLL.getData(), new String[] {"Id","Tên", "Id nhà cung cấp"}, e -> selectRowTable());
         dataTable.setPreferredSize(new Dimension(50, 700));
         containerTable.removeAll();
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);
 
-        if (!jTextFieldProduct.get(2).getText().isEmpty()) {
-            Brand brand = brandBLL.findBrandsBy(Map.of("id", Integer.parseInt(jTextFieldProduct.get(2).getText()))).get(0);
-            int index = brandBLL.getIndex(brand, "id", brandBLL.getBrandList());
-            dataTable.setRowSelectionInterval(index, index);
-        }
+        Brand brand = brandBLL.findBrandsBy(Map.of("id", Integer.parseInt(jTextFieldProduct.get(2).getText()))).get(0);
+        int index = brandBLL.getIndex(brand, "id", brandBLL.getBrandList());
+        dataTable.setRowSelectionInterval(index, index);
 
         containerTable.repaint();
         containerTable.revalidate();
@@ -245,3 +253,4 @@ public class FormAddProductGUI extends DialogForm{
         }
     }
 }
+

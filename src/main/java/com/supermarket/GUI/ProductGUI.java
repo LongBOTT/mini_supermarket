@@ -1,11 +1,12 @@
 package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.ProductBLL;
-import com.supermarket.BLL.RoleBLL;
-import com.supermarket.BLL.StaffBLL;
+import com.supermarket.BLL.*;
+import com.supermarket.DTO.Brand;
 import com.supermarket.DTO.Product;
 import com.supermarket.GUI.DialogGUI.FormAddProductGUI;
+import com.supermarket.GUI.DialogGUI.FormUpdateAccountGUI;
+import com.supermarket.GUI.DialogGUI.FormUpdateProductGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout4;
 import com.supermarket.GUI.components.RoundedScrollPane;
@@ -28,14 +29,14 @@ public class ProductGUI extends Layout4 {
     private JLabel iconEdit;
     private JLabel iconDelete;
     private Product product;
-    private String id,name,brand_id,category_id,unit,cost,quantity,barcode;
+    private String id,name,brand_id,category_id,unit,cost,quantity,barcode,image;
     public ProductGUI(){
         super();
         initComponent();
     }
 
     public void initComponent(){
-        dataTable = new DataTable(productBLL.getData(), new String[]{"Id sản phẩm","Tên sản phẩm","Mã nhãn hàng", "Mã loại", "Đơn vị", "Giá bán", "Số lượng", "barcode"}, e -> {});
+        dataTable = new DataTable(productBLL.getData(), new String[]{"Id sản phẩm","Tên sản phẩm","Mã nhãn hàng", "Mã loại", "Đơn vị", "Giá bán", "Số lượng","Hình ảnh","barcode"}, e -> {});
         scrollPane = new RoundedScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         leftContent.add(scrollPane, BorderLayout.CENTER);
 
@@ -66,6 +67,7 @@ public class ProductGUI extends Layout4 {
                         unit = dataTable.getValueAt(selectedRow,4).toString();
                         cost = dataTable.getValueAt(selectedRow,5).toString();
                         quantity = dataTable.getValueAt(selectedRow,6).toString();
+
                     }
                     for (String string : new String[]{"Id sản phẩm:", "Tên sản phẩm:", "Mã nhãn hàng:", "Mã loại:", "Đơn vị:","Giá bán:","Số lượng:"}) {
                         JLabel label = new JLabel();
@@ -102,26 +104,6 @@ public class ProductGUI extends Layout4 {
                         textField.setPreferredSize(new Dimension(170,30));
                         textField.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
                         rightContent.add(textField);
-
-                        iconEdit.setIcon(new FlatSVGIcon("icon/edit.svg"));
-                        iconEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                        iconEdit.addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-                                updateProduct();
-                            }
-                        });
-                        rightContent.add(iconEdit);
-
-                        iconDelete.setIcon(new FlatSVGIcon("icon/remove.svg"));
-                        iconDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                        iconDelete.addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mousePressed(MouseEvent e) {
-                                deleteProduct();
-                            }
-                        });
-                        rightContent.add(iconDelete);
                     }
                 }
             }
@@ -136,26 +118,29 @@ public class ProductGUI extends Layout4 {
             }
         });
         leftMenu.add(iconAdd);
-
-        /**iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
-        iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconDetail.addMouseListener(new MouseAdapter() {
+        iconEdit.setIcon(new FlatSVGIcon("icon/edit.svg"));
+        iconEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        iconEdit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                showDetailProduct();
+                DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+                new FormUpdateProductGUI(productBLL.findProductsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
             }
         });
-        leftMenu.add(iconDetail);*/
+        leftMenu.add(iconEdit);
 
-
-
+        iconDelete.setIcon(new FlatSVGIcon("icon/remove.svg"));
+        iconDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        iconDelete.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                deleteProduct();
+            }
+        });
+        leftMenu.add(iconDelete);
     }
 
     private void deleteProduct() {
-
-    }
-
-    private void updateProduct() {
 
     }
 
@@ -165,13 +150,13 @@ public class ProductGUI extends Layout4 {
 
     public static void loadDataTable(Object[][] objects) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        RoleBLL roleBLL = new RoleBLL();
-        StaffBLL staffBLL = new StaffBLL();
+        BrandBLL brandBLL = new BrandBLL();
+        CategoryBLL categoryBLL = new CategoryBLL();
         for (Object[] object : objects) {
-            int roleId = Integer.parseInt(object[3].toString());
-            int staffId = Integer.parseInt(object[5].toString());
-            object[3] = roleBLL.findRolesBy(Map.of("id", roleId)).get(0).getName();
-            object[5] = staffBLL.findStaffsBy(Map.of("id", staffId)).get(0).getName();
+            int brandied = Integer.parseInt(object[2].toString());
+            int categoryId = Integer.parseInt(object[3].toString());
+            object[2] = String.valueOf(brandBLL.findBrandsBy(Map.of("id", brandied)).get(0).getId());
+            object[3] = String.valueOf(categoryBLL.findCategoriesBy(Map.of("id", categoryId)).get(0).getId());
         }
 
         model.setRowCount(0);

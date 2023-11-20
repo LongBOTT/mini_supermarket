@@ -46,7 +46,6 @@ public class AccountGUI extends Layout1 {
     public AccountGUI() {
         super();
         init();
-
     }
 
     public void init() {
