@@ -36,7 +36,7 @@ public class FormDetailStaffGUI extends DialogForm{
     public FormDetailStaffGUI(Staff staff) {
         super();
         this.staff = staff;
-        super.setTitle("Quản lý tài khoản");
+        super.setTitle("Xem thông tin nhân viên");
         init();
         containerButton.setBackground(new Color(0xFFFFFF));
         setVisible(true);
@@ -61,7 +61,7 @@ public class FormDetailStaffGUI extends DialogForm{
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[]{"Mã nhân viên:", "Tên nhân viên:", "Giới tính:", "Ngày sinh:", "Số điện thoại:", "Địa chỉ:","Ngày vào làm"}) {
+        for (String string : new String[]{"Mã nhân viên:", "Tên nhân viên:", "Giới tính:", "Ngày sinh:", "Số điện thoại:", "Địa chỉ:","Email:","Ngày vào làm:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -88,6 +88,9 @@ public class FormDetailStaffGUI extends DialogForm{
             }
             if (string.equals("Địa chỉ:")) {
                 textField.setText(staff.getAddress());
+            }
+            if (string.equals("Email:")) {
+                textField.setText(staff.getEmail());
             }
             if (string.equals("Ngày vào làm:")) {
                 textField.setText(String.valueOf(staff.getEntry_date()));

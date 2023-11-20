@@ -6,7 +6,9 @@ import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DTO.Staff;
 import com.supermarket.DTO.Role;
 import com.supermarket.DTO.Staff;
+import com.supermarket.GUI.DialogGUI.FormAddStaffGUI;
 import com.supermarket.GUI.DialogGUI.FormDetailStaffGUI;
+import com.supermarket.GUI.DialogGUI.FormUpdateStaffGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout1;
 import com.supermarket.GUI.components.RoundedScrollPane;
@@ -48,7 +50,7 @@ public class StaffGUI extends Layout1 {
     public void init() {
         staffList = new Object[0][0];
         dataTable = new DataTable(new Object[][] {},
-            new String[] {"Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày sinh", "Số điện thoại","Địa chỉ","Email","Ngày vào làm", "Chức vụ"}, e -> {});
+            new String[] {"Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày sinh", "Số điện thoại","Địa chỉ","Email","Ngày vào làm"}, e -> {});
         scrollPane = new RoundedScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         iconDetail = new JLabel();
         iconAdd = new JLabel();
@@ -57,7 +59,7 @@ public class StaffGUI extends Layout1 {
         iconPDF = new JLabel();
         iconExcel = new JLabel();
         jTextFieldSearch = new JTextField();
-        cbbAttributeProduct = new JComboBox(new String[] {"Tên nhân viên", "Giới tính", "Chức vụ"});
+        cbbAttributeProduct = new JComboBox(new String[] {"Tên nhân viên", "Giới tính"});
         cbbGender = new JComboBox<>();
         cbbMembership = new JComboBox<>();
 //
@@ -201,7 +203,7 @@ public class StaffGUI extends Layout1 {
     }
 
     private void addStaff() {
-//        new FormAddStaffGUI();
+        new FormAddStaffGUI();
     }
 //    private void updateStaff(){ new FormUpdateStaffGUI();}
 
@@ -224,7 +226,7 @@ public class StaffGUI extends Layout1 {
             return;
         }
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-//        new FormUpdateStaffGUI(staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
+        new FormUpdateStaffGUI(staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
 
     }
 
@@ -254,18 +256,6 @@ public class StaffGUI extends Layout1 {
 
     public static void loadDataTable(Object[][] objects) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        AccountBLL accountBLL = new AccountBLL();
-        StaffBLL staffBLL = new StaffBLL();
-        RoleBLL roleBLL = new RoleBLL();
-        for (Object[] object : objects) {
-            int staffId = Integer.parseInt(object[0].toString());
-//            int roleId = Integer.parseInt(object[3].toString());
-//            int staffId = Integer.parseInt(object[5].toString());
-//            object[3] = roleBLL.findRolesBy(Map.of("id", roleId)).get(0).getName();
-//            object[5] = staffBLL.findStaffsBy(Map.of("id", staffId)).get(0).getName();
-//            object[8] = accountBLL.findAccountsBy(Map.of("staff_id",staffId)).get(0).;
-        }
-
         model.setRowCount(0);
         for (Object[] object : objects) {
             model.addRow(object);
