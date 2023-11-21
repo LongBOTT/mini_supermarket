@@ -14,8 +14,7 @@ public class PromotionDAL extends Manager{
             List.of("id",
                 "start_date",
                 "end_date",
-                "status",
-                "deleted"));
+                "status"));
     }
 
     public List<Promotion> convertToPromotions(List<List<String>> data) {
@@ -25,8 +24,7 @@ public class PromotionDAL extends Manager{
                     Integer.parseInt(row.get(0)), // id
                     Date.parseDate(row.get(1)),  // start_date
                     Date.parseDate(row.get(2)),  // end_date
-                    Boolean.parseBoolean(row.get(3)), // status
-                    Boolean.parseBoolean(row.get(4)) // deleted
+                    Boolean.parseBoolean(row.get(3))// status
                 );
             } catch (Exception e) {
                 System.out.println("Error occurred in PromotionDAL.convertToPromotions(): " + e.getMessage());
@@ -40,8 +38,7 @@ public class PromotionDAL extends Manager{
             return create(promotion.getId(),
                 promotion.getStart_date(),
                 promotion.getEnd_date(),
-                promotion.isStatus(),
-                false
+                promotion.isStatus()
             ); // promotion khi tạo mặc định deleted = 0
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in PromotionDAL.addPromotion(): " + e.getMessage());
@@ -56,21 +53,9 @@ public class PromotionDAL extends Manager{
             updateValues.add(promotion.getStart_date());
             updateValues.add(promotion.getEnd_date());
             updateValues.add(promotion.isStatus());
-            updateValues.add(promotion.isDeleted());
             return update(updateValues, "id = " + promotion.getId());
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in PromotionDAL.updatePromotion(): " + e.getMessage());
-        }
-        return 0;
-    }
-
-    public int deletePromotion(String... conditions) {
-        try {
-            List<Object> updateValues = new ArrayList<>();
-            updateValues.add(true);
-            return update(updateValues, conditions);
-        } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in PromotionDAL.deletePromotion(): " + e.getMessage());
         }
         return 0;
     }

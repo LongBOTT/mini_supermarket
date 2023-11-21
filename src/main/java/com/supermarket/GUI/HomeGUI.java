@@ -360,9 +360,9 @@ public class HomeGUI extends JFrame {
             case 0 -> home();
             case 1 -> new SaleGUI(account);
             case 2 -> new Layout1();
-            case 3 -> new StatisticPanel();
-            case 4 -> new Layout3();
-            case 5 -> new Layout3();
+            case 3 -> new StatisticGUI();
+            case 4 -> new DiscountGUI();
+            case 5 -> new PromotionGUI();
             case 6 -> new Layout2();
             case 7 -> new Layout2();
             case 8 -> new Layout2();

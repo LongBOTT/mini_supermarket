@@ -65,7 +65,7 @@ public class DataTable extends JTable {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 6) {
+                if (columnIndex == 4) {
                     return Boolean.class;
                 }
                 return String.class;

@@ -13,7 +13,7 @@ public class ReceiptBLL extends Manager<Receipt>{
 
     public ReceiptBLL() {
         receiptDAL = new ReceiptDAL();
-        receiptList = searchReceipts("deleted = 0");
+        receiptList = searchReceipts();
     }
 
     public ReceiptDAL getReceiptDAL() {
@@ -39,16 +39,6 @@ public class ReceiptBLL extends Manager<Receipt>{
     public boolean addReceipt(Receipt receipt) {
         receiptList.add(receipt);
         return receiptDAL.addReceipt(receipt) != 0;
-    }
-
-    public boolean updateReceipt(Receipt receipt) {
-        receiptList.set(getIndex(receipt, "id", receiptList), receipt);
-        return receiptDAL.updateReceipt(receipt) != 0;
-    }
-
-    public boolean deleteReceipt(Receipt receipt) {
-        receiptList.remove(getIndex(receipt, "id", receiptList));
-        return receiptDAL.deleteReceipt("id = " + receipt.getId()) != 0;
     }
 
     public List<Receipt> searchReceipts(String... conditions) {

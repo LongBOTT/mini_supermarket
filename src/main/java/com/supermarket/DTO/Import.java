@@ -8,18 +8,16 @@ public class Import {
     private Date received_date;
     private double total;
     private int supplier_id;
-    private boolean deleted;
 
     public Import() {
     }
 
-    public Import(int id, int staff_id, Date received_date, double total, int supplier_id, boolean deleted) {
+    public Import(int id, int staff_id, Date received_date, double total, int supplier_id) {
         this.id = id;
         this.staff_id = staff_id;
         this.received_date = received_date;
         this.total = total;
         this.supplier_id = supplier_id;
-        this.deleted = deleted;
     }
 
     public int getId() {
@@ -62,13 +60,6 @@ public class Import {
         this.supplier_id = supplier_id;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
 
     @Override
     public String toString() {

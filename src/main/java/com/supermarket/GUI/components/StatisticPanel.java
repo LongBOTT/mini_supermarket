@@ -27,13 +27,13 @@ public class StatisticPanel extends RoundedPanel {
         }
 
         menu.setLayout(new FlowLayout(FlowLayout.LEFT, 1,0));
-        menu.setPreferredSize(new Dimension(1000, 50));
+        menu.setPreferredSize(new Dimension(1000, 30));
         menu.setBackground(new Color(0xFFFFFF));
         menu.setBorder(new EmptyBorder(0,30,0,0));
         add(menu, BorderLayout.NORTH);
 
         content.setLayout(new BorderLayout());
-        content.setPreferredSize(new Dimension(1140, 720));
+        content.setPreferredSize(new Dimension(1140, 750));
         content.setBackground(new Color(0xA8A8AF));
         add(content, BorderLayout.CENTER);
 

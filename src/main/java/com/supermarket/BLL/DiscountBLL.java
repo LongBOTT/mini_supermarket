@@ -13,7 +13,7 @@ public class DiscountBLL extends Manager<Discount> {
 
     public DiscountBLL() {
         discountDAL = new DiscountDAL();
-        discountList = searchDiscounts("deleted = 0");
+        discountList = searchDiscounts();
     }
 
     public DiscountDAL getDiscountDAL() {
@@ -44,11 +44,6 @@ public class DiscountBLL extends Manager<Discount> {
     public boolean updateDiscount(Discount discount) {
         discountList.set(getIndex(discount, "id", discountList), discount);
         return discountDAL.updateDiscount(discount) != 0;
-    }
-
-    public boolean deleteDiscount(Discount discount) {
-        discountList.remove(getIndex(discount, "id", discountList));
-        return discountDAL.deleteDiscount("id = " + discount.getId()) != 0;
     }
 
     public List<Discount> searchDiscounts(String... conditions) {

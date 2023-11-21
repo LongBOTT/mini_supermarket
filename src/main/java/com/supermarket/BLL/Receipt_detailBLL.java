@@ -41,11 +41,6 @@ public class Receipt_detailBLL extends Manager<Receipt_detail>{
         return receipt_detailDAL.addReceipt_detail(receipt_detail) != 0;
     }
 
-    public boolean updateReceipt_detail(Receipt_detail receipt_detail) {
-        receipt_detailList.set(getIndex(receipt_detail, "receipt_id", receipt_detailList), receipt_detail);
-        return receipt_detailDAL.updateReceipt_detail(receipt_detail) != 0;
-    }
-
     public List<Receipt_detail> searchReceipt_details(String... conditions) {
         return receipt_detailDAL.searchReceipt_details(conditions);
     }
@@ -71,8 +66,7 @@ public class Receipt_detailBLL extends Manager<Receipt_detail>{
         return !findReceipt_detailsBy(Map.of(
             "product_id", receipt_detail.getProduct_id(),
             "quantity", receipt_detail.getQuantity(),
-            "total", receipt_detail.getTotal(),
-            "percent", receipt_detail.getPercent()
+            "total", receipt_detail.getTotal()
         )).isEmpty();
     }
 
@@ -87,7 +81,6 @@ public class Receipt_detailBLL extends Manager<Receipt_detail>{
             case "product_id" -> receipt_detail.getProduct_id();
             case "quantity" -> receipt_detail.getQuantity();
             case "total" -> receipt_detail.getTotal();
-            case "percent" -> receipt_detail.getPercent();
             default -> null;
         };
     }

@@ -46,11 +46,6 @@ public class Promotion_itemBLL extends Manager<Promotion_item>{
         return promotion_itemDAL.updatePromotion_item(promotion_item) != 0;
     }
 
-//    public boolean deletePromotion_item(Promotion_item promotion_item) {
-//        promotion_itemList.remove(getIndex(promotion_item, "promotion_id", promotion_itemList));
-//        return promotion_itemDAL.deletePromotion_item("promotion_id = " + promotion_item.getPromotion_id()) != 0;
-//    }
-
     public List<Promotion_item> searchPromotion_items(String... conditions) {
         return promotion_itemDAL.searchPromotion_items(conditions);
     }

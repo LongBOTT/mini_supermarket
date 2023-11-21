@@ -33,12 +33,10 @@ public class AccountGUI extends Layout1 {
     private JLabel iconAdd;
     private JLabel iconEdit;
     private JLabel iconDelete;
-    private JLabel iconPDF;
-    private JLabel iconExcel;
     private static DataTable dataTable;
     private RoundedScrollPane scrollPane;
     private JTextField jTextFieldSearch;
-    private JComboBox cbbAttributeProduct;
+    private JComboBox cbbAttributeAccount;
     private JComboBox cbbRole;
     private JComboBox cbbStaff;
     private Object[][] accountList;
@@ -58,10 +56,8 @@ public class AccountGUI extends Layout1 {
         iconAdd = new JLabel();
         iconEdit = new JLabel();
         iconDelete = new JLabel();
-        iconPDF = new JLabel();
-        iconExcel = new JLabel();
         jTextFieldSearch = new JTextField();
-        cbbAttributeProduct = new JComboBox(new String[] {"Tên tài khoản", "Chức vụ", "Nhân viên"});
+        cbbAttributeAccount = new JComboBox(new String[] {"Tên tài khoản", "Chức vụ", "Nhân viên"});
         cbbRole = new JComboBox<>();
         cbbStaff = new JComboBox<>();
 
@@ -105,18 +101,9 @@ public class AccountGUI extends Layout1 {
         });
         leftMenu.add(iconDelete);
 
-
-        iconPDF.setIcon(new FlatSVGIcon("icon/pdf.svg"));
-        iconPDF.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        leftMenu.add(iconPDF);
-
-        iconExcel.setIcon(new FlatSVGIcon("icon/excel.svg"));
-        iconExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        leftMenu.add(iconExcel);
-
-        cbbAttributeProduct.setPreferredSize(new Dimension(130, 30));
-        cbbAttributeProduct.addActionListener(e -> selectSearchFilter());
-        rightMenu.add(cbbAttributeProduct);
+        cbbAttributeAccount.setPreferredSize(new Dimension(130, 30));
+        cbbAttributeAccount.addActionListener(e -> selectSearchFilter());
+        rightMenu.add(cbbAttributeAccount);
 
         for (Role role : roleBLL.getRoleList()) {
             cbbRole.addItem(role.getName());
@@ -182,13 +169,13 @@ public class AccountGUI extends Layout1 {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Chức vụ")) {
+        if (Objects.requireNonNull(cbbAttributeAccount.getSelectedItem()).toString().contains("Chức vụ")) {
             jTextFieldSearch.setVisible(false);
             cbbStaff.setVisible(false);
             cbbRole.setSelectedIndex(0);
             cbbRole.setVisible(true);
             searchByRole();
-        } else if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Nhân viên")) {
+        } else if (Objects.requireNonNull(cbbAttributeAccount.getSelectedItem()).toString().contains("Nhân viên")) {
             jTextFieldSearch.setVisible(false);
             cbbRole.setVisible(false);
             cbbStaff.setSelectedIndex(0);

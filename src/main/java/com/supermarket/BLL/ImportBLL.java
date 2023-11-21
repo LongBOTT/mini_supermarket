@@ -12,7 +12,7 @@ public class ImportBLL extends Manager<Import> {
 
     public ImportBLL() {
         importNoteDAL = new ImportDAL();
-        importList = searchImport("deleted = 0");
+        importList = searchImport();
     }
 
     public ImportDAL getImportDAL() {
@@ -38,16 +38,6 @@ public class ImportBLL extends Manager<Import> {
     public boolean addImport(Import importnote) {
         importList.add(importnote);
         return importNoteDAL.addImport(importnote) != 0;
-    }
-
-    public boolean updateImport(Import importnote) {
-        importList.set(getIndex(importnote, "id", importList), importnote);
-        return importNoteDAL.updateImportnote(importnote) != 0;
-    }
-
-    public boolean deleteImport(Import importnote) {
-        importList.remove(getIndex(importnote, "id", importList));
-        return importNoteDAL.deleteImport("id = " + importnote.getId()) != 0;
     }
 
     public List<Import> searchImport(String... conditions) {
