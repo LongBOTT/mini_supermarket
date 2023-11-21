@@ -7,6 +7,13 @@ import com.supermarket.DAL.MySQL;
 import com.supermarket.DTO.Product;
 import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.components.*;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -233,7 +240,7 @@ public class StatisticGUI extends StatisticPanel {
                 "FROM `import`" +
                 " WHERE (MONTH(CURDATE()) - MONTH(`import`.received_date)) = 0 AND (YEAR(CURDATE()) - YEAR(`import`.received_date)) = 0");
             listIcon.get(6).setIcon(new FlatSVGIcon("icon/importGoods.svg"));
-            listValue.get(6).setText("<html>" + mostInventory.get(0).get(0) + "<html>");
+            listValue.get(6).setText("<html>" + mostInventory.get(0).get(0) + "<br>vnđ<html>");
             listTitle.get(6).setText("<html>Chi phí nhập kho của tháng<html>");
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
@@ -250,7 +257,7 @@ public class StatisticGUI extends StatisticPanel {
                 "FROM `receipt` " +
                 "WHERE (MONTH(CURDATE()) - MONTH(`receipt`.invoice_date)) = 0 AND (YEAR(CURDATE()) - YEAR(`receipt`.invoice_date)) = 0");
             listIcon.get(7).setIcon(new FlatSVGIcon("icon/imcome.svg"));
-            listValue.get(7).setText("<html>" + mostInventory.get(0).get(0) + "<html>");
+            listValue.get(7).setText("<html>" + mostInventory.get(0).get(0) + "<br>vnđ<html>");
             listTitle.get(7).setText("<html>Doanh thu của tháng<html>");
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
@@ -271,8 +278,55 @@ public class StatisticGUI extends StatisticPanel {
 
     private RoundedPanel statisticByYear() {
         RoundedPanel statisticByYearTab = new RoundedPanel();
+        JFXPanel jfxPanel = new JFXPanel();
+
+        statisticByYearTab.setLayout(new BorderLayout());
         statisticByYearTab.setPreferredSize(new Dimension(1140, 760));
         statisticByYearTab.setBackground(new Color(0xFFBDD2DB, true));
+
+
+        SwingUtilities.invokeLater(() -> {
+            statisticByYearTab.add(jfxPanel, BorderLayout.CENTER);
+            Platform.runLater(() -> {
+                final CategoryAxis xAxis = new CategoryAxis();
+                final NumberAxis yAxis = new NumberAxis();
+                final BarChart<String,Number> bc =
+                    new BarChart<String,Number>(xAxis,yAxis);
+                bc.setTitle("Country Summary");
+                xAxis.setLabel("Country");
+                yAxis.setLabel("Value");
+
+                XYChart.Series series1 = new XYChart.Series();
+                series1.setName("2003");
+                series1.getData().add(new XYChart.Data("austria", 25601.34));
+                series1.getData().add(new XYChart.Data("brazil", 20148.82));
+                series1.getData().add(new XYChart.Data("france", 10000));
+                series1.getData().add(new XYChart.Data("italy", 35407.15));
+                series1.getData().add(new XYChart.Data("usa", 12000));
+
+                XYChart.Series series2 = new XYChart.Series();
+                series2.setName("2004");
+                series2.getData().add(new XYChart.Data("austria", 57401.85));
+                series2.getData().add(new XYChart.Data("brazil", 41941.19));
+                series2.getData().add(new XYChart.Data("france", 45263.37));
+                series2.getData().add(new XYChart.Data("italy", 117320.16));
+                series2.getData().add(new XYChart.Data("usa", 14845.27));
+
+                XYChart.Series series3 = new XYChart.Series();
+                series3.setName("2005");
+                series3.getData().add(new XYChart.Data("austria", 45000.65));
+                series3.getData().add(new XYChart.Data("brazil", 44835.76));
+                series3.getData().add(new XYChart.Data("france", 18722.18));
+                series3.getData().add(new XYChart.Data("italy", 17557.31));
+                series3.getData().add(new XYChart.Data("usa", 92633.68));
+
+                Scene scene  = new Scene(bc,800,600);
+                bc.getData().addAll(series1, series2, series3);
+                jfxPanel.setScene(scene);
+            });
+        });
+
+
         return statisticByYearTab;
     }
 
