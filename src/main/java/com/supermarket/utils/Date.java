@@ -12,7 +12,7 @@ public class Date {
     private int month;
     private int year;
 
-    public Date() {
+    public Date(java.sql.Date date) {
     }
 
     public Date(Date date) {

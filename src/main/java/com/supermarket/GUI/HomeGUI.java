@@ -366,10 +366,10 @@ public class HomeGUI extends JFrame {
             case 6 -> new Layout2();
             case 7 -> new Layout2();
             case 8 -> new Layout2();
-            case 9 -> new Layout4();
+            case 9 -> new ProductGUI();
             case 10 -> new Layout1();
-            case 11 -> new Layout1();
-            case 12 -> new Layout1();
+            case 11 -> new CustomerGUI();
+            case 12 -> new StaffGUI();
             case 13 -> new AccountGUI();
             case 14 -> new Layout4();
             default -> null;
