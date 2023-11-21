@@ -40,7 +40,7 @@ public class FormAddStaffGUI extends DialogForm{
     private RoundedScrollPane scrollPaneFormDetail;
     private RoundedScrollPane scrollPaneDatatable;
     private List<JLabel> attributeStaff;
-    private List<JTextField> jTextFieldStaff;
+    private List<JComponent> jComponentStaff;
     private JButton buttonCancel;
     private JButton buttonAdd;
     private boolean flag;
@@ -57,7 +57,7 @@ public class FormAddStaffGUI extends DialogForm{
         dataTable = new DataTable(new Object[][] {}, new String[] {}, e -> {});
         formDetail = new RoundedPanel();
         attributeStaff = new ArrayList<>();
-        jTextFieldStaff = new ArrayList<>();
+        jComponentStaff = new ArrayList<>();
         buttonCancel = new JButton("Huỷ");
         buttonAdd = new JButton("Thêm");
         scrollPaneDatatable = new RoundedScrollPane(containerTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -87,73 +87,25 @@ public class FormAddStaffGUI extends DialogForm{
                 textField.setText(String.valueOf(staffBLL.getAutoID(staffBLL.searchStaffs())));
                 textField.setEnabled(false);
             }
-            if (string.equals("Giới tính:")) {//click vào textbox thì đổi giữa Nam hoặc Nữ
-                textField.setText("Nam");
-                textField.setEnabled(false);
-                textField.addMouseListener(new MouseListener() {
-
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if(textField.getText().equals("Nam")){
-                            textField.setText("Nữ");
-                        }
-                        else{
-                            textField.setText("Nam");
-                        }
-                    }
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                    }
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                    }
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                    }
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                    }
-                });
-            }
+            String[] gender = {"Nam", "Nữ"};
+            JComboBox cbbGender = new JComboBox<>(gender);
             if(string.equals("Ngày sinh:")){
                 addPlaceholder(textField, "yyyy-mm-dd");
             }
-            if (string.equals("Thành viên:")) {//chưa làm để chọn combo box là Có hoặc Không
-                textField.setText("Có");
-                textField.setEnabled(false);
-                textField.addMouseListener(new MouseListener() {
-
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if(textField.getText().equals("Có")){
-                            textField.setText("Không");
-                        }
-                        else{
-                            textField.setText("Có");
-                        }
-                    }
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                    }
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                    }
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                    }
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                    }
-                });
-            }
             if (string.equals("Ngày vào làm:")) {
-//                textField.setText(String.valueOf(java.sql.Date.valueOf(LocalDate.now())));
                 addPlaceholder(textField, "yyyy-mm-dd");
             }
-            textField.setPreferredSize(new Dimension(400, 50));
-            textField.setFont((new Font("FlatLaf.style", Font.BOLD, 14)));
-            jTextFieldStaff.add(textField);
-            formDetail.add(textField, "wrap");
+            if(string.equals("Giới tính:")){
+                cbbGender.setPreferredSize(new Dimension(400, 50));
+                cbbGender.setFont((new Font("FlatLaf.style", Font.BOLD, 14)));
+                jComponentStaff.add(cbbGender);
+                formDetail.add(cbbGender, "wrap");
+            }else{
+                textField.setPreferredSize(new Dimension(400, 50));
+                textField.setFont((new Font("FlatLaf.style", Font.BOLD, 14)));
+                jComponentStaff.add(textField);
+                formDetail.add(textField, "wrap");
+            }
         }
 
         buttonCancel.setPreferredSize(new Dimension(100,40));
@@ -170,7 +122,7 @@ public class FormAddStaffGUI extends DialogForm{
             }
             @Override
             public void mousePressed(MouseEvent e) {
-                refresh();
+                dispose();
             }
         });
         containerButton.add(buttonCancel);
@@ -209,10 +161,20 @@ public class FormAddStaffGUI extends DialogForm{
             }
         });
     }
-
+    private String getValueFromComponent(JComponent component) {
+        if (component instanceof JTextField) {
+            return ((JTextField) component).getText();
+        } else if (component instanceof JComboBox) {
+            Object selectedValue = ((JComboBox<?>) component).getSelectedItem();
+            return (selectedValue != null) ? selectedValue.toString() : "";
+        } else {
+            // Xử lý các loại JComponent khác ở đây (nếu cần)
+            return ""; // Trả về một giá trị mặc định hoặc xử lý đặc biệt cho các loại khác
+        }
+    }
     private void addStaff() {
-        for (int i = 0; i < jTextFieldStaff.size(); i++) {
-            if (i != 6 && jTextFieldStaff.get(i).getText().isEmpty()) {
+        for (int i = 0; i < jComponentStaff.size(); i++) {
+            if (i != 6 && getValueFromComponent(jComponentStaff.get(i)).isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin nhân viên.",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -220,14 +182,14 @@ public class FormAddStaffGUI extends DialogForm{
         }
 
         try{
-            int id = Integer.parseInt(jTextFieldStaff.get(0).getText());
-            String staffName = jTextFieldStaff.get(1).getText();
-            boolean gender = jTextFieldStaff.get(2).getText().equals("Nam")?true:false;
-            Date birthDate = Date.parseDate(jTextFieldStaff.get(3).getText());
-            String phoneNumber = jTextFieldStaff.get(4).getText();
-            String address = jTextFieldStaff.get(5).getText();
-            String email = jTextFieldStaff.get(6).getText();
-            Date entry_date = Date.parseDate(jTextFieldStaff.get(7).getText());
+            int id = Integer.parseInt(getValueFromComponent(jComponentStaff.get(0)));
+            String staffName = getValueFromComponent(jComponentStaff.get(1));
+            boolean gender = getValueFromComponent(jComponentStaff.get(2)).equals("Nam")?true:false;
+            Date birthDate = Date.parseDate(getValueFromComponent(jComponentStaff.get(3)));
+            String phoneNumber = getValueFromComponent(jComponentStaff.get(4));
+            String address = getValueFromComponent(jComponentStaff.get(5));
+            String email = getValueFromComponent(jComponentStaff.get(6));
+            Date entry_date = Date.parseDate(getValueFromComponent(jComponentStaff.get(7)));
 
             Staff staff = new Staff(id,staffName,gender,birthDate,phoneNumber,address,email,entry_date,false);
 
@@ -240,7 +202,7 @@ public class FormAddStaffGUI extends DialogForm{
                         "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
                     StaffGUI.loadDataTable(staffBLL.getData());
-                    refresh();
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Thêm nhân viên không thành công!",
                         "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -249,35 +211,6 @@ public class FormAddStaffGUI extends DialogForm{
         }
         catch(Exception e){
             System.out.println(e.getLocalizedMessage());
-        }
-    }
-
-    private void refresh() {
-        jTextFieldStaff.get(1).setText("");
-        jTextFieldStaff.get(3).setText("");
-        addPlaceholder(jTextFieldStaff.get(3),"yyyy-mm-dd");
-        jTextFieldStaff.get(4).setText("");
-        jTextFieldStaff.get(5).setText("");
-        jTextFieldStaff.get(6).setText("");
-        jTextFieldStaff.get(7).setText("");
-        addPlaceholder(jTextFieldStaff.get(7),"yyyy-mm-dd");
-        jTextFieldStaff.get(0).setEnabled(false);
-        jTextFieldStaff.get(2).setEnabled(false);
-    }
-
-    public void selectRowTable() {
-        String id = "";
-        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        int indexRow = dataTable.getSelectedRow();
-        id = model.getDataVector().elementAt(indexRow).get(0).toString();
-        if (flag) {
-            jTextFieldStaff.get(3).setEnabled(true);
-            jTextFieldStaff.get(3).setText(id);
-            jTextFieldStaff.get(3).setEnabled(false);
-        } else {
-            jTextFieldStaff.get(5).setEnabled(true);
-            jTextFieldStaff.get(5).setText(id);
-            jTextFieldStaff.get(5).setEnabled(false);
         }
     }
 }

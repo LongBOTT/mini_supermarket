@@ -32,7 +32,7 @@ public class FormUpdateStaffGUI extends DialogForm {
     private RoundedScrollPane scrollPaneFormDetail;
     private RoundedScrollPane scrollPaneDatatable;
     private java.util.List<JLabel> attributeStaff;
-    private List<JTextField> jTextFieldStaff;
+    private List<JComponent> jComponentsStaff;
     private JButton buttonCancel;
     private JButton buttonUpdate;
     private Staff staff;
@@ -49,7 +49,7 @@ public class FormUpdateStaffGUI extends DialogForm {
         dataTable = new DataTable(new Object[][] {}, new String[] {}, e -> {});
         formDetail = new RoundedPanel();
         attributeStaff = new ArrayList<>();
-        jTextFieldStaff = new ArrayList<>();
+        jComponentsStaff = new ArrayList<>();
         buttonCancel = new JButton("Huỷ");
         buttonUpdate = new JButton("Cập nhật");
         scrollPaneDatatable = new RoundedScrollPane(containerTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -75,6 +75,8 @@ public class FormUpdateStaffGUI extends DialogForm {
             formDetail.add(label);
 
             JTextField textField = new JTextField();
+            String[] gender = {"Nam", "Nữ"};
+            JComboBox cbbGender = new JComboBox<>(gender);
             if (string.equals("Mã nhân viên:")) {
                 textField.setText(String.valueOf(staff.getId()));
                 textField.setEnabled(false);
@@ -82,35 +84,7 @@ public class FormUpdateStaffGUI extends DialogForm {
             if (string.equals("Tên nhân viên:")) {
                 textField.setText(staff.getName());
             }
-            if (string.equals("Giới tính:")) {
-                String gender = staff.getGender() ? "Nam":"Nữ";
-                textField.setText(gender);
-                textField.addMouseListener(new MouseListener() {
 
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if(textField.getText().equals("Nam")){
-                            textField.setText("Nữ");
-                        }
-                        else{
-                            textField.setText("Nam");
-                        }
-                    }
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                    }
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                    }
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                    }
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                    }
-                });
-                textField.setEnabled(false);
-            }
             if (string.equals("Ngày sinh:")) {
                 textField.setText(String.valueOf(staff.getBirthday()));
             }
@@ -127,10 +101,22 @@ public class FormUpdateStaffGUI extends DialogForm {
             if (string.equals("Ngày vào làm:")) {
                 textField.setText(String.valueOf(staff.getEntry_date()));
             }
-            textField.setPreferredSize(new Dimension(400, 50));
-            textField.setFont((new Font("FlatLaf.style", Font.BOLD, 14)));
-            jTextFieldStaff.add(textField);
-            formDetail.add(textField, "wrap");
+            if(string.equals("Giới tính:")){
+                if(staff.getGender() == true){
+                    cbbGender.setSelectedItem("Nam");
+                }else{
+                    cbbGender.setSelectedItem("Nữ");
+                }
+                cbbGender.setPreferredSize(new Dimension(400, 50));
+                cbbGender.setFont((new Font("FlatLaf.style", Font.BOLD, 14)));
+                jComponentsStaff.add(cbbGender);
+                formDetail.add(cbbGender, "wrap");
+            }else{
+                textField.setPreferredSize(new Dimension(400, 50));
+                textField.setFont((new Font("FlatLaf.style", Font.BOLD, 14)));
+                jComponentsStaff.add(textField);
+                formDetail.add(textField, "wrap");
+            }
         }
 
         buttonCancel.setPreferredSize(new Dimension(100,40));
@@ -147,7 +133,7 @@ public class FormUpdateStaffGUI extends DialogForm {
             }
             @Override
             public void mousePressed(MouseEvent e) {
-                refresh();
+                dispose();
             }
         });
         containerButton.add(buttonCancel);
@@ -164,10 +150,21 @@ public class FormUpdateStaffGUI extends DialogForm {
         containerButton.add(buttonUpdate);
 
     }
+    private String getValueFromComponent(JComponent component) {
+        if (component instanceof JTextField) {
+            return ((JTextField) component).getText();
+        } else if (component instanceof JComboBox) {
+            Object selectedValue = ((JComboBox<?>) component).getSelectedItem();
+            return (selectedValue != null) ? selectedValue.toString() : "";
+        } else {
+            // Xử lý các loại JComponent khác ở đây (nếu cần)
+            return ""; // Trả về một giá trị mặc định hoặc xử lý đặc biệt cho các loại khác
+        }
+    }
 
     private void updateStaff() {
-        for (int i = 0; i < jTextFieldStaff.size(); i++) {
-            if (i != 6 && jTextFieldStaff.get(i).getText().isEmpty()) {
+        for (int i = 0; i < jComponentsStaff.size(); i++) {
+            if (i != 6 && getValueFromComponent(jComponentsStaff.get(i)).isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin khách hàng.",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -176,14 +173,14 @@ public class FormUpdateStaffGUI extends DialogForm {
 
 
         try{
-            int id = Integer.parseInt(jTextFieldStaff.get(0).getText());
-            String staffName = jTextFieldStaff.get(1).getText();
-            boolean gender = jTextFieldStaff.get(2).getText().equals("Nam")?true:false;
-            Date birthDate = Date.parseDate(jTextFieldStaff.get(3).getText());
-            String phoneNumber = jTextFieldStaff.get(4).getText();
-            String address = jTextFieldStaff.get(5).getText();
-            String email = jTextFieldStaff.get(6).getText();
-            Date entry_date = Date.parseDate(jTextFieldStaff.get(7).getText());
+            int id = Integer.parseInt(getValueFromComponent(jComponentsStaff.get(0)));
+            String staffName = getValueFromComponent(jComponentsStaff.get(1));
+            boolean gender = getValueFromComponent(jComponentsStaff.get(2)).equals("Nam")?true:false;
+            Date birthDate = Date.parseDate(getValueFromComponent(jComponentsStaff.get(3)));
+            String phoneNumber = getValueFromComponent(jComponentsStaff.get(4));
+            String address = getValueFromComponent(jComponentsStaff.get(5));
+            String email = getValueFromComponent(jComponentsStaff.get(6));
+            Date entry_date = Date.parseDate(getValueFromComponent(jComponentsStaff.get(7)));
 
             Staff staff = new Staff(id,staffName,gender,birthDate,phoneNumber,address,email,entry_date,false);
 
@@ -208,53 +205,4 @@ public class FormUpdateStaffGUI extends DialogForm {
         }
     }
 
-    private void refresh() {
-        jTextFieldStaff.get(1).setText("");
-        jTextFieldStaff.get(3).setText("");
-        jTextFieldStaff.get(4).setText("");
-        jTextFieldStaff.get(1).setEnabled(false);
-        jTextFieldStaff.get(3).setEnabled(false);
-        jTextFieldStaff.get(4).setEnabled(false);
-    }
-
-    private void loadTableStaff() {
-        dataTable = new DataTable(staffBLL.getData(), new String[] {"Mã nhân viên", "Họ tên", "Giới tính", "Ngày sinh", "Điện thoại", "Địa chỉ", "Email", "Ngày vào làm"}, e -> {});
-        dataTable.setPreferredSize(new Dimension(1500, 700));
-        containerTable.removeAll();
-        containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
-        containerTable.add(dataTable, BorderLayout.CENTER);
-
-        Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(jTextFieldStaff.get(5).getText()))).get(0);
-        int index = staffBLL.getIndex(staff, "id", staffBLL.getStaffList());
-        dataTable.setRowSelectionInterval(index, index);
-
-        containerTable.repaint();
-        containerTable.revalidate();
-        scrollPaneDatatable.setViewportView(containerTable);
-    }
-
-    private void loadTableRole() {
-        dataTable = new DataTable(roleBLL.getData(), new String[] {"Mã chức vụ", "Tên chức vụ"}, e -> selectRowTable());
-        containerTable.removeAll();
-        containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
-        containerTable.add(dataTable, BorderLayout.CENTER);
-
-        Role role = roleBLL.findRolesBy(Map.of("id", Integer.parseInt(jTextFieldStaff.get(3).getText()))).get(0);
-        int index = roleBLL.getIndex(role, "id", roleBLL.getRoleList());
-        dataTable.setRowSelectionInterval(index, index);
-
-        containerTable.repaint();
-        containerTable.revalidate();
-        scrollPaneDatatable.setViewportView(containerTable);
-    }
-
-    public void selectRowTable() {
-        String id = "";
-        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        int indexRow = dataTable.getSelectedRow();
-        id = model.getDataVector().elementAt(indexRow).get(0).toString();
-        jTextFieldStaff.get(3).setEnabled(true);
-        jTextFieldStaff.get(3).setText(id);
-        jTextFieldStaff.get(3).setEnabled(false);
-    }
 }
