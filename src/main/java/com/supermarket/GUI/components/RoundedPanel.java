@@ -1,5 +1,7 @@
 package com.supermarket.GUI.components;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -27,4 +29,11 @@ public class RoundedPanel extends JPanel {
         g2.dispose();
         super.paint(graphics);
     }
+
+    public void add(FlatSVGIcon flatSVGIcon) {
+        JLabel label = new JLabel();
+        label.setIcon(flatSVGIcon);
+        add(label);
+    }
+
 }

@@ -359,7 +359,7 @@ public class HomeGUI extends JFrame {
         JPanel panel = switch (index) {
             case 0 -> home();
             case 1 -> new SaleGUI(account);
-            case 2 -> new Layout1();
+            case 2 -> new ShipmentGUI();
             case 3 -> new StatisticGUI();
             case 4 -> new DiscountGUI();
             case 5 -> new PromotionGUI();

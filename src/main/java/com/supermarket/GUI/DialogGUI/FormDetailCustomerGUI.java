@@ -1,5 +1,6 @@
 package com.supermarket.GUI.DialogGUI;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.RoleBLL;
 import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DTO.Account;
@@ -54,7 +55,8 @@ public class FormDetailCustomerGUI extends DialogForm{
 
         scrollPaneDatatable.setPreferredSize(new Dimension(600, 700));
         leftContent.add(scrollPaneDatatable, BorderLayout.CENTER);
-        containerTable.add(dataTable);
+        containerTable.setLayout(new GridBagLayout());
+        containerTable.add(new FlatSVGIcon("icon/customerr.svg"));
 
         scrollPaneFormDetail.setPreferredSize(new Dimension(670, 610));
         rightContent.add(scrollPaneFormDetail, BorderLayout.NORTH);

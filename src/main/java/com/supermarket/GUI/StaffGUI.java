@@ -210,7 +210,7 @@ public class StaffGUI extends Layout1 {
     private void showDetailStaff() {
         staffBLL = new StaffBLL();
         if (dataTable.getSelectedRow() == -1) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng cần xem chi tiết.",
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xem chi tiết.",
                 "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -232,23 +232,23 @@ public class StaffGUI extends Layout1 {
 
     private void deleteStaff() {
         if (dataTable.getSelectedRow() == -1) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng cần xoá.",
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần xoá.",
                 "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
 
         String[] options = new String[]{"Huỷ", "Xác nhận"};
-        int choice = JOptionPane.showOptionDialog(null, "Xác nhận xoá khách hàng?",
+        int choice = JOptionPane.showOptionDialog(null, "Xác nhận xoá nhân viên?",
             "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == 1) {
             if (staffBLL.deleteStaff(staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0))) {
-                JOptionPane.showMessageDialog(null, "Xoá khách hàng thành công!",
+                JOptionPane.showMessageDialog(null, "Xoá nhân viên thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
                 loadDataTable(staffBLL.getData());
             } else {
-                JOptionPane.showMessageDialog(null, "Xoá khách hàng không thành công!",
+                JOptionPane.showMessageDialog(null, "Xoá nhân viên không thành công!",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         }

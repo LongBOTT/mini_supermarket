@@ -101,7 +101,7 @@ public class SupplierGUI extends Layout1 {
         iconExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         leftMenu.add(iconExcel);
 
-        cbbAttributeProduct.setPreferredSize(new Dimension(130, 30));
+        cbbAttributeProduct.setPreferredSize(new Dimension(180, 30));
         cbbAttributeProduct.addActionListener(e -> selectSearchFilter());
         rightMenu.add(cbbAttributeProduct);
 

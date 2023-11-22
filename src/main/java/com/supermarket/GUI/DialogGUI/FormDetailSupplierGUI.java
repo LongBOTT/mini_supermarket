@@ -11,6 +11,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -87,15 +88,20 @@ public class FormDetailSupplierGUI extends DialogForm{
     }
 
     private void loadTableBrand() {
-        dataTable = new DataTable(brandBLL.getData(), new String[] {"Mã thương hiệu", "Tên thương hiệu"}, e -> {});
+        Object[][] objects = new Object[0][0];
+        for (Brand brand : brandBLL.findBrandsBy(Map.of("supplier_id", supplier.getId()))) {
+            Object[] newObject = new Object[2];
+            newObject[0] = brand.getId();
+            newObject[1] = brand.getName();
+            objects = Arrays.copyOf(objects, objects.length + 1);
+            objects[objects.length-1] = newObject;
+        }
+
+        dataTable = new DataTable(objects, new String[] {"Mã thương hiệu", "Tên thương hiệu"}, e -> {});
         dataTable.setPreferredSize(new Dimension(500, 1500));
         containerTable.removeAll();
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);
-
-        Brand brand = brandBLL.findBrandsBy(Map.of("id", supplier.getId())).get(0);
-        int index = brandBLL.getIndex(brand, "id", brandBLL.getBrandList());
-        dataTable.setRowSelectionInterval(index, index);
 
         containerTable.repaint();
         containerTable.revalidate();

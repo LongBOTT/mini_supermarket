@@ -1,16 +1,15 @@
 package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.sun.javafx.application.PlatformImpl;
 import com.supermarket.BLL.ProductBLL;
 import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DAL.MySQL;
 import com.supermarket.DTO.Product;
 import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.components.*;
-import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -22,24 +21,35 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Year;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class StatisticGUI extends StatisticPanel {
     private List<JLabel> listTab;
-    private int currentTab = 0;
+    private int currentTab = -1;
+    private RoundedPanel genneralPanel;
+    private RoundedPanel statisticByYearPanel;
+    private RoundedPanel statisticByQuarterPanel;
+    private RoundedPanel statisticByMonthPanel;
     public StatisticGUI() {
         super();
+        PlatformImpl.startup(() -> {});
         init();
         selectedTab(0);
     }
 
     private void init() {
         listTab = new ArrayList<>();
+        genneralPanel = new RoundedPanel();
+        statisticByYearPanel = new RoundedPanel();
+        statisticByQuarterPanel = new RoundedPanel();
+        statisticByMonthPanel = new RoundedPanel();
 
         int index = 0;
-        for (String string : new String[]{"Tổng quát", "Theo năm", "Theo tháng", "Theo ngày"}) {
+        for (String string : new String[]{"Tổng quát", "Theo năm", "Theo quý", "Theo quý tháng"}) {
             JLabel label = new JLabel();
             label.setText(string);
             listTab.add(label);
@@ -55,20 +65,24 @@ public class StatisticGUI extends StatisticPanel {
             });
             index++;
         }
+        genneralPanel = genneral();
+        statisticByYear();
 
     }
 
     private void selectedTab(int index) {
-        active(index);
-        JPanel panel = switch (index) {
-            case 0 -> genneral();
-            case 1 -> statisticByYear();
-            case 2 -> statisticByMonth();
-            case 3 -> statisticByDay();
-            default -> null;
-        };
-        currentTab = index;
-        OpenTab(panel);
+        if (currentTab != index) {
+            active(index);
+            JPanel panel = switch (index) {
+                case 0 -> genneralPanel;
+                case 1 -> statisticByYearPanel;
+                case 2 -> statisticByQuarter();
+                case 3 -> statisticByMonth();
+                default -> null;
+            };
+            currentTab = index;
+            OpenTab(panel);
+        }
     }
 
     private void active(int index) {
@@ -158,13 +172,21 @@ public class StatisticGUI extends StatisticPanel {
         try {
             List<List<String>> bestSeller= MySQL.executeQueryStatistic("SELECT product.id, product.image, SUM(receipt_detail.quantity) " +
                 "FROM receipt_detail JOIN product on receipt_detail.product_id = product.id " +
+                "JOIN receipt on receipt.id = receipt_detail.receipt_id " +
+                "WHERE (MONTH(CURDATE()) = MONTH(`receipt`.invoice_date)) AND (YEAR(CURDATE()) = YEAR(`receipt`.invoice_date)) " +
                 "GROUP BY product.id, product.image " +
                 "ORDER BY SUM(receipt_detail.quantity) DESC" +
                 " LIMIT 1");
-            listIcon.get(2).setIcon(new FlatSVGIcon(bestSeller.get(0).get(1)));
-            listValue.get(2).setText(bestSeller.get(0).get(2));
-            Product product = productBLL.findProductsBy(Map.of("id", Integer.parseInt(bestSeller.get(0).get(0)))).get(0);
-            listTitle.get(2).setText("<html>Sản phẩm bán chạy nhất: <br>" + product.getName() +"<html>");
+            if (!bestSeller.isEmpty()) {
+                listIcon.get(2).setIcon(new FlatSVGIcon(bestSeller.get(0).get(1)));
+                listValue.get(2).setText(bestSeller.get(0).get(2));
+                Product product = productBLL.findProductsBy(Map.of("id", Integer.parseInt(bestSeller.get(0).get(0)))).get(0);
+                listTitle.get(2).setText("<html>Sản phẩm bán chạy nhất tháng: <br>" + product.getName() +"<html>");
+            }else {
+                listValue.get(2).setText("0");
+                listTitle.get(2).setText("<html>Sản phẩm bán chạy nhất tháng:<html>");
+            }
+
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -179,13 +201,21 @@ public class StatisticGUI extends StatisticPanel {
         try {
             List<List<String>> bestSeller= MySQL.executeQueryStatistic("SELECT product.id, product.image, SUM(receipt_detail.quantity) " +
                 "FROM receipt_detail JOIN product on receipt_detail.product_id = product.id " +
+                "JOIN receipt on receipt.id = receipt_detail.receipt_id " +
+                "WHERE (MONTH(CURDATE()) = MONTH(`receipt`.invoice_date)) AND (YEAR(CURDATE()) = YEAR(`receipt`.invoice_date)) " +
                 "GROUP BY product.id, product.image " +
                 "ORDER BY SUM(receipt_detail.quantity) ASC" +
                 " LIMIT 1");
-            listIcon.get(3).setIcon(new FlatSVGIcon(bestSeller.get(0).get(1)));
-            listValue.get(3).setText(bestSeller.get(0).get(2));
-            Product product = productBLL.findProductsBy(Map.of("id", Integer.parseInt(bestSeller.get(0).get(0)))).get(0);
-            listTitle.get(3).setText("<html>Sản phẩm bán ít nhất: <br>" + product.getName() +"<html>");
+            if (!bestSeller.isEmpty()) {
+                listIcon.get(3).setIcon(new FlatSVGIcon(bestSeller.get(0).get(1)));
+                listValue.get(3).setText(bestSeller.get(0).get(2));
+                Product product = productBLL.findProductsBy(Map.of("id", Integer.parseInt(bestSeller.get(0).get(0)))).get(0);
+                listTitle.get(3).setText("<html>Sản phẩm bán ít nhất tháng: <br>" + product.getName() +"<html>");
+            }else {
+                listValue.get(3).setText("0");
+                listTitle.get(3).setText("<html>Sản phẩm bán ít nhất tháng:<html>");
+            }
+
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -197,15 +227,22 @@ public class StatisticGUI extends StatisticPanel {
         genneralTab.add(listItem.get(3), "wrap");
 
         try {
-            List<List<String>> bestStaf= MySQL.executeQueryStatistic("SELECT staff.id, staff.name, COUNT(receipt.id) " +
+            List<List<String>> bestStaff= MySQL.executeQueryStatistic("SELECT staff.id, staff.name, COUNT(receipt.id) " +
                 "FROM receipt JOIN staff on receipt.staff_id = staff.id " +
+                "WHERE (MONTH(CURDATE()) = MONTH(`receipt`.invoice_date)) AND (YEAR(CURDATE()) = YEAR(`receipt`.invoice_date)) " +
                 "GROUP BY staff.id, staff.name " +
                 "ORDER BY COUNT(receipt.id) DESC" +
                 " LIMIT 1");
             listIcon.get(4).setIcon(new FlatSVGIcon("icon/stafff.svg"));
-            listValue.get(4).setText(bestStaf.get(0).get(2));
-            Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(bestStaf.get(0).get(0)))).get(0);
-            listTitle.get(4).setText("<html>Nhân viên bán nhiều nhất: <br>" + staff.getName() +"<html>");
+
+            if (!bestStaff.isEmpty()) {
+                listValue.get(4).setText(bestStaff.get(0).get(2));
+                Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(bestStaff.get(0).get(0)))).get(0);
+                listTitle.get(4).setText("<html>Nhân viên của tháng: <br>" + staff.getName() +"<html>");
+            }else {
+                listValue.get(4).setText("0");
+                listTitle.get(4).setText("<html>Nhân viên của tháng:<html>");
+            }
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -221,10 +258,16 @@ public class StatisticGUI extends StatisticPanel {
                 "FROM shipment JOIN product on shipment.product_id = product.id " +
                 "ORDER BY shipment.remain ASC" +
                 " LIMIT 1");
-            listIcon.get(5).setIcon(new FlatSVGIcon(mostInventory.get(0).get(1)));
-            listValue.get(5).setText(mostInventory.get(0).get(2));
-            Product product = productBLL.findProductsBy(Map.of("id", Integer.parseInt(mostInventory.get(0).get(0)))).get(0);
-            listTitle.get(5).setText("<html>Sản phẩm tồn kho nhiều nhất: <br>" + product.getName() +"<html>");
+            if (!mostInventory.isEmpty()) {
+                listIcon.get(5).setIcon(new FlatSVGIcon(mostInventory.get(0).get(1)));
+                listValue.get(5).setText(mostInventory.get(0).get(2));
+                Product product = productBLL.findProductsBy(Map.of("id", Integer.parseInt(mostInventory.get(0).get(0)))).get(0);
+                listTitle.get(5).setText("<html>Sản phẩm tồn kho nhiều nhất: <br>" + product.getName() +"<html>");
+            }else {
+                listValue.get(5).setText("0");
+                listTitle.get(5).setText("<html>Sản phẩm tồn kho nhiều nhất:<html>");
+            }
+
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -237,8 +280,8 @@ public class StatisticGUI extends StatisticPanel {
 
         try {
             List<List<String>> mostInventory= MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
-                "FROM `import`" +
-                " WHERE (MONTH(CURDATE()) - MONTH(`import`.received_date)) = 0 AND (YEAR(CURDATE()) - YEAR(`import`.received_date)) = 0");
+                "FROM `import` " +
+                "WHERE (MONTH(CURDATE()) - MONTH(`import`.received_date)) = 0 AND (YEAR(CURDATE()) - YEAR(`import`.received_date)) = 0");
             listIcon.get(6).setIcon(new FlatSVGIcon("icon/importGoods.svg"));
             listValue.get(6).setText("<html>" + mostInventory.get(0).get(0) + "<br>vnđ<html>");
             listTitle.get(6).setText("<html>Chi phí nhập kho của tháng<html>");
@@ -276,70 +319,186 @@ public class StatisticGUI extends StatisticPanel {
         return genneralTab;
     }
 
-    private RoundedPanel statisticByYear() {
-        RoundedPanel statisticByYearTab = new RoundedPanel();
-        JFXPanel jfxPanel = new JFXPanel();
-
-        statisticByYearTab.setLayout(new BorderLayout());
-        statisticByYearTab.setPreferredSize(new Dimension(1140, 760));
-        statisticByYearTab.setBackground(new Color(0xFFBDD2DB, true));
-
+    private void statisticByYear() {
+        statisticByYearPanel.setLayout(new BorderLayout());
+        statisticByYearPanel.setPreferredSize(new Dimension(1140, 760));
+        statisticByYearPanel.setBackground(new Color(0xFFBDD2DB, true));
 
         SwingUtilities.invokeLater(() -> {
-            statisticByYearTab.add(jfxPanel, BorderLayout.CENTER);
-            Platform.runLater(() -> {
-                final CategoryAxis xAxis = new CategoryAxis();
-                final NumberAxis yAxis = new NumberAxis();
-                final BarChart<String,Number> bc =
-                    new BarChart<String,Number>(xAxis,yAxis);
-                bc.setTitle("Country Summary");
-                xAxis.setLabel("Country");
-                yAxis.setLabel("Value");
+            JFXPanel jfxPanel = new JFXPanel();
+            Chart<String, Number> barChart = createBarChart(1);
+            Scene scene = new Scene(barChart, 800, 600);
 
-                XYChart.Series series1 = new XYChart.Series();
-                series1.setName("2003");
-                series1.getData().add(new XYChart.Data("austria", 25601.34));
-                series1.getData().add(new XYChart.Data("brazil", 20148.82));
-                series1.getData().add(new XYChart.Data("france", 10000));
-                series1.getData().add(new XYChart.Data("italy", 35407.15));
-                series1.getData().add(new XYChart.Data("usa", 12000));
+            jfxPanel.setScene(scene);
+            JFXPanel newJFXPanel = new JFXPanel();
+            newJFXPanel.setScene(scene);
+            statisticByYearPanel.add(newJFXPanel, BorderLayout.CENTER);
+            statisticByYearPanel.repaint();
+            statisticByYearPanel.revalidate();
+        });
+    }
 
-                XYChart.Series series2 = new XYChart.Series();
-                series2.setName("2004");
-                series2.getData().add(new XYChart.Data("austria", 57401.85));
-                series2.getData().add(new XYChart.Data("brazil", 41941.19));
-                series2.getData().add(new XYChart.Data("france", 45263.37));
-                series2.getData().add(new XYChart.Data("italy", 117320.16));
-                series2.getData().add(new XYChart.Data("usa", 14845.27));
+    private RoundedPanel statisticByQuarter() {
+        statisticByQuarterPanel.setLayout(new BorderLayout());
+        statisticByQuarterPanel.setPreferredSize(new Dimension(1140, 760));
+        statisticByQuarterPanel.setBackground(new Color(0xFFBDD2DB, true));
 
-                XYChart.Series series3 = new XYChart.Series();
-                series3.setName("2005");
-                series3.getData().add(new XYChart.Data("austria", 45000.65));
-                series3.getData().add(new XYChart.Data("brazil", 44835.76));
-                series3.getData().add(new XYChart.Data("france", 18722.18));
-                series3.getData().add(new XYChart.Data("italy", 17557.31));
-                series3.getData().add(new XYChart.Data("usa", 92633.68));
+        SwingUtilities.invokeLater(() -> {
+            JFXPanel jfxPanel = new JFXPanel();
+            Chart<String, Number> barChart = createBarChart(2);
+            Scene scene = new Scene(barChart, 800, 600);
 
-                Scene scene  = new Scene(bc,800,600);
-                bc.getData().addAll(series1, series2, series3);
-                jfxPanel.setScene(scene);
-            });
+            jfxPanel.setScene(scene);
+            JFXPanel newJFXPanel = new JFXPanel();
+            newJFXPanel.setScene(scene);
+            statisticByQuarterPanel.add(newJFXPanel, BorderLayout.CENTER);
+            statisticByQuarterPanel.repaint();
+            statisticByQuarterPanel.revalidate();
         });
 
-
-        return statisticByYearTab;
+        return statisticByQuarterPanel;
     }
 
     private RoundedPanel statisticByMonth() {
-        RoundedPanel statisticByMonthTab = new RoundedPanel();
-        statisticByMonthTab.setPreferredSize(new Dimension(1140, 760));
-        statisticByMonthTab.setBackground(new Color(0xFFBDD2DB, true));
-        return statisticByMonthTab;
+        statisticByMonthPanel.setLayout(new BorderLayout());
+        statisticByMonthPanel.setPreferredSize(new Dimension(1140, 760));
+        statisticByMonthPanel.setBackground(new Color(0xFFBDD2DB, true));
+
+        SwingUtilities.invokeLater(() -> {
+            JFXPanel jfxPanel = new JFXPanel();
+            Chart<String, Number> barChart = createBarChart(3);
+            Scene scene = new Scene(barChart, 800, 600);
+
+            jfxPanel.setScene(scene);
+            JFXPanel newJFXPanel = new JFXPanel();
+            newJFXPanel.setScene(scene);
+            statisticByMonthPanel.add(newJFXPanel, BorderLayout.CENTER);
+            statisticByMonthPanel.repaint();
+            statisticByMonthPanel.revalidate();
+        });
+
+        return statisticByMonthPanel;
     }
-    private RoundedPanel statisticByDay() {
-        RoundedPanel statisticByDayTab = new RoundedPanel();
-        statisticByDayTab.setPreferredSize(new Dimension(1140, 760));
-        statisticByDayTab.setBackground(new Color(0xFFBDD2DB, true));
-        return statisticByDayTab;
+
+    private Chart<String, Number> createBarChart(int flag) {
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+        Chart<String, Number> bc = new Chart<>(xAxis, yAxis);
+        if (flag == 1) {
+            bc.setTitle("THỐNG KÊ THEO 3 NĂM GẦN NHẤT ");
+            xAxis.setLabel("Năm");
+            yAxis.setLabel("VNĐ");
+
+            int currentYear = Year.now().getValue();
+            for (int i = currentYear - 2; i <= currentYear; i ++) {
+                long expenses, amount;
+                XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+                series1.setName("Năm " + i);
+                try {
+                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
+                        "FROM `import` " +
+                        "WHERE YEAR(`import`.received_date) = " + i);
+                    expenses = Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
+                    series1.getData().add(new XYChart.Data<>("Chi phí", expenses));
+
+                } catch (SQLException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                try {
+                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`receipt`.total) " +
+                        "FROM `receipt` " +
+                        "WHERE YEAR(`receipt`.invoice_date) = " + i);
+                    amount =  Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
+                    series1.getData().add(new XYChart.Data<>("Doanh thu", amount));
+
+                } catch (SQLException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                series1.getData().add(new XYChart.Data<>("Lợi nhuận", amount - expenses));
+
+                bc.getData().add(series1);
+            }
+        }
+        if (flag == 2) {
+            xAxis.setLabel("Quý");
+            yAxis.setLabel("VNĐ");
+
+            int currentMonth = YearMonth.now().getMonthValue();
+            int currentYear = Year.now().getValue();
+            int currentQuarter = (currentMonth - 1) / 3 + 1;
+            bc.setTitle("THỐNG KÊ THEO QUÝ TRONG NĂM " + currentYear);
+            for (int i = 1; i <= currentQuarter; i++) {
+                long expenses, amount;
+                XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+                series1.setName("Quý " + i);
+                try {
+                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
+                        "FROM `import` " +
+                        "WHERE YEAR(`import`.received_date) = " + currentYear + " AND QUARTER(`import`.received_date) = " + i);
+                    expenses = Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
+                    series1.getData().add(new XYChart.Data<>("Chi phí", expenses));
+
+                } catch (SQLException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                try {
+                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`receipt`.total) " +
+                        "FROM `receipt` " +
+                        "WHERE YEAR(`receipt`.invoice_date) = " + currentYear + " AND QUARTER(`receipt`.invoice_date) = " + i);
+                    amount =  Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
+                    series1.getData().add(new XYChart.Data<>("Doanh thu", amount));
+
+                } catch (SQLException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                series1.getData().add(new XYChart.Data<>("Lợi nhuận", amount - expenses));
+
+                bc.getData().add(series1);
+            }
+        }
+        if (flag == 3) {
+            xAxis.setLabel("Tháng");
+            yAxis.setLabel("VNĐ");
+
+            int currentMonth = YearMonth.now().getMonthValue();
+            int currentYear = Year.now().getValue();
+            bc.setTitle("THỐNG KÊ THEO THÁNG TRONG NĂM " + currentYear);
+            for (int i = 1; i <= currentMonth; i++) {
+                long expenses, amount;
+                XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+                series1.setName("Tháng " + i);
+                try {
+                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
+                        "FROM `import` " +
+                        "WHERE YEAR(`import`.received_date) = " + currentYear + " AND MONTH(`import`.received_date) = " + i);
+                    expenses = Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
+                    series1.getData().add(new XYChart.Data<>("Chi phí", expenses));
+
+                } catch (SQLException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                try {
+                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`receipt`.total) " +
+                        "FROM `receipt` " +
+                        "WHERE YEAR(`receipt`.invoice_date) = " + currentYear + " AND MONTH(`receipt`.invoice_date) = " + i);
+                    amount = Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
+                    series1.getData().add(new XYChart.Data<>("Doanh thu", amount));
+
+                } catch (SQLException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                series1.getData().add(new XYChart.Data<>("Lợi nhuận", amount - expenses));
+
+                bc.getData().add(series1);
+            }
+        }
+        return bc;
     }
+
 }
