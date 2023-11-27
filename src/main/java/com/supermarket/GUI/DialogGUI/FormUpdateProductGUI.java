@@ -1,23 +1,28 @@
 package com.supermarket.GUI.DialogGUI;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.*;
 import com.supermarket.DTO.*;
 import com.supermarket.GUI.ProductGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
+import com.supermarket.utils.Resource;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class FormUpdateProductGUI extends DialogForm {
+    private Product product;
+
     private final ProductBLL productBLL = new ProductBLL();
     private final BrandBLL brandBLL = new BrandBLL();
     private final CategoryBLL categoryBLL = new CategoryBLL();
@@ -25,12 +30,15 @@ public class FormUpdateProductGUI extends DialogForm {
     private RoundedPanel formDetail;
     private RoundedScrollPane scrollPaneFormDetail;
     private RoundedScrollPane scrollPaneDatatable;
-    private java.util.List<JLabel> attributeProduct;
+    private List<JLabel> attributeProduct;
     private List<JTextField> jTextFieldProduct;
+    private JComboBox cbbUnit;
     private JButton buttonCancel;
-    private JButton buttonUpdate;
-    private Product product;
+    private JButton buttonAdd;
     private boolean flag;
+    private JLabel labelImageProduct;
+    private JLabel labelAddImage;
+    private JFileChooser jFileChooser;
 
     public FormUpdateProductGUI(Product product) {
         super();
@@ -46,11 +54,14 @@ public class FormUpdateProductGUI extends DialogForm {
         formDetail = new RoundedPanel();
         attributeProduct = new ArrayList<>();
         jTextFieldProduct = new ArrayList<>();
+        cbbUnit = new JComboBox(new String[] {"Lốc", "Chai", "Hộp", "Ly", "Lon"});
         buttonCancel = new JButton("Huỷ");
-        buttonUpdate = new JButton("Cập nhật");
+        buttonAdd = new JButton("Cập nhật");
         scrollPaneDatatable = new RoundedScrollPane(containerTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPaneFormDetail = new RoundedScrollPane(formDetail, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
+        labelImageProduct = new JLabel();
+        labelAddImage = new JLabel();
+        jFileChooser = new JFileChooser();
 
         scrollPaneDatatable.setPreferredSize(new Dimension(600, 700));
         leftContent.add(scrollPaneDatatable, BorderLayout.CENTER);
@@ -62,7 +73,42 @@ public class FormUpdateProductGUI extends DialogForm {
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[]{"Id sản phẩm:", "Tên sản phẩm:", "Mã nhãn hàng:", "Mã loại:", "Đơn vị:","Giá bán:","Số lượng:"}) {
+        labelAddImage.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        labelAddImage.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                jFileChooser = new JFileChooser(Resource.getAbsolutePath("img"));
+
+                int value = jFileChooser.showSaveDialog(null);
+                if (value == JFileChooser.APPROVE_OPTION)
+                {
+                    labelAddImage.setVisible(false);
+                    labelImageProduct.setIcon(new FlatSVGIcon(jFileChooser.getSelectedFile()));
+                    labelImageProduct.setVisible(true);
+                    formDetail.repaint();
+                    formDetail.revalidate();
+                }
+            }
+        });
+
+        labelImageProduct.setIcon(new FlatSVGIcon("img/Pro1.svg"));
+        labelImageProduct.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        labelImageProduct.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                String[] options = new String[]{"Huỷ", "Xác nhận"};
+                int choice = JOptionPane.showOptionDialog(null, "Xác nhận xoá hình sản phẩm?",
+                    "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                if (choice == 1) {
+                    labelImageProduct.setVisible(false);
+                    labelAddImage.setVisible(true);
+                    formDetail.repaint();
+                    formDetail.revalidate();
+                }
+            }
+        });
+
+        for (String string : new String[] {"Hình sản phẩm:", "Mã sản phẩm:", "Tên sản phẩm:", "Mã thương hiệu:", "Mã thể loại:", "Đơn vị:", "Giá bán:", "Số lượng:", "Barcode:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -71,14 +117,22 @@ public class FormUpdateProductGUI extends DialogForm {
             formDetail.add(label);
 
             JTextField textField = new JTextField();
-            if (string.equals("Id sản phẩm:")) {
+            if (string.equals("Hình sản phẩm:")) {
+                labelImageProduct.setIcon(new FlatSVGIcon(product.getImage()));
+                formDetail.add(labelImageProduct, "split 2");
+                labelAddImage.setIcon(new FlatSVGIcon("icon/image.svg"));
+                formDetail.add(labelAddImage, "wrap");
+                labelAddImage.setVisible(false);
+                continue;
+            }
+            if (string.equals("Mã sản phẩm:")) {
                 textField.setText(String.valueOf(product.getId()));
                 textField.setEnabled(false);
             }
             if (string.equals("Tên sản phẩm:")) {
-                textField.setText(product.getName());
+                textField.setText(String.valueOf(product.getName()));
             }
-            if (string.equals("Mã nhãn hàng:")) {
+            if (string.equals("Mã thương hiệu:")) {
                 textField.setText(String.valueOf(product.getBrand_id()));
                 textField.addMouseListener(new MouseAdapter() {
                     @Override
@@ -88,7 +142,7 @@ public class FormUpdateProductGUI extends DialogForm {
                 });
                 textField.setEnabled(false);
             }
-            if (string.equals("Mã loại:")) {
+            if (string.equals("Mã thể loại:")) {
                 textField.setText(String.valueOf(product.getCategory_id()));
                 textField.addMouseListener(new MouseAdapter() {
                     @Override
@@ -99,13 +153,30 @@ public class FormUpdateProductGUI extends DialogForm {
                 textField.setEnabled(false);
             }
             if (string.equals("Đơn vị:")) {
-                textField.setText(product.getUnit());
+                cbbUnit.setPreferredSize(new Dimension(400, 50));
+                cbbUnit.setSelectedItem(product.getUnit());
+                formDetail.add(cbbUnit, "wrap");
+                continue;
             }
-            if (string.equals("Giá bán:")) {
-                textField.setText(String.valueOf(product.getCost()));
+            if (string.equals("Giá bán:") || string.equals("Số lượng:")) {
+                if (string.equals("Giá bán:")) {
+                    textField.setText(String.valueOf(product.getCost()));
+                }
+                if (string.equals("Số lượng:")) {
+                    textField.setText(String.valueOf(product.getQuantity()));
+                }
+                textField.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyTyped(KeyEvent e) {
+                        char c = e.getKeyChar();
+                        if (!Character.isDigit(c) && c != KeyEvent.VK_PERIOD) {
+                            e.consume();
+                        }
+                    }
+                });
             }
-            if (string.equals("Số lượng:")) {
-                textField.setText(String.valueOf(product.getQuantity()));
+            if (string.equals("Barcode:")) {
+                textField.setText(String.valueOf(product.getBarcode()));
             }
             textField.setPreferredSize(new Dimension(400, 50));
             textField.setFont((new Font("FlatLaf.style", Font.BOLD, 14)));
@@ -132,22 +203,22 @@ public class FormUpdateProductGUI extends DialogForm {
         });
         containerButton.add(buttonCancel);
 
-        buttonUpdate.setPreferredSize(new Dimension(100,40));
-        buttonUpdate.setFont(new Font("FlatLaf.style", Font.BOLD, 15));
-        buttonUpdate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        buttonUpdate.addMouseListener(new MouseAdapter() {
+        buttonAdd.setPreferredSize(new Dimension(100,40));
+        buttonAdd.setFont(new Font("FlatLaf.style", Font.BOLD, 15));
+        buttonAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        buttonAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 updateProduct();
             }
         });
-        containerButton.add(buttonUpdate);
+        containerButton.add(buttonAdd);
 
     }
 
     private void updateProduct() {
         for (int i = 0; i < jTextFieldProduct.size(); i++) {
-            if (i != 4 && jTextFieldProduct.get(i).getText().isEmpty()) {
+            if (jTextFieldProduct.get(i).getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin sản phẩm.",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -158,10 +229,21 @@ public class FormUpdateProductGUI extends DialogForm {
         String name = jTextFieldProduct.get(1).getText();
         int brandID = Integer.parseInt(jTextFieldProduct.get(2).getText());
         int categoryID = Integer.parseInt(jTextFieldProduct.get(3).getText());
-        String unit = jTextFieldProduct.get(4).getText();
-        double cost = Double.parseDouble((jTextFieldProduct.get(5).getText()));
-        double quantity = Double.parseDouble((jTextFieldProduct.get(6).getText()));
-        Product product = new Product(id, name,brandID,categoryID,unit,cost,quantity,"","",false);
+        String unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
+        double cost = Double.parseDouble((jTextFieldProduct.get(4).getText()));
+        double quantity = Double.parseDouble((jTextFieldProduct.get(5).getText()));
+        String barcode = jTextFieldProduct.get(6).getText();
+        String image = "";
+        if (labelAddImage.isVisible()) {
+            image = "img/Pro1.svg";
+        } else {
+            if (jFileChooser.getSelectedFile() == null)
+                image = product.getImage();
+            else
+                image = "img/" + jFileChooser.getSelectedFile().getName();
+        }
+
+        Product product = new Product(id, name,brandID,categoryID,unit,cost,quantity,image, barcode,false);
 
         String[] options = new String[]{"Huỷ", "Xác nhận"};
         int choice = JOptionPane.showOptionDialog(null, "Xác nhận cập nhật sản phẩm?",
@@ -171,8 +253,11 @@ public class FormUpdateProductGUI extends DialogForm {
                 JOptionPane.showMessageDialog(null, "Cập nhật sản phẩm thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
-                ProductGUI.loadDataTable(productBLL.getData());
-                dispose();
+                ProductGUI.loadDataTable(productBLL.getProductList());
+                Category category = categoryBLL.findCategoriesBy(Map.of("id", categoryID)).get(0);
+                category.setQuantity(category.getQuantity() + 1);
+                categoryBLL.updateCategory(category);
+                refresh();
             } else {
                 JOptionPane.showMessageDialog(null, "Cập nhật sản phẩm không thành công!",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -193,27 +278,30 @@ public class FormUpdateProductGUI extends DialogForm {
         jTextFieldProduct.get(3).setText("");
         jTextFieldProduct.get(3).setEnabled(false);
         jTextFieldProduct.get(4).setText("");
-        jTextFieldProduct.get(5).setEnabled(true);
         jTextFieldProduct.get(5).setText("");
-        jTextFieldProduct.get(5).setEnabled(false);
-        jTextFieldProduct.get(6).setEnabled(true);
         jTextFieldProduct.get(6).setText("");
-        jTextFieldProduct.get(6).setEnabled(false);
     }
 
     private void loadTableCategory() {
-        flag=false;
-        dataTable = new DataTable(categoryBLL.getData(), new String[] {"Id", "Họ tên", "Số lượng"}, e -> selectRowTable());
-        dataTable.setPreferredSize(new Dimension(50, 700));
+        flag = false;
+        Object[][] categoryList = new Object[0][0];
+        for (Category category : categoryBLL.getCategoryList()) {
+            Object[] object = new Object[3];
+            object[0] = category.getId();
+            object[1] = category.getName();
+            object[2] = category.getQuantity();
+            categoryList = Arrays.copyOf(categoryList, categoryList.length + 1);
+            categoryList[categoryList.length - 1] = object;
+        }
+
+        dataTable = new DataTable(categoryList, new String[] {"Mã thể loại", "Tên thể loại", "Số lượng"}, e -> selectRowTable());
         containerTable.removeAll();
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);
 
-        if (!jTextFieldProduct.get(3).getText().isEmpty()) {
-            Category category = categoryBLL.findCategoriesBy(Map.of("id", Integer.parseInt(jTextFieldProduct.get(3).getText()))).get(0);
-            int index = categoryBLL.getIndex(category, "id", categoryBLL.getCategoryList());
-            dataTable.setRowSelectionInterval(index, index);
-        }
+        Category category = categoryBLL.findCategoriesBy(Map.of("id", Integer.parseInt(jTextFieldProduct.get(3).getText()))).get(0);
+        int index = categoryBLL.getIndex(category, "id", categoryBLL.getCategoryList());
+        dataTable.setRowSelectionInterval(index, index);
 
         containerTable.repaint();
         containerTable.revalidate();
@@ -221,9 +309,19 @@ public class FormUpdateProductGUI extends DialogForm {
     }
 
     private void loadTableBrand() {
-        flag=true;
-        dataTable = new DataTable(brandBLL.getData(), new String[] {"Id","Tên", "Id nhà cung cấp"}, e -> selectRowTable());
-        dataTable.setPreferredSize(new Dimension(50, 700));
+        flag = true;
+        Object[][] brandList = new Object[0][0];
+        SupplierBLL supplierBLL = new SupplierBLL();
+        for (Brand brand : brandBLL.getBrandList()) {
+            Object[] object = new Object[3];
+            object[0] = brand.getId();
+            object[1] = brand.getName();
+            object[2] = supplierBLL.findSuppliersBy(Map.of("id", brand.getSupplier_id())).get(0).getName();
+            brandList = Arrays.copyOf(brandList, brandList.length + 1);
+            brandList[brandList.length - 1] = object;
+        }
+
+        dataTable = new DataTable(brandList, new String[] {"Mã thương hiệu", "Tên thương hiệu", "Tên nhà cung cấp"}, e -> selectRowTable());
         containerTable.removeAll();
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);

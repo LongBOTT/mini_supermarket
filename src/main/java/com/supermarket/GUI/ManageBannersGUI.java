@@ -77,7 +77,7 @@ public class ManageBannersGUI extends JDialog {
             contentPanel.add(label);
         }
 
-        addBanner.setIcon(new FlatSVGIcon("icon/addBanner.svg"));
+        addBanner.setIcon(new FlatSVGIcon("icon/image.svg"));
         addBanner.setHorizontalAlignment(SwingConstants.CENTER);
         addBanner.setCursor(new Cursor(Cursor.HAND_CURSOR));
         addBanner.addMouseListener(new MouseAdapter() {

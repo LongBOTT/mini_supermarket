@@ -3,13 +3,13 @@ package com.supermarket.GUI;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.*;
 import com.supermarket.DTO.*;
-import com.supermarket.GUI.DialogGUI.FormAddProductGUI;
-import com.supermarket.GUI.DialogGUI.FormDetailAccountGUI;
-import com.supermarket.GUI.DialogGUI.FormUpdateAccountGUI;
-import com.supermarket.GUI.DialogGUI.FormUpdateProductGUI;
+import com.supermarket.GUI.DialogGUI.*;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout4;
+import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
+import com.toedter.calendar.JDateChooser;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -20,8 +20,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.List;
 
 public class ProductGUI extends Layout4 {
     private ProductBLL productBLL = new ProductBLL();
@@ -31,15 +31,17 @@ public class ProductGUI extends Layout4 {
     private JLabel iconAdd;
     private JLabel iconEdit;
     private JLabel iconDelete;
+    private RoundedPanel formDetail;
     private Product product;
     private JComboBox cbbAttributeProduct;
     private JTextField jTextFieldSearch;
+    private List<JTextField> jTextFieldBrand;
+    private List<JTextField> jTextFieldCategory;
     private JComboBox cbbBrand;
     private JComboBox cbbCategory;
-    private String id,name,brand_id,category_id,unit,cost,quantity,barcode,image;
     private BrandBLL brandBLL = new BrandBLL();
     private CategoryBLL categoryBLL = new CategoryBLL();
-    private Object[][] productlist;
+    private static Object[][] productlist;
     public ProductGUI(){
         super();
         initComponent();
@@ -48,7 +50,8 @@ public class ProductGUI extends Layout4 {
     public void initComponent(){
         productlist = new Object[0][0];
 
-        dataTable = new DataTable(new Object[][]{}, new String[]{"Id sản phẩm","Tên sản phẩm","Mã nhãn hàng", "Mã loại", "Đơn vị", "Giá bán", "Số lượng","Hình ảnh","barcode"}, e -> {});
+        formDetail = new RoundedPanel();
+        dataTable = new DataTable(new Object[][]{}, new String[]{"Mã sản phẩm","Tên sản phẩm","Thương hiệu", "Thể loại", "Giá bán", "Số lượng"}, e -> {});
         scrollPane = new RoundedScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         leftContent.add(scrollPane, BorderLayout.CENTER);
 
@@ -56,74 +59,25 @@ public class ProductGUI extends Layout4 {
         iconAdd = new JLabel();
         iconEdit = new JLabel();
         iconDelete = new JLabel();
+        jTextFieldCategory = new ArrayList<>();
+        jTextFieldBrand = new ArrayList<>();
 
-        cbbAttributeProduct= new JComboBox(new String[] {"Tên sản phẩm","Mã nhãn hàng","Mã loại"});
+        formDetail.setBackground(new Color(0xFFBDD2DB));
+        formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
+
+        cbbAttributeProduct= new JComboBox(new String[] {"Tên sản phẩm","Thương hiệu","Thể loại", "Sắp hết hàng"});
         cbbBrand= new JComboBox<>();
         cbbCategory = new JComboBox<>();
 
-        ListSelectionModel selectionModel = dataTable.getSelectionModel();
-        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        selectionModel.addListSelectionListener((new ListSelectionListener() {
+        iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
+        iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        iconDetail.addMouseListener(new MouseAdapter() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-
-                    rightContent.removeAll();
-                    rightContent.revalidate();
-                    rightContent.repaint();
-
-                    rightContent.setLayout(new FlowLayout());
-                    int selectedRow = dataTable.getSelectedRow();
-                    if (selectedRow != -1) {
-                        id = dataTable.getValueAt(selectedRow,0).toString();
-                        name = dataTable.getValueAt(selectedRow,1).toString();
-                        brand_id = dataTable.getValueAt(selectedRow,2).toString();
-                        category_id = dataTable.getValueAt(selectedRow,3).toString();
-                        unit = dataTable.getValueAt(selectedRow,4).toString();
-                        cost = dataTable.getValueAt(selectedRow,5).toString();
-                        quantity = dataTable.getValueAt(selectedRow,6).toString();
-
-                    }
-                    for (String string : new String[]{"Id sản phẩm:", "Tên sản phẩm:", "Mã nhãn hàng:", "Mã loại:", "Đơn vị:","Giá bán:","Số lượng:"}) {
-                        JLabel label = new JLabel();
-                        label.setPreferredSize(new Dimension(130, 30));
-                        label.setText(string);
-                        label.setFont((new Font("FlatLaf.style", Font.PLAIN, 16)));
-                        rightContent.add(label);
-
-                        JTextField textField= new JTextField();
-                        if (string.equals("Id sản phẩm:")) {
-                            textField.setText(String.valueOf(id));
-                        }
-                        if (string.equals("Tên sản phẩm:")) {
-                            textField.setText(String.valueOf(name));
-                        }
-                        if (string.equals("Mã nhãn hàng:")) {
-                            textField.setText(String.valueOf(brand_id));
-                        }
-                        if (string.equals("Mã loại:")) {
-                            textField.setText(String.valueOf(category_id));
-                        }
-                        if (string.equals("Đơn vị:")) {
-                            textField.setText(String.valueOf(unit));
-                        }
-                        if (string.equals("Giá bán:")) {
-                            textField.setText(String.valueOf(cost));
-                        }
-                        if (string.equals("Số lượng:")) {
-                            textField.setText(String.valueOf(quantity));
-                        }
-                        /**if (string.equals("Barcode")) {
-                            textField.setText(String.valueOf(barcode));
-                        }*/
-                        textField.setPreferredSize(new Dimension(170,30));
-                        textField.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
-                        rightContent.add(textField);
-                    }
-                }
+            public void mousePressed(MouseEvent e) {
+                showDetailAccount();
             }
-        }));
+        });
+        leftMenu.add(iconDetail);
 
         iconAdd.setIcon(new FlatSVGIcon("icon/add.svg"));
         iconAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -139,8 +93,7 @@ public class ProductGUI extends Layout4 {
         iconEdit.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-                new FormUpdateProductGUI(productBLL.findProductsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
+                updateProduct();
             }
         });
         leftMenu.add(iconEdit);
@@ -160,14 +113,14 @@ public class ProductGUI extends Layout4 {
         rightMenu.add(cbbAttributeProduct);
 
         for (Brand brand : brandBLL.getBrandList()) {
-            cbbBrand.addItem(brand.getId());
+            cbbBrand.addItem(brand.getName());
         }
         rightMenu.add(cbbBrand);
         cbbBrand.setVisible(false);
         cbbBrand.addActionListener(e -> searchByBrand());
 
         for (Category category : categoryBLL.getCategoryList()) {
-            cbbCategory.addItem(category.getId());
+            cbbCategory.addItem(category.getName());
         }
         rightMenu.add(cbbCategory);
         cbbCategory.setVisible(false);
@@ -192,53 +145,150 @@ public class ProductGUI extends Layout4 {
             }
         });
         rightMenu.add(jTextFieldSearch);
-        loadDataTable(productBLL.getData());
+        loadDataTable(productBLL.getProductList());
     }
+
+    private void showDetailAccount() {
+        productBLL = new ProductBLL();
+        if (dataTable.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm cần xem chi tiết.",
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        new FormDetailProductGUI(productBLL.findProductsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
+    }
+
     private void searchProduct() {
         if (jTextFieldSearch.getText().isEmpty()) {
-            loadDataTable(productBLL.getData());
+            loadDataTable(productBLL.getProductList());
         } else {
-            loadDataTable(productBLL.getData(productBLL.findProducts("name", jTextFieldSearch.getText())));
+            loadDataTable(productBLL.findProducts("name", jTextFieldSearch.getText()));
         }
     }
 
     private void searchByBrand() {
+        bottom.removeAll();
+        formDetail.removeAll();
+        JLabel title = new JLabel("THƯƠNG HIỆU");
+        title.setFont((new Font("FlatLaf.style", Font.BOLD, 23)));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        formDetail.add(title, "span 2 1, wrap");
+
+        SupplierBLL supplierBLL = new SupplierBLL();
+        Brand brand1 = brandBLL.getBrandList().get(cbbBrand.getSelectedIndex());
+        Supplier supplier = supplierBLL.findSuppliersBy(Map.of("id", brand1.getSupplier_id())).get(0);
+        for (String string : new String[] {"Tên thương hiệu:", "Nhà cung cấp:"}) {
+            JLabel label = new JLabel();
+            label.setPreferredSize(new Dimension(170, 30));
+            label.setText(string);
+            label.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
+            formDetail.add(label, "wrap");
+
+            JTextField textField = new JTextField();
+            if (string.equals("Tên thương hiệu:")) {
+                textField.setText(brand1.getName());
+            }
+            if (string.equals("Nhà cung cấp:")) {
+                textField.setText(supplier.getName());
+            }
+            textField.setPreferredSize(new Dimension(400, 50));
+            textField.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
+            jTextFieldBrand.add(textField);
+            formDetail.add(textField, "wrap");
+        }
+
+        rightContent.add(formDetail);
+        rightContent.repaint();
+        rightContent.revalidate();
+        bottom.add(leftContent, BorderLayout.WEST);
+        bottom.add(rightContent, BorderLayout.EAST);
+        bottom.repaint();
+        bottom.revalidate();
+
         for (Brand brand : brandBLL.getBrandList()) {
             if (brand.getName().equals(cbbBrand.getSelectedItem())) {
-                loadDataTable(brandBLL.getData(brandBLL.findBrandsBy(Map.of("brand_id", brand.getId()))));
+                loadDataTable(productBLL.findProductsBy(Map.of("brand_id", brand.getId())));
                 return;
             }
         }
     }
+
     private void searchByCategory() {
+        bottom.removeAll();
+        formDetail.removeAll();
+        JLabel title = new JLabel("THỂ LOẠI");
+        title.setFont((new Font("FlatLaf.style", Font.BOLD, 23)));
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        formDetail.add(title, "span 2 1, wrap");
+
+        Category category1 = categoryBLL.getCategoryList().get(cbbCategory.getSelectedIndex());
+        for (String string : new String[] {"Tên thể loại:"}) {
+            JLabel label = new JLabel();
+            label.setPreferredSize(new Dimension(170, 30));
+            label.setText(string);
+            label.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
+            formDetail.add(label, "wrap");
+
+            JTextField textField = new JTextField();
+            textField.setText(category1.getName());
+
+            textField.setPreferredSize(new Dimension(400, 50));
+            textField.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
+            jTextFieldBrand.add(textField);
+            formDetail.add(textField, "wrap");
+        }
+
+        rightContent.add(formDetail);
+        rightContent.repaint();
+        rightContent.revalidate();
+        bottom.add(leftContent, BorderLayout.WEST);
+        bottom.add(rightContent, BorderLayout.EAST);
+        bottom.repaint();
+        bottom.revalidate();
         for (Category category : categoryBLL.getCategoryList()) {
             if (category.getName().equals(cbbCategory.getSelectedItem())) {
-                System.out.println(cbbCategory.getSelectedItem());
-                loadDataTable(categoryBLL.getData(categoryBLL.findCategoriesBy(Map.of("category_id", category.getId()))));
+                loadDataTable(productBLL.findProductsBy(Map.of("category_id", category.getId())));
                 return;
             }
         }
     }
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Mã nhãn hàng")) {
+        if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Thương hiệu")) {
             jTextFieldSearch.setVisible(false);
             cbbCategory.setVisible(false);
             cbbBrand.setSelectedIndex(0);
             cbbBrand.setVisible(true);
             searchByBrand();
-        }else if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Mã loại")) {
+            return;
+        } else if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Thể loại")) {
             jTextFieldSearch.setVisible(false);
             cbbBrand.setVisible(false);
             cbbCategory.setSelectedIndex(0);
             cbbCategory.setVisible(true);
             searchByCategory();
+            return;
+        } else if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Sắp hết hàng")) {
+            jTextFieldSearch.setVisible(false);
+            cbbBrand.setVisible(false);
+            cbbCategory.setVisible(false);
+            searchByQuantity();
         } else {
             cbbCategory.setVisible(false);
             cbbBrand.setVisible(false);
             jTextFieldSearch.setVisible(true);
             searchProduct();
         }
+        bottom.removeAll();
+        bottom.add(leftContent, BorderLayout.CENTER);
+        bottom.repaint();
+        bottom.revalidate();
     }
+
+    private void searchByQuantity() {
+        loadDataTable(productBLL.searchProducts("deleted = 0", "`product`.quantity > 0 AND `product`.quantity <= 20"));
+    }
+
     private void deleteProduct() {
         if (dataTable.getSelectedRow() == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm cần xoá.",
@@ -255,7 +305,7 @@ public class ProductGUI extends Layout4 {
                 JOptionPane.showMessageDialog(null, "Xoá sản phẩm thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
-                loadDataTable(productBLL.getData());
+                loadDataTable(productBLL.getProductList());
             } else {
                 JOptionPane.showMessageDialog(null, "Xoá sản phẩm không thành công!",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -267,20 +317,36 @@ public class ProductGUI extends Layout4 {
         new FormAddProductGUI();
     }
 
-    public static void loadDataTable(Object[][] objects) {
+    private void updateProduct() {
+        productBLL = new ProductBLL();
+        if (dataTable.getSelectedRow() == -1) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm cần cập nhật.",
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        new FormUpdateProductGUI(productBLL.findProductsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
+    }
+
+    public static  void loadDataTable(List<Product> products) {
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        productlist = new Object[0][0];
         BrandBLL brandBLL = new BrandBLL();
         CategoryBLL categoryBLL = new CategoryBLL();
-        for (Object[] object : objects) {
-                int brandied = Integer.parseInt(object[2].toString());
-                int categoryId = Integer.parseInt(object[3].toString());
-                object[2] = String.valueOf(brandBLL.findBrandsBy(Map.of("id", brandied)).get(0).getId());
-                object[3] = String.valueOf(categoryBLL.findCategoriesBy(Map.of("id", categoryId)).get(0).getId());
-
+        for (Product product : products) {
+            Object[] object = new Object[6];
+            object[0] = product.getId();
+            object[1] = product.getName();
+            object[2] = brandBLL.findBrandsBy(Map.of("id", product.getBrand_id())).get(0).getName();
+            object[3] = categoryBLL.findCategoriesBy(Map.of("id", product.getCategory_id())).get(0).getName();
+            object[4] = product.getCost();
+            object[5] = product.getQuantity();
+            productlist = Arrays.copyOf(productlist, productlist.length + 1);
+            productlist[productlist.length - 1] = object;
         }
 
         model.setRowCount(0);
-        for (Object[] object : objects) {
+        for (Object[] object : productlist) {
             model.addRow(object);
         }
     }

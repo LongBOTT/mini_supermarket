@@ -41,7 +41,7 @@ public class ShipmentGUI extends Layout1 {
             new String[] {"Mã lô hàng", "Tên sản phẩm", "Đơn giá", "Số lượng nhập", "Tồn kho", "Ngày sản xuất", "Ngày hết hạn", "Ngày nhập hàng"}, e -> {});
         scrollPane = new RoundedScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         iconDetail = new JLabel();
-        cbbAttributeShipment = new JComboBox(new String[] {"Tên sản phẩm", "Ngày hết hạn"});
+        cbbAttributeShipment = new JComboBox(new String[] {"Tên sản phẩm", "Ngày hết hạn", "Sắp hết hàng"});
         cbbProduct = new JComboBox<>();
         cbbDate = new JComboBox<>(new String[] {"Hết hạn", "Sắp hết hạn"});
 
@@ -128,7 +128,15 @@ public class ShipmentGUI extends Layout1 {
             cbbDate.setSelectedIndex(0);
             cbbDate.setVisible(true);
             searchByDate();
+        } else {
+            cbbDate.setVisible(false);
+            cbbProduct.setVisible(false);
+            searchByQuantity();
         }
+    }
+
+    private void searchByQuantity() {
+        loadDataTable(shipmentBLL.searchShipments("deleted = 0", "`shipment`.remain > 0 AND `shipment`.remain <= 20"));
     }
 
     private void showDetailShipment() {

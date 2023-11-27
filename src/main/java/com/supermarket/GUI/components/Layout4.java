@@ -22,11 +22,10 @@ public class Layout4 extends Layout1{
         leftContent.setLayout(new BorderLayout());
         leftContent.setBackground(new Color(0xA8A8AF));
         leftContent.setPreferredSize(new Dimension(800, 710));
-        bottom.add(leftContent, BorderLayout.WEST);
+        bottom.add(leftContent, BorderLayout.CENTER);
 
         rightContent.setLayout(new BorderLayout());
         rightContent.setBackground(new Color(0xA8A8AF));
         rightContent.setPreferredSize(new Dimension(350, 710));
-        bottom.add(rightContent, BorderLayout.EAST);
     }
 }

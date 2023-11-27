@@ -36,12 +36,12 @@ public class Export_detailBLL extends Manager<Export_detail>{
         return getData(exportList);
     }
 
-    public boolean addExport(Export_detail exportDetail) {
+    public boolean addExport_detail(Export_detail exportDetail) {
         exportList.add(exportDetail);
         return exportDetailDAL.addExport_detail(exportDetail) != 0;
     }
 
-    public boolean updateExport(Export_detail exportDetail) {
+    public boolean updateExport_detail(Export_detail exportDetail) {
         exportList.set(getIndex(exportDetail,List.of("export_note_id","shipment_id"), exportList), exportDetail);
         return exportDetailDAL.updateExport_detail(exportDetail) != 0;
     }

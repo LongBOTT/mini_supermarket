@@ -74,7 +74,7 @@ public class FormAddCustomerGUI extends DialogForm{
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[]{"Mã khách hàng:", "Tên khách hàng:", "Giới tính:", "Ngày sinh:", "Số điện thoại:", "Thành viên:", "Lần đăng nhập cuối:", "Điểm thưởng:"}) {
+        for (String string : new String[]{"Mã khách hàng:", "Tên khách hàng:", "Giới tính:", "Ngày sinh:", "Số điện thoại:", "Thành viên:", "Ngày đăng ký thành viên:", "Điểm thưởng:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -94,7 +94,7 @@ public class FormAddCustomerGUI extends DialogForm{
             if(string.equals("Ngày sinh:")){
                 addPlaceholder(textField, "yyyy-mm-dd");
             }
-            if (string.equals("Lần đăng nhập cuối:")) {
+            if (string.equals("Ngày đăng ký thành viên:")) {
                 textField.setText(new Date(01,01,1000).toString());
                 textField.setEnabled(false);
             }
