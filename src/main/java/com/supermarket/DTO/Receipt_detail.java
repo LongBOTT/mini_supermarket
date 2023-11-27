@@ -5,17 +5,15 @@ public class Receipt_detail {
     private int product_id;
     private double quantity;
     private double total;
-    private double percent;
 
     public Receipt_detail() {
     }
 
-    public Receipt_detail(int receipt_id, int product_id, double quantity, double total, double percent) {
+    public Receipt_detail(int receipt_id, int product_id, double quantity, double total) {
         this.receipt_id = receipt_id;
         this.product_id = product_id;
         this.quantity = quantity;
         this.total = total;
-        this.percent = percent;
     }
 
     public int getReceipt_id() {
@@ -50,20 +48,12 @@ public class Receipt_detail {
         this.total = total;
     }
 
-    public double getPercent() {
-        return percent;
-    }
-
-    public void setPercent(double percent) {
-        this.percent = percent;
-    }
 
     @Override
     public String toString() {
         return receipt_id + " | " +
             product_id + " | " +
             quantity + " | " +
-            total + " | " +
-            percent;
+            total;
     }
 }

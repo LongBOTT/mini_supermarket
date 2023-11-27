@@ -1,5 +1,7 @@
 package com.supermarket.GUI.components;
 
+import net.miginfocom.swing.MigLayout;
+
 import java.awt.*;
 
 public class Layout2 extends Layout1{
@@ -19,8 +21,8 @@ public class Layout2 extends Layout1{
 
         bottom.setBackground(new Color(0xFFFFFF));
 
-        leftContent.setLayout(new BorderLayout());
-        leftContent.setBackground(new Color(0xA8A8AF));
+        leftContent.setLayout(new MigLayout("", "10[]20[]10", "20[]20[]"));
+        leftContent.setBackground(new Color(0xFFBDD2DB));
         leftContent.setPreferredSize(new Dimension(350, 710));
         bottom.add(leftContent, BorderLayout.WEST);
 

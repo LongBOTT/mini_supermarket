@@ -12,7 +12,7 @@ public class ImportBLL extends Manager<Import> {
 
     public ImportBLL() {
         importNoteDAL = new ImportDAL();
-        importList = searchImport("deleted = 0");
+        importList = searchImport();
     }
 
     public ImportDAL getImportDAL() {
@@ -40,16 +40,6 @@ public class ImportBLL extends Manager<Import> {
         return importNoteDAL.addImport(importnote) != 0;
     }
 
-    public boolean updateImport(Import importnote) {
-        importList.set(getIndex(importnote, "id", importList), importnote);
-        return importNoteDAL.updateImportnote(importnote) != 0;
-    }
-
-    public boolean deleteImport(Import importnote) {
-        importList.remove(getIndex(importnote, "id", importList));
-        return importNoteDAL.deleteImport("id = " + importnote.getId()) != 0;
-    }
-
     public List<Import> searchImport(String... conditions) {
         return importNoteDAL.searchImport(conditions);
     }
@@ -73,10 +63,10 @@ public class ImportBLL extends Manager<Import> {
 
     public boolean exists(Import imports) {
         return !findImportBy(Map.of(
-            "staff id", imports.getStaff_id(),
-            "received date", imports.getReceived_date(),
+            "staff_id", imports.getStaff_id(),
+            "received_date", imports.getReceived_date(),
             "total", imports.getTotal(),
-            "suplier id", imports.getSupplier_id()
+            "supplier_id", imports.getSupplier_id()
         )).isEmpty();
     }
 
@@ -88,11 +78,16 @@ public class ImportBLL extends Manager<Import> {
     public Object getValueByKey(Import imports, String key) {
         return switch (key) {
             case "id" -> imports.getId();
-            case "staff id" -> imports.getStaff_id();
+            case "staff_id" -> imports.getStaff_id();
             case "received date" -> imports.getReceived_date();
             case "total" -> imports.getTotal();
-            case "suplier id" -> imports.getSupplier_id();
+            case "supplier_id" -> imports.getSupplier_id();
             default -> null;
         };
+    }
+
+    public static void main(String[] args) {
+        ImportBLL importBLL = new ImportBLL();
+        System.out.println(importBLL.getImportList());
     }
 }

@@ -1,5 +1,6 @@
 package com.supermarket.GUI.DialogGUI;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.RoleBLL;
 import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DTO.Account;
@@ -54,7 +55,8 @@ public class FormDetailCustomerGUI extends DialogForm{
 
         scrollPaneDatatable.setPreferredSize(new Dimension(600, 700));
         leftContent.add(scrollPaneDatatable, BorderLayout.CENTER);
-        containerTable.add(dataTable);
+        containerTable.setLayout(new GridBagLayout());
+        containerTable.add(new FlatSVGIcon("icon/customerr.svg"));
 
         scrollPaneFormDetail.setPreferredSize(new Dimension(670, 610));
         rightContent.add(scrollPaneFormDetail, BorderLayout.NORTH);
@@ -62,7 +64,7 @@ public class FormDetailCustomerGUI extends DialogForm{
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[]{"Mã khách hàng:", "Tên khách hàng:", "Giới tính:", "Ngày sinh:", "Số điện thoại:", "Thành viên:","Lần đăng nhập cuối:","Điểm thưởng:"}) {
+        for (String string : new String[]{"Mã khách hàng:", "Tên khách hàng:", "Giới tính:", "Ngày sinh:", "Số điện thoại:", "Thành viên:","Ngày đăng ký thành viên:","Điểm thưởng:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -91,21 +93,12 @@ public class FormDetailCustomerGUI extends DialogForm{
                 String membership = customer.isMembership()? "Có":"Không";
                 textField.setText(membership);
             }
-            if (string.equals("Lần đăng nhập cuối:")) {
+            if (string.equals("Ngày đăng ký thành viên:")) {
                 textField.setText(customer.getSigned_up_date().toString());
             }
             if (string.equals("Điểm thưởng:")) {
                 textField.setText(String.valueOf(customer.getPoint()));
             }
-//            if (string.equals("Mã nhân viên:")) {
-//                textField.setText(String.valueOf(account.getStaffID()));
-//                textField.addMouseListener(new MouseAdapter() {
-//                    @Override
-//                    public void mousePressed(MouseEvent e) {
-//                        loadTableStaff();
-//                    }
-//                });
-//            }
             textField.setEditable(false);
             textField.setPreferredSize(new Dimension(400, 50));
             textField.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));

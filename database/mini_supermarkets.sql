@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2023 at 06:00 PM
+-- Generation Time: Nov 27, 2023 at 03:59 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -106,7 +106,7 @@ INSERT INTO `category` (`id`, `name`, `quantity`, `deleted`) VALUES
 (4, 'Sữa chua', 6, b'0'),
 (5, 'Sữa bột', 2, b'0'),
 (6, 'Nước trái cây, nước trà', 6, b'0'),
-(7, 'Miến ăn liền', 0, b'0'),
+(7, 'Miến ăn liền', 4, b'0'),
 (8, 'xyz', 0, b'1');
 
 -- --------------------------------------------------------
@@ -142,8 +142,7 @@ INSERT INTO `customer` (`id`, `name`, `gender`, `birthdate`, `phone`, `membershi
 (8, 'NGUYỄN THI DIỆU CHI', b'0', '2000-04-09', '0378367833', b'1', '2022-05-05', 450, b'0'),
 (9, 'NGUYỄN THỊ THANH NHÀN', b'0', '2001-08-03', '0323373316', b'1', '2022-09-08', 3000, b'0'),
 (10, 'NGUYỄN TRUNG TÍN', b'1', '1000-01-01', '', b'0', '1000-01-01', 0, b'0'),
-(11, 'ĐINH XUÂN HOÀI', b'1', '2004-07-06', '0964745278', b'1', '2023-03-07', 200, b'0'),
-(12, 'xyz', b'0', '2023-02-02', '0963', b'0', '2023-02-02', 0, b'1');
+(11, 'ĐINH XUÂN HOÀI', b'1', '2004-07-06', '0964745278', b'1', '2023-03-07', 200, b'0');
 
 -- --------------------------------------------------------
 
@@ -215,17 +214,19 @@ CREATE TABLE `discount` (
   `percent` double DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
-  `deleted` bit(1) DEFAULT NULL
+  `status` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `discount`
 --
 
-INSERT INTO `discount` (`id`, `percent`, `start_date`, `end_date`, `status`, `deleted`) VALUES
-(1, 10, '2023-09-09', '2023-09-16', b'0', b'0'),
-(2, 15, '2023-09-20', '2023-09-26', b'0', b'0');
+INSERT INTO `discount` (`id`, `percent`, `start_date`, `end_date`, `status`) VALUES
+(1, 10, '2023-09-09', '2023-09-16', b'1'),
+(2, 15, '2023-09-20', '2023-09-26', b'1'),
+(3, 30, '2023-11-16', '2023-11-18', b'1'),
+(4, 15, '2023-11-15', '2023-11-30', b'1'),
+(5, 50, '2023-11-22', '2023-11-30', b'0');
 
 -- --------------------------------------------------------
 
@@ -245,7 +246,17 @@ CREATE TABLE `discount_detail` (
 
 INSERT INTO `discount_detail` (`discount_id`, `product_id`, `status`) VALUES
 (1, 1, b'0'),
-(2, 5, b'0');
+(1, 2, b'0'),
+(3, 1, b'0'),
+(3, 2, b'0'),
+(3, 3, b'0'),
+(3, 9, b'0'),
+(3, 11, b'0'),
+(3, 12, b'0'),
+(4, 5, b'0'),
+(4, 6, b'0'),
+(5, 5, b'0'),
+(5, 6, b'0');
 
 -- --------------------------------------------------------
 
@@ -257,7 +268,7 @@ CREATE TABLE `export` (
   `id` bigint(20) NOT NULL,
   `staff_id` bigint(20) DEFAULT NULL,
   `invoice_date` date DEFAULT NULL,
-  `total` double DEFAULT NULL,
+  `total` bigint(20) DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -267,11 +278,18 @@ CREATE TABLE `export` (
 --
 
 INSERT INTO `export` (`id`, `staff_id`, `invoice_date`, `total`, `reason`, `deleted`) VALUES
-(1, 9, '2023-09-15', 845000, 'Xuất để bán', b'0'),
-(2, 10, '2023-09-28', 205000, 'Xuất để bỏ', b'0'),
-(3, 7, '2023-09-28', 220000, 'Xuất để bỏ', b'0'),
-(4, 1, '2029-09-25', 200000, 'Xuất để bán', b'0'),
-(5, 1, '2029-09-25', 300000, 'Xuất để bán', b'0');
+(1, 1, '2023-01-01', 150, 'Bán', b'0'),
+(2, 2, '2023-01-02', 200, 'Huỷ', b'0'),
+(3, 3, '2023-01-03', 300, 'Bán', b'0'),
+(4, 4, '2023-01-04', 180, 'Huỷ', b'0'),
+(5, 5, '2023-01-05', 250, 'Bán', b'0'),
+(6, 6, '2023-01-06', 120, 'Huỷ', b'0'),
+(7, 7, '2023-01-07', 350, 'Bán', b'0'),
+(8, 8, '2023-01-08', 170, 'Huỷ', b'0'),
+(9, 9, '2023-01-09', 280, 'Bán', b'0'),
+(10, 10, '2023-01-10', 200, 'Huỷ', b'0'),
+(11, 1, '2023-11-27', 3, 'Bán', b'0'),
+(12, 1, '2023-11-27', 300000, 'Bán', b'0');
 
 -- --------------------------------------------------------
 
@@ -295,7 +313,10 @@ INSERT INTO `export_detail` (`export_id`, `shipment_id`, `quantity`, `total`) VA
 (2, 2, 3, 615000),
 (3, 2, 3, 660000),
 (4, 1, 2, 400000),
-(5, 2, 3, 900000);
+(5, 2, 3, 900000),
+(11, 14, 1, 3),
+(12, 1, 10, 100000),
+(12, 2, 20, 200000);
 
 -- --------------------------------------------------------
 
@@ -329,19 +350,47 @@ CREATE TABLE `import` (
   `id` bigint(20) NOT NULL,
   `staff_id` bigint(20) DEFAULT NULL,
   `received_date` date DEFAULT NULL,
-  `total` double DEFAULT NULL,
-  `supplier_id` bigint(20) DEFAULT NULL,
-  `deleted` bit(1) DEFAULT NULL
+  `total` bigint(20) DEFAULT NULL,
+  `supplier_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `import`
 --
 
-INSERT INTO `import` (`id`, `staff_id`, `received_date`, `total`, `supplier_id`, `deleted`) VALUES
-(1, 5, '2023-09-02', 50, 1, b'0'),
-(2, 4, '2023-09-02', 50, 2, b'0'),
-(3, 2, '2023-09-02', 30, 3, b'0');
+INSERT INTO `import` (`id`, `staff_id`, `received_date`, `total`, `supplier_id`) VALUES
+(4, 2, '2023-11-19', 200000, 1),
+(5, 3, '2023-11-17', 200000, 2),
+(6, 3, '2023-11-14', 200000, 1),
+(7, 1, '2023-11-12', 200000, 3),
+(8, 2, '2023-11-10', 200000, 1),
+(9, 1, '2023-11-08', 200000, 2),
+(10, 3, '2023-11-06', 200000, 1),
+(11, 2, '2023-11-04', 200000, 3),
+(12, 1, '2023-11-02', 200000, 2),
+(13, 3, '2023-10-31', 200000, 1),
+(14, 1, '2023-10-29', 200000, 3),
+(15, 2, '2023-10-27', 200000, 1),
+(16, 1, '2023-10-25', 100000, 2),
+(17, 3, '2023-10-23', 100000, 3),
+(18, 2, '2023-10-21', 100000, 1),
+(19, 1, '2023-10-19', 100000, 2),
+(20, 3, '2023-10-17', 100000, 3),
+(21, 2, '2023-10-15', 100000, 1),
+(22, 1, '2023-10-13', 100000, 2),
+(23, 3, '2023-10-11', 100000, 3),
+(24, 2, '2023-10-09', 200000, 1),
+(25, 1, '2023-10-07', 200000, 2),
+(26, 3, '2023-10-05', 200000, 3),
+(27, 2, '2023-10-03', 200000, 1),
+(28, 1, '2023-10-01', 200000, 2),
+(29, 3, '2023-09-29', 200000, 3),
+(30, 2, '2023-09-27', 200000, 1),
+(31, 1, '2023-09-25', 200000, 2),
+(32, 3, '2023-09-23', 200000, 3),
+(33, 2, '2023-09-21', 200000, 1),
+(34, 1, '2023-11-27', 14, 3),
+(35, 1, '2023-11-27', 14, 3);
 
 -- --------------------------------------------------------
 
@@ -387,7 +436,7 @@ CREATE TABLE `product` (
   `brand_id` bigint(20) DEFAULT NULL,
   `category_id` bigint(20) DEFAULT NULL,
   `unit` varchar(255) DEFAULT NULL,
-  `cost` double DEFAULT NULL,
+  `cost` bigint(20) DEFAULT NULL,
   `quantity` double DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
   `barcode` varchar(255) DEFAULT NULL,
@@ -399,16 +448,16 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`id`, `name`, `brand_id`, `category_id`, `unit`, `cost`, `quantity`, `image`, `barcode`, `deleted`) VALUES
-(1, 'Lốc 4 hộp sữa tươi 110ml Vinamilk có đường', 3, 1, 'Lốc', 21500, 0, 'img/Pro1.svg', '', b'0'),
-(2, 'Lốc 4 hộp sữa tươi 110ml Vinamilk ít đường', 3, 1, 'Lốc', 21500, 0, 'img/Pro2.svg', '', b'0'),
+(1, 'Lốc 4 hộp sữa tươi 110ml Vinamilk có đường', 3, 1, 'Lốc', 21500, 10, 'img/Pro1.svg', '', b'0'),
+(2, 'Lốc 4 hộp sữa tươi 110ml Vinamilk ít đường', 3, 1, 'Lốc', 21500, 20, 'img/Pro2.svg', '', b'0'),
 (3, 'Lốc 4 hộp sữa tươi 110ml Vinamilk không đường', 3, 1, 'Lốc', 21500, 0, 'img/Pro3.svg', '', b'0'),
 (4, 'Lốc 4 hộp sữa tươi 180ml Vinamilk có đường', 3, 1, 'Lốc', 29900, 0, 'img/Pro4.svg', '', b'0'),
-(5, 'Lốc 4 hộp sữa tươi 180ml Vinamilk ít đường', 3, 1, 'Lốc', 29900, 0, 'img/Pro5.svg', '', b'0'),
-(6, 'Lốc 4 hộp sữa tươi 180ml Vinamilk không đường', 3, 1, 'Lốc', 29900, 0, 'img/Pro6.svg', '', b'0'),
+(5, 'Lốc 4 hộp sữa tươi 180ml Vinamilk ít đường', 3, 1, 'Lốc', 29900, 4, 'img/Pro5.svg', '', b'0'),
+(6, 'Lốc 4 hộp sữa tươi 180ml Vinamilk không đường', 3, 1, 'Lốc', 29900, 4, 'img/Pro6.svg', '', b'0'),
 (7, 'Sữa bột Vinamilk Sure Prevent Gold lon 900g', 2, 5, 'Lon', 625000, 0, 'img/Pro7.svg', '', b'0'),
 (8, '6 chai sữa pha sẵn Sure Prevent Gold 200ml', 2, 5, 'Lốc', 168000, 0, 'img/Pro8.svg', '', b'0'),
-(9, 'Nước ép cam Vfresh 1 lít', 1, 6, 'Hộp', 50000, 1, 'img/Pro9.svg', '', b'0'),
-(10, 'Nước ép cam không đường Vfresh 1 lít', 1, 6, 'Hộp', 50000, 0, 'img/Pro10.svg', '', b'0'),
+(9, 'Nước ép cam Vfresh 1 lít', 1, 6, 'Hộp', 50000, 4, 'img/Pro9.svg', '', b'0'),
+(10, 'Nước ép cam không đường Vfresh 1 lít', 1, 6, 'Hộp', 50000, 4, 'img/Pro10.svg', '', b'0'),
 (11, 'Nước ép đào Vfresh 1 lít', 1, 6, 'Hộp', 42000, 0, 'img/Pro11.svg', '', b'0'),
 (12, 'Nước ép đào không đường Vfresh 1 lít', 1, 6, 'Hộp', 42000, 0, 'img/Pro12.svg', '', b'0'),
 (13, 'Trà Atiso Vfresh 1 lít', 1, 6, 'Hộp', 20000, 0, 'img/Pro1.svg', '', b'0'),
@@ -438,7 +487,9 @@ INSERT INTO `product` (`id`, `name`, `brand_id`, `category_id`, `unit`, `cost`, 
 (37, 'Nước ngọt Fanta cam chai 390ml', 7, 3, 'Chai', 7800, 0, 'img/Pro1.svg', '', b'0'),
 (38, 'Nước ngọt Fanta xá xị chai 390ml', 7, 3, 'Chai', 7800, 0, 'img/Pro1.svg', '', b'0'),
 (39, 'Mì Hảo Hảo tôm chua cay gói 75g', 13, 2, 'Gói', 4400, 0, 'img/Pro1.svg', '', b'0'),
-(40, 'Mì Handy Hảo Hảo tôm chua cay ly 67g', 13, 2, 'Ly', 9500, 0, 'img/Pro1.svg', '', b'0');
+(40, 'Mì Handy Hảo Hảo tôm chua cay ly 67g', 13, 2, 'Ly', 9500, 0, 'img/Pro1.svg', '', b'0'),
+(41, 'abc', 9, 7, 'Lốc', 3, 3333, 'Pro7.svg', 'asd', b'1'),
+(42, 'asd', 14, 7, 'Lốc', 33, 333, 'img/Pro1.svg', '3333fafs', b'1');
 
 -- --------------------------------------------------------
 
@@ -450,18 +501,17 @@ CREATE TABLE `promotion` (
   `id` bigint(20) NOT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL,
-  `deleted` bit(1) DEFAULT NULL
+  `status` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `promotion`
 --
 
-INSERT INTO `promotion` (`id`, `start_date`, `end_date`, `status`, `deleted`) VALUES
-(1, '2023-09-25', '2023-10-01', b'0', b'0'),
-(2, '2023-09-27', '2023-10-01', b'0', b'0'),
-(3, '2023-09-22', '2023-09-29', b'0', b'0');
+INSERT INTO `promotion` (`id`, `start_date`, `end_date`, `status`) VALUES
+(1, '2023-09-25', '2023-10-01', b'0'),
+(2, '2023-09-27', '2023-10-01', b'1'),
+(3, '2023-09-22', '2023-09-29', b'1');
 
 -- --------------------------------------------------------
 
@@ -480,9 +530,8 @@ CREATE TABLE `promotion_gift` (
 --
 
 INSERT INTO `promotion_gift` (`promotion_id`, `product_id`, `quantity`) VALUES
-(1, 25, 1),
-(2, 25, 1),
-(3, 25, 1);
+(1, 9, 1),
+(1, 10, 1);
 
 -- --------------------------------------------------------
 
@@ -501,9 +550,8 @@ CREATE TABLE `promotion_item` (
 --
 
 INSERT INTO `promotion_item` (`promotion_id`, `product_id`, `quantity`) VALUES
-(1, 4, 2),
-(2, 5, 2),
-(3, 6, 2);
+(1, 5, 2),
+(1, 6, 2);
 
 -- --------------------------------------------------------
 
@@ -516,20 +564,54 @@ CREATE TABLE `receipt` (
   `staff_id` bigint(20) DEFAULT NULL,
   `customer_id` bigint(20) DEFAULT NULL,
   `invoice_date` date DEFAULT NULL,
-  `total` double DEFAULT NULL,
-  `received` double DEFAULT NULL,
-  `excess` double DEFAULT NULL,
-  `deleted` bit(1) DEFAULT NULL
+  `total` bigint(20) DEFAULT NULL,
+  `received` bigint(20) DEFAULT NULL,
+  `excess` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `receipt`
 --
 
-INSERT INTO `receipt` (`id`, `staff_id`, `customer_id`, `invoice_date`, `total`, `received`, `excess`, `deleted`) VALUES
-(1, 5, 2, '2023-09-18', 1690000, 1700000, 10000, b'0'),
-(2, 6, 3, '2023-09-05', 400000, 500000, 100000, b'0'),
-(3, 7, 4, '2023-09-28', 900000, 1000000, 100000, b'0');
+INSERT INTO `receipt` (`id`, `staff_id`, `customer_id`, `invoice_date`, `total`, `received`, `excess`) VALUES
+(1, 4, 2, '2023-11-15', 150000, 150000, 0),
+(2, 4, 3, '2023-11-16', 200000, 200000, 0),
+(3, 4, 4, '2023-11-17', 300000, 300000, 0),
+(4, 4, 5, '2023-11-18', 250000, 250000, 0),
+(5, 4, 6, '2023-11-19', 180000, 180000, 0),
+(6, 4, 7, '2023-11-20', 120000, 120000, 0),
+(7, 4, 8, '2023-11-21', 350000, 350000, 0),
+(8, 4, 9, '2023-11-22', 400000, 400000, 0),
+(9, 4, 10, '2023-11-23', 280000, 280000, 0),
+(10, 4, 11, '2023-11-24', 320000, 320000, 0),
+(11, 4, 2, '2023-11-15', 180000, 180000, 0),
+(12, 4, 3, '2023-11-16', 210000, 210000, 0),
+(13, 4, 4, '2023-11-17', 320000, 320000, 0),
+(14, 4, 5, '2023-11-18', 280000, 280000, 0),
+(31, 4, 2, '2023-09-05', 120000, 120000, 0),
+(32, 4, 3, '2023-09-12', 180000, 180000, 0),
+(33, 4, 4, '2023-09-20', 250000, 250000, 0),
+(34, 4, 5, '2023-09-25', 300000, 300000, 0),
+(35, 4, 6, '2023-10-05', 200000, 200000, 0),
+(36, 4, 7, '2023-10-10', 150000, 150000, 0),
+(37, 4, 8, '2023-10-15', 280000, 280000, 0),
+(38, 4, 9, '2023-10-20', 320000, 320000, 0),
+(39, 4, 10, '2023-10-25', 180000, 180000, 0),
+(40, 4, 11, '2023-10-30', 220000, 220000, 0),
+(41, 4, 2, '2023-09-02', 150000, 150000, 0),
+(42, 4, 3, '2023-09-08', 220000, 220000, 0),
+(43, 4, 4, '2023-09-15', 180000, 180000, 0),
+(44, 4, 5, '2023-09-22', 250000, 250000, 0),
+(45, 4, 6, '2023-10-01', 100000, 120000, 0),
+(46, 4, 7, '2023-10-08', 190000, 190000, 0),
+(47, 4, 8, '2023-10-14', 280000, 280000, 0),
+(48, 4, 9, '2023-10-21', 320000, 320000, 0),
+(49, 4, 10, '2023-10-27', 180000, 180000, 0),
+(50, 4, 11, '2023-11-03', 220000, 220000, 0),
+(51, 4, 2, '2023-11-09', 150000, 150000, 0),
+(52, 4, 3, '2023-11-16', 220000, 220000, 0),
+(53, 4, 4, '2023-11-23', 180000, 180000, 0),
+(54, 4, 5, '2023-11-30', 250000, 250000, 0);
 
 -- --------------------------------------------------------
 
@@ -541,18 +623,90 @@ CREATE TABLE `receipt_detail` (
   `receipt_id` bigint(20) NOT NULL,
   `product_id` bigint(20) NOT NULL,
   `quantity` double DEFAULT NULL,
-  `total` double DEFAULT NULL,
-  `percent` double DEFAULT NULL
+  `total` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `receipt_detail`
 --
 
-INSERT INTO `receipt_detail` (`receipt_id`, `product_id`, `quantity`, `total`, `percent`) VALUES
-(1, 1, 2, 1690000, 0),
-(2, 2, 3, 615000, 0),
-(3, 2, 3, 660000, 0);
+INSERT INTO `receipt_detail` (`receipt_id`, `product_id`, `quantity`, `total`) VALUES
+(1, 1, 2, 43000),
+(1, 3, 1, 21500),
+(2, 2, 3, 89700),
+(2, 4, 2, 59800),
+(3, 5, 1, 29900),
+(3, 6, 1, 29900),
+(4, 7, 2, 125000),
+(4, 8, 1, 168000),
+(5, 9, 4, 200000),
+(5, 10, 3, 150000),
+(6, 11, 2, 84000),
+(6, 12, 1, 42000),
+(7, 7, 2, 40000),
+(7, 13, 3, 132000),
+(8, 7, 1, 36000),
+(8, 20, 1, 72000),
+(9, 7, 2, 220000),
+(9, 27, 1, 180000),
+(10, 7, 3, 240000),
+(10, 16, 2, 160000),
+(11, 1, 2, 43000),
+(11, 3, 1, 21500),
+(12, 2, 3, 89700),
+(12, 4, 2, 59800),
+(13, 6, 1, 29900),
+(13, 7, 1, 29900),
+(14, 7, 2, 125000),
+(14, 8, 1, 168000),
+(31, 1, 2, 43000),
+(31, 3, 1, 21500),
+(32, 2, 3, 89700),
+(32, 4, 2, 59800),
+(33, 5, 1, 29900),
+(33, 6, 1, 29900),
+(34, 7, 2, 125000),
+(34, 8, 1, 168000),
+(35, 7, 4, 200000),
+(35, 10, 3, 150000),
+(36, 11, 2, 84000),
+(36, 12, 1, 42000),
+(37, 13, 3, 132000),
+(37, 14, 2, 40000),
+(38, 15, 1, 36000),
+(38, 16, 1, 72000),
+(39, 17, 2, 220000),
+(39, 18, 1, 180000),
+(40, 19, 3, 240000),
+(40, 20, 2, 160000),
+(41, 1, 2, 43000),
+(41, 3, 1, 21500),
+(42, 2, 3, 89700),
+(42, 4, 2, 59800),
+(43, 5, 1, 29900),
+(43, 6, 1, 29900),
+(44, 7, 2, 125000),
+(44, 8, 1, 168000),
+(45, 9, 4, 200000),
+(45, 10, 3, 150000),
+(46, 11, 2, 84000),
+(46, 12, 1, 42000),
+(47, 13, 3, 132000),
+(47, 14, 2, 40000),
+(48, 15, 1, 36000),
+(48, 16, 1, 72000),
+(49, 17, 2, 220000),
+(49, 18, 1, 180000),
+(50, 19, 3, 240000),
+(50, 20, 2, 160000),
+(51, 1, 2, 43000),
+(51, 3, 1, 21500),
+(52, 2, 3, 89700),
+(52, 4, 2, 59800),
+(53, 5, 1, 29900),
+(53, 6, 1, 29900),
+(54, 7, 2, 125000),
+(54, 8, 1, 168000);
 
 -- --------------------------------------------------------
 
@@ -585,7 +739,7 @@ INSERT INTO `role` (`id`, `name`, `deleted`) VALUES
 CREATE TABLE `shipment` (
   `id` bigint(20) NOT NULL,
   `product_id` bigint(20) DEFAULT NULL,
-  `unit_price` double DEFAULT NULL,
+  `unit_price` bigint(20) DEFAULT NULL,
   `quantity` double DEFAULT NULL,
   `remain` double DEFAULT NULL,
   `mfg` date DEFAULT NULL,
@@ -600,9 +754,20 @@ CREATE TABLE `shipment` (
 --
 
 INSERT INTO `shipment` (`id`, `product_id`, `unit_price`, `quantity`, `remain`, `mfg`, `exp`, `sku`, `import_id`, `deleted`) VALUES
-(1, 2, 256000, 10, 12, '2023-09-02', '2024-09-02', '00010002', 1, b'0'),
-(2, 3, 230000, 20, 15, '2023-09-02', '2024-09-02', '00020003', 2, b'0'),
-(3, 4, 400000, 20, 15, '2023-09-02', '2024-09-02', '00030004', 3, b'0');
+(1, 1, 10000, 50, 40, '2023-01-01', '2023-12-31', '', 11, b'0'),
+(2, 2, 10000, 30, 10, '2023-02-01', '2023-11-08', '', 12, b'0'),
+(3, 3, 10000, 75, 75, '2023-03-01', '2023-10-31', '', 13, b'0'),
+(4, 4, 10000, 40, 40, '2023-04-01', '2023-09-30', '', 4, b'0'),
+(5, 5, 10000, 60, 60, '2023-05-01', '2023-08-31', '', 5, b'0'),
+(6, 6, 10000, 25, 25, '2023-06-01', '2023-07-31', '', 6, b'0'),
+(7, 7, 10000, 45, 45, '2023-07-01', '2023-06-30', '', 7, b'0'),
+(8, 8, 10000, 35, 35, '2023-08-01', '2023-05-31', '', 8, b'0'),
+(9, 9, 10000, 55, 55, '2023-09-01', '2023-04-30', '', 9, b'0'),
+(10, 10, 10000, 20, 20, '2023-10-01', '2023-03-31', '', 10, b'0'),
+(11, 33, 1, 1, 1, '2023-11-01', '2023-11-01', '00110033', 34, b'0'),
+(12, 34, 2, 2, 2, '2023-11-01', '2023-11-01', '00120034', 35, b'0'),
+(13, 35, 1, 1, 1, '2023-11-02', '2023-11-02', '00120035', 35, b'0'),
+(14, 36, 3, 3, 3, '2023-11-03', '2023-11-03', '00120036', 35, b'0');
 
 -- --------------------------------------------------------
 
@@ -627,7 +792,7 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`id`, `name`, `gender`, `birthdate`, `phone`, `address`, `email`, `entry_date`, `deleted`) VALUES
-(1, 'ADMIN', b'0', '1000-01-01', '', '', 'colong30082003@gmail.com', '1000-01-01', b'0'),
+(1, 'ADMIN', b'0', '1000-01-01', '096333946', '514/26 Lê Đức Thọ P17 Gò Vấp TPHCM', 'colong30082003@gmail.com', '1000-01-01', b'0'),
 (2, 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '0834527892', '531 Nguyễn Oanh, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', 'dungboi@gmail.com', '1000-01-01', b'0'),
 (3, 'ĐINH QUANG DUY', b'1', '2003-01-20', '0359872569', '1A Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', 'quangduy@gmail.com', '1000-01-01', b'0'),
 (4, 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '0970352875', '514/26 Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', 'colong30082003@gmail.com', '1000-01-01', b'0'),
@@ -870,13 +1035,13 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `discount`
 --
 ALTER TABLE `discount`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `export`
 --
 ALTER TABLE `export`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `function`
@@ -888,7 +1053,7 @@ ALTER TABLE `function`
 -- AUTO_INCREMENT for table `import`
 --
 ALTER TABLE `import`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `module`
@@ -900,7 +1065,7 @@ ALTER TABLE `module`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `promotion`
@@ -912,7 +1077,7 @@ ALTER TABLE `promotion`
 -- AUTO_INCREMENT for table `receipt`
 --
 ALTER TABLE `receipt`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT for table `role`
@@ -924,13 +1089,13 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `shipment`
 --
 ALTER TABLE `shipment`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `statistic`

@@ -13,7 +13,7 @@ public class PromotionBLL extends Manager<Promotion>{
 
     public PromotionBLL() {
         promotionDAL = new PromotionDAL();
-        promotionList = searchPromotions("deleted = 0");
+        promotionList = searchPromotions("status = 0");
     }
 
     public PromotionDAL getPromotionDAL() {
@@ -46,11 +46,6 @@ public class PromotionBLL extends Manager<Promotion>{
         return promotionDAL.updatePromotion(promotion) != 0;
     }
 
-    public boolean deletePromotion(Promotion promotion) {
-        promotionList.remove(getIndex(promotion, "id", promotionList));
-        return promotionDAL.deletePromotion("id = " + promotion.getId()) != 0;
-    }
-
     public List<Promotion> searchPromotions(String... conditions) {
         return promotionDAL.searchPromotions(conditions);
     }
@@ -76,8 +71,7 @@ public class PromotionBLL extends Manager<Promotion>{
         return !findPromotionsBy(Map.of(
             "start_date", promotion.getStart_date(),
             "end_date", promotion.getEnd_date(),
-            "status", promotion.isStatus(),
-            "deleted", promotion.isDeleted()
+            "status", promotion.isStatus()
         )).isEmpty();
     }
 
@@ -92,7 +86,6 @@ public class PromotionBLL extends Manager<Promotion>{
             case "start_date" -> promotion.getStart_date();
             case "end_date" -> promotion.getEnd_date();
             case "status" -> promotion.isStatus();
-            case "deleted" -> promotion.isDeleted();
             default -> null;
         };
     }

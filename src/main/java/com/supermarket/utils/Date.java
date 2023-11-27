@@ -2,7 +2,9 @@ package com.supermarket.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class Date {
@@ -10,7 +12,7 @@ public class Date {
     private int month;
     private int year;
 
-    public Date() {
+    public Date(java.sql.Date date) {
     }
 
     public Date(Date date) {
@@ -23,6 +25,13 @@ public class Date {
         this.date = date;
         this.month = month;
         this.year = year;
+    }
+
+    public Date(java.util.Date date) {
+        LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        this.date = localDate.getDayOfMonth();
+        this.month = localDate.getMonthValue();
+        this.year = localDate.getYear();
     }
 
     public int getDate() {

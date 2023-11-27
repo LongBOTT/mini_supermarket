@@ -7,17 +7,14 @@ public class Promotion {
     private Date start_date;
     private Date end_date;
     private boolean status;
-    private boolean deleted;
-
     public Promotion() {
     }
 
-    public Promotion(int id, Date start_date, Date end_date, boolean status, boolean deleted) {
+    public Promotion(int id, Date start_date, Date end_date, boolean status) {
         this.id = id;
         this.start_date = start_date;
         this.end_date = end_date;
         this.status = status;
-        this.deleted = deleted;
     }
 
     public int getId() {
@@ -52,17 +49,11 @@ public class Promotion {
         this.status = status;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
 
     @Override
     public String toString() {
-        String status1 = status? "Ngưng áp dụng" : "Đang áp dụng";
+        String status1 = !status? "Đang áp dụng" : "Ngừng áp dụng";
         return id  + " | " +
             start_date + " | " +
             end_date + " | " +

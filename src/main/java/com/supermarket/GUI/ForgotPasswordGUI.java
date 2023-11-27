@@ -253,7 +253,7 @@ public class ForgotPasswordGUI extends JDialog {
         revalidate();
     }
 
-    private void sendOTP(JLabel nothing) {
+    private void sendOTP(JLabel nothing)    {
         if (currentCountDownThread != null)
             currentCountDownThread.interrupt();
         currentCountDownThread = new Thread(() -> {

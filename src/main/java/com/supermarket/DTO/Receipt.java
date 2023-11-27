@@ -10,12 +10,10 @@ public class Receipt {
     private double total;
     private double received;
     private double excess;
-    private boolean deleted;
-
     public Receipt() {
     }
 
-    public Receipt(int id, int staff_id, int customer_id, Date invoice_date, double total, double received, double excess, boolean deleted) {
+    public Receipt(int id, int staff_id, int customer_id, Date invoice_date, double total, double received, double excess) {
         this.id = id;
         this.staff_id = staff_id;
         this.customer_id = customer_id;
@@ -23,7 +21,6 @@ public class Receipt {
         this.total = total;
         this.received = received;
         this.excess = excess;
-        this.deleted = deleted;
     }
 
     public int getId() {
@@ -82,13 +79,6 @@ public class Receipt {
         this.excess = excess;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
 
     @Override
     public String toString() {

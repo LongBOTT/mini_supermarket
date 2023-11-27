@@ -40,7 +40,7 @@ public class Discount_detail {
 
     @Override
     public String toString() {
-        String status1 = status? "Ngưng áp dụng" : "Đang áp dụng";
+        String status1 = !status? "Đang áp dụng" : "Ngừng áp dụng";
         return discount_id + " | " +
             product_id + " | " +
             status1;

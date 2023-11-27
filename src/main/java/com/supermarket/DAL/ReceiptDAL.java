@@ -17,8 +17,7 @@ public class ReceiptDAL extends Manager {
                 "invoice_date",
                 "total",
                 "received",
-                "excess",
-                "deleted"));
+                "excess"));
     }
 
     public List<Receipt> convertToReceipts(List<List<String>> data) {
@@ -31,8 +30,7 @@ public class ReceiptDAL extends Manager {
                     Date.parseDate(row.get(3)), // invoice_date
                     Double.parseDouble(row.get(4)), // total
                     Double.parseDouble(row.get(5)), // received
-                    Double.parseDouble(row.get(6)), // excess
-                    Boolean.parseBoolean(row.get(7))    // deleted
+                    Double.parseDouble(row.get(6)) // excess
                 );
             } catch (Exception e) {
                 System.out.println("Error occurred in ReceiptDAL.convertToReceipts(): " + e.getMessage());
@@ -49,40 +47,10 @@ public class ReceiptDAL extends Manager {
                 receipt.getInvoice_date(),
                 receipt.getTotal(),
                 receipt.getReceived(),
-                receipt.getExcess(),
-                false
+                receipt.getExcess()
             ); // receipt khi tạo mặc định deleted = 0
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in ReceiptDAL.addReceipt(): " + e.getMessage());
-        }
-        return 0;
-    }
-
-    public int updateReceipt(Receipt receipt) {
-        try {
-            List<Object> updateValues = new ArrayList<>();
-            updateValues.add(receipt.getId());
-            updateValues.add(receipt.getStaff_id());
-            updateValues.add(receipt.getCustomer_id());
-            updateValues.add(receipt.getInvoice_date());
-            updateValues.add(receipt.getTotal());
-            updateValues.add(receipt.getReceived());
-            updateValues.add(receipt.getExcess());
-            updateValues.add(receipt.isDeleted());
-            return update(updateValues, "id = " + receipt.getId());
-        } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in ReceiptDAL.updateReceipt(): " + e.getMessage());
-        }
-        return 0;
-    }
-
-    public int deleteReceipt(String... conditions) {
-        try {
-            List<Object> updateValues = new ArrayList<>();
-            updateValues.add(true);
-            return update(updateValues, conditions);
-        } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in ReceiptDAL.deleteReceipt(): " + e.getMessage());
         }
         return 0;
     }

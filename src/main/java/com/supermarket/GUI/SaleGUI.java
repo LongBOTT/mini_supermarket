@@ -9,6 +9,7 @@ import com.supermarket.GUI.components.RoundedScrollPane;
 import com.supermarket.GUI.components.SalePanel;
 import com.supermarket.utils.Date;
 import net.miginfocom.swing.MigLayout;
+import org.apache.poi.util.LocaleID;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -26,6 +27,11 @@ public class SaleGUI extends SalePanel {
     private final BrandBLL brandBLL = new BrandBLL();
     private final StaffBLL staffBLL = new StaffBLL();
     private final CustomerBLL customerBLL = new CustomerBLL();
+    private final DiscountBLL discountBLL = new DiscountBLL();
+    private final Discount_detailBLL discountDetailBLL = new Discount_detailBLL();
+    private final PromotionBLL promotionBLL = new PromotionBLL();
+    private final Promotion_giftBLL promotionGiftBLL = new Promotion_giftBLL();
+    private final Promotion_itemBLL promotionItemBLL = new Promotion_itemBLL();
     private RoundedPanel containerProduct;
     private RoundedPanel containerProductDetail;
     private RoundedPanel containerBillDetail;
@@ -53,8 +59,13 @@ public class SaleGUI extends SalePanel {
     private JButton buttonPay;
     private DataTable cartShopping;
     private Object[][] products;
+    private Object[][] gifts;
     private List<Integer> productsInCart;
+    private List<Integer> giftsInCart;
     private List<Integer> productID;
+    private List<Integer> productIDBillDetail;
+    private List<Double> totalBillDetail;
+    private List<Double> quantityBillDetail;
     private int index = -1;
     private final Account account;
     public SaleGUI(Account account) {
@@ -89,8 +100,16 @@ public class SaleGUI extends SalePanel {
         buttonConfirm = new JButton("Xác nhận");
         buttonPay = new JButton("Thanh toán");
         products = new Object[0][0];
+        gifts =  new Object[0][0];
         productsInCart = new ArrayList<>();
+        giftsInCart = new ArrayList<>();
         productID = new ArrayList<>();
+        totalBillDetail = new ArrayList<>();
+        quantityBillDetail = new ArrayList<>();
+        productIDBillDetail = new ArrayList<>();
+
+        Thread thread = new Thread( () -> loadProduct(productBLL.getProductList()));
+        thread.start();
 
         cbbAttributeProduct.setPreferredSize(new Dimension(130, 30));
         cbbAttributeProduct.addActionListener(e -> selectSearchFilter());
@@ -132,7 +151,7 @@ public class SaleGUI extends SalePanel {
         containerProduct.setBackground(new Color(0xFFFFFF));
         containerProduct.setAutoscrolls(true);
         ProductPanel.add(containerProduct, BorderLayout.CENTER);
-        loadProduct(productBLL.getProductList());
+
 
         containerProductDetail.setLayout(new MigLayout("", "10[][]10", "10[]20[]"));
         containerProductDetail.setBackground(new Color(0xFFFFFF));
@@ -406,7 +425,11 @@ public class SaleGUI extends SalePanel {
         buttonPay.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                payBill();
+                String[] options = new String[]{"Huỷ", "Xác nhận"};
+                int choice = JOptionPane.showOptionDialog(null, "Xác nhận lập hoá đơn?",
+                    "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+                if (choice == 1)
+                    payBill();
             }
         });
         containerBill.add(buttonPay);
@@ -419,13 +442,81 @@ public class SaleGUI extends SalePanel {
         double received = Double.parseDouble(jTextFieldBill.get(4).getText());
         double total = Double.parseDouble(jTextFieldBill.get(3).getText().replace(" vnđ", ""));
         double excess = received - total;
-        jTextFieldBill.get(5).setText(String.valueOf(excess) + " vnđ");
+        jTextFieldBill.get(5).setText(excess + " vnđ");
     }
 
     private void payBill() {
+        if (Objects.equals(jTextFieldBill.get(5).getText(), ""))  {
+            JOptionPane.showMessageDialog(null, "Vui lòng nhập số tiền nhận và nhấn Enter.",
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (jTextFieldBill.get(5).getText().contains("-"))  {
+            JOptionPane.showMessageDialog(null, "Chưa đủ tiền thanh toán.",
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (productIDBillDetail.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm.",
+                "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Receipt receipt = new Receipt();
+        ReceiptBLL receiptBLL = new ReceiptBLL();
+        receipt.setId(receiptBLL.getAutoID(receiptBLL.getReceiptList()));
+        receipt.setStaff_id(account.getStaffID());
+        if (Objects.equals(jTextFieldBill.get(1).getText(), ""))
+            receipt.setCustomer_id(1);
+        else {
+            List<Customer> customers = customerBLL.findCustomersBy(Map.of("phone", jTextFieldSearchCustomer.getText()));
+            if (customers.isEmpty()) {
+                if (Objects.equals(jTextFieldBill.get(3).getText(), "")) {
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy khách hàng!.",
+                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                receipt.setCustomer_id((customers.get(0).getId()));
+            }
+        }
+
+        try {
+            receipt.setInvoice_date(Date.parseDate(jTextFieldBill.get(2).getText()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        receipt.setTotal(Double.parseDouble(jTextFieldBill.get(3).getText().replace(" vnđ", "")));
+        receipt.setReceived(Double.parseDouble(jTextFieldBill.get(4).getText()));
+        receipt.setExcess(Double.parseDouble(jTextFieldBill.get(5).getText().replace(" vnđ", "")));
+        receiptBLL.addReceipt(receipt);
+
+        Receipt_detailBLL receiptDetailBLL = new Receipt_detailBLL();
+        for (int i = 0; i < productIDBillDetail.size(); i++) {
+            Receipt_detail receiptDetail = new Receipt_detail();
+            receiptDetail.setReceipt_id(receipt.getId());
+            receiptDetail.setProduct_id(productIDBillDetail.get(i));
+            receiptDetail.setQuantity(quantityBillDetail.get(i));
+            receiptDetail.setTotal(totalBillDetail.get(i));
+            receiptDetailBLL.addReceipt_detail(receiptDetail);
+
+            Product product = productBLL.findProductsBy(Map.of("id", productIDBillDetail.get(i))).get(0);
+            product.setQuantity(product.getQuantity() - quantityBillDetail.get(i));
+            productBLL.updateProduct(product);
+        }
+
+        JOptionPane.showMessageDialog(null, "Tạo hoá dơn thành công.",
+            "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
+        loadProduct(productBLL.getProductList());
+        cancelBill();
     }
 
     private void cancelBill() {
+        productIDBillDetail.removeAll(productIDBillDetail);
+        totalBillDetail.removeAll(totalBillDetail);
+        quantityBillDetail.removeAll((quantityBillDetail));
         containerProductsBuy.removeAll();
         productsBuy.removeAll(productsBuy);
         jTextFieldBill.get(1).setText("");
@@ -468,13 +559,15 @@ public class SaleGUI extends SalePanel {
                 JLabel label1 = new JLabel();
                 label1.setFont((new Font("FlatLaf.style", Font.PLAIN, 15)));
                 label1.setText("Số lượng: " + products[i][3].toString());
+                quantityBillDetail.add(Double.parseDouble(products[i][3].toString()));
                 JLabel label2 = new JLabel();
                 label2.setFont((new Font("FlatLaf.style", Font.PLAIN, 15)));
                 label2.setText("Tổng cộng: " + products[i][4].toString() + " vnđ");
-
+                totalBillDetail.add(Double.parseDouble(products[i][4].toString()));
                 panel.add(label,"wrap");
                 panel.add(label1, "wrap");
                 panel.add(label2, "wrap");
+                productIDBillDetail.add(productsInCart.get(i));
 
                 productsBuy.add(panel);
 
@@ -482,6 +575,41 @@ public class SaleGUI extends SalePanel {
 
                 total += Double.parseDouble(products[i][4].toString());
             }
+
+            for (int i = 0; i < giftsInCart.size(); i++) {
+
+                RoundedPanel panel = new RoundedPanel();
+                panel.setPreferredSize(new Dimension(310, 110));
+                panel.setLayout(new MigLayout("","10[]10","[][]"));
+                panel.setBackground(new Color(0x93D3D3D3, true));
+
+                JLabel label = new JLabel();
+                label.setFont((new Font("FlatLaf.style", Font.BOLD, 15)));
+                label.setText("<html>" + (productsBuy.size()+1) + ". Khuyến mãi: " + productBLL.findProductsBy(Map.of("id", giftsInCart.get(i))).get(0).getName() + "<html>");
+                JLabel label1 = new JLabel();
+                label1.setFont((new Font("FlatLaf.style", Font.PLAIN, 15)));
+                label1.setText("Số lượng: " + gifts[i][3].toString());
+                JLabel label2 = new JLabel();
+                label2.setFont((new Font("FlatLaf.style", Font.PLAIN, 15)));
+                label2.setText("Tổng cộng: " + gifts[i][4].toString() + " vnđ");
+                panel.add(label,"wrap");
+                panel.add(label1, "wrap");
+                panel.add(label2, "wrap");
+
+                if (productIDBillDetail.contains(giftsInCart.get(i))) {
+                    int indexProID = productIDBillDetail.indexOf(giftsInCart.get(i));
+                    double quantity = quantityBillDetail.get(indexProID) + Double.parseDouble(gifts[i][3].toString());
+                    quantityBillDetail.set(indexProID, quantity);
+                } else {
+                    productIDBillDetail.add(giftsInCart.get(i));
+                    quantityBillDetail.add(Double.parseDouble(gifts[i][3].toString()));
+                    totalBillDetail.add(Double.parseDouble(gifts[i][4].toString()));
+                }
+                productsBuy.add(panel);
+
+                containerProductsBuy.add(panel, "wrap");
+            }
+
             jTextFieldBill.get(3).setText(total + " vnđ");
         }
         cancelAllCartShopping();
@@ -545,22 +673,27 @@ public class SaleGUI extends SalePanel {
     private void fillProductDetail() {
         DefaultTableModel model = (DefaultTableModel) cartShopping.getModel();
         int indexRow = cartShopping.getSelectedRow();
-        Object[] rowData = model.getDataVector().elementAt(indexRow).toArray();
-        String[] data = new String[rowData.length];
-        for (int i = 0; i < rowData.length; i++) {
-            data[i] = rowData[i].toString();
-        }
-        String[] product = String.join(" | ", data).split(" \\| ");
-        Product selectedProduct = productBLL.findProductsBy(Map.of("id", productsInCart.get(indexRow))).get(0);
-        loadProductDetail(selectedProduct);
+        if (indexRow < products.length) {
+            Object[] rowData = model.getDataVector().elementAt(indexRow).toArray();
+            String[] data = new String[rowData.length];
+            for (int i = 0; i < rowData.length; i++) {
+                data[i] = rowData[i].toString();
+            }
+            String[] product = String.join(" | ", data).split(" \\| ");
+            Product selectedProduct = productBLL.findProductsBy(Map.of("id", productsInCart.get(indexRow))).get(0);
+            loadProductDetail(selectedProduct);
 
-        jTextFieldProductDetail.get(5).setText(product[3]);
-        index = productsInCart.get(indexRow);
+            jTextFieldProductDetail.get(5).setText(product[3]);
+            index = productsInCart.get(indexRow);
+        }
+
     }
 
     private void cancelAllCartShopping() {
         productsInCart.removeAll(productsInCart);
+        giftsInCart.removeAll(giftsInCart);
         products = Arrays.copyOf(new Object[0][0], 0);
+        gifts = Arrays.copyOf(new Object[0][0], 0);
         index = -1;
         jTextFieldProductDetail.get(0).setText("");
         jTextFieldProductDetail.get(1).setText("");
@@ -635,6 +768,58 @@ public class SaleGUI extends SalePanel {
             products[products.length - 1] = objects;
             productsInCart.add(index);
         }
+        Object[] objects;
+        gifts = new Object[0][0];
+        for (Promotion promotion : promotionBLL.getPromotionList()) {
+            int min = 1000;
+            List<Integer> listItemInCart = new ArrayList<>();
+            List<Promotion_item> promotionItems = promotionItemBLL.findPromotion_itemsBy(Map.of("promotion_id", promotion.getId()));
+            List<Promotion_gift> promotionGifts = promotionGiftBLL.findPromotion_giftsBy(Map.of("promotion_id", promotion.getId()));
+            for (Promotion_item promotionItem : promotionItems) {
+                if (productsInCart.contains(promotionItem.getProduct_id())) {
+                    int indexRow = productsInCart.indexOf(promotionItem.getProduct_id());
+                    double quantity = Double.parseDouble(products[indexRow][3].toString());
+                    if (quantity >= promotionItem.getQuantity()) {
+                        listItemInCart.add(promotionItem.getProduct_id());
+                        int quantityGift = (int) quantity / (int) promotionItem.getQuantity();
+                        if (quantityGift < min)
+                            min = quantityGift;
+                    }
+                }
+            }
+
+            int i = 0;
+            if (listItemInCart.size() == promotionItems.size() ) {
+                for (Promotion_gift promotionGift : promotionGifts) {
+                    Product product = productBLL.findProductsBy(Map.of("id", promotionGift.getProduct_id())).get(0);
+                    if (product.getQuantity() < promotionGift.getQuantity() * min) {
+                        JOptionPane.showMessageDialog(this, "Sản phẩm " + product.getName() + " không đủ để khuyến mãi.",
+                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        loadCartShopping(products);
+                        jTextFieldProductDetail.get(0).setText("");
+                        jTextFieldProductDetail.get(1).setText("");
+                        jTextFieldProductDetail.get(2).setText("");
+                        jTextFieldProductDetail.get(3).setText("");
+                        jTextFieldProductDetail.get(4).setText("");
+                        jTextFieldProductDetail.get(5).setText("");
+                        index = -1;
+                        return;
+                    }
+                    objects = new Object[5];
+                    objects[0] = "Khuyến mãi: " + product.getName();
+                    objects[1] = brandBLL.findBrandsBy(Map.of("id", product.getBrand_id())).get(0).getName();
+                    objects[2] = categoryBLL.findCategoriesBy(Map.of("id", product.getCategory_id())).get(0).getName();
+                    objects[3] = promotionGift.getQuantity() * min;
+                    objects[4] = 0.0;
+                    gifts = Arrays.copyOf(gifts, gifts.length + 1);
+                    gifts[gifts.length - 1] = objects;
+                    giftsInCart.add(promotionGift.getProduct_id());
+                    i += 1;
+                }
+            }
+
+        }
+
         loadCartShopping(products);
         jTextFieldProductDetail.get(0).setText("");
         jTextFieldProductDetail.get(1).setText("");
@@ -700,11 +885,17 @@ public class SaleGUI extends SalePanel {
     }
 
     public void loadProductDetail(Product product) {
+        List<Discount_detail> discountDetails = discountDetailBLL.findDiscount_detailsBy(Map.of("product_id", product.getId()));
         jTextFieldProductDetail.get(0).setText(product.getName());
         jTextFieldProductDetail.get(0).setCaretPosition(0);
         jTextFieldProductDetail.get(1).setText(brandBLL.findBrandsBy(Map.of("id", product.getBrand_id())).get(0).getName());
+        if (!discountDetails.isEmpty()) {
+            Discount discount = discountBLL.findDiscountsBy(Map.of("id", discountDetails.get(discountDetails.size()-1).getDiscount_id())).get(0);
+            jTextFieldProductDetail.get(3).setText(String.valueOf(product.getCost() - (product.getCost() * discount.getPercent() / 100)));
+        } else {
+            jTextFieldProductDetail.get(3).setText(String.valueOf(product.getCost()));
+        }
         jTextFieldProductDetail.get(2).setText(categoryBLL.findCategoriesBy(Map.of("id", product.getCategory_id())).get(0).getName());
-        jTextFieldProductDetail.get(3).setText(String.valueOf(product.getCost()));
         jTextFieldProductDetail.get(4).setText(product.getBarcode());
         jTextFieldProductDetail.get(5).setText("0.0");
     }
@@ -714,6 +905,11 @@ public class SaleGUI extends SalePanel {
         model.setRowCount(0);
         for (Object[] object : objects) {
             model.addRow(object);
+        }
+        if (gifts.length > 0) {
+            for (Object[] object : gifts) {
+                model.addRow(object);
+            }
         }
     }
 

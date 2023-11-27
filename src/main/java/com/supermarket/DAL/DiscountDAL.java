@@ -15,8 +15,7 @@ public class DiscountDAL extends Manager {
                 "percent",
                 "start_date",
                 "end_date",
-                "status",
-                "deleted"
+                "status"
                 ));
     }
 
@@ -28,8 +27,7 @@ public class DiscountDAL extends Manager {
                     Double.parseDouble(row.get(1)), // percent
                     Date.parseDate(row.get(2)), // start_date
                     Date.parseDate(row.get(3)), // end_date
-                    Boolean.parseBoolean(row.get(4)), // status
-                    Boolean.parseBoolean(row.get(5)) //deleted
+                    Boolean.parseBoolean(row.get(4)) // status
                 );
             } catch (Exception e) {
                 System.out.println("Error occurred in DiscountDAL.convertToDiscounts(): " + e.getMessage());
@@ -44,8 +42,7 @@ public class DiscountDAL extends Manager {
                 discount.getPercent(),
                 discount.getStart_date(),
                 discount.getEnd_date(),
-                discount.isStatus(),
-                false
+                discount.isStatus()
             ); // discount khi tạo mặc định deleted = 0
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in DiscountDAL.addDiscount(): " + e.getMessage());
@@ -61,21 +58,9 @@ public class DiscountDAL extends Manager {
             updateValues.add(discount.getStart_date());
             updateValues.add(discount.getEnd_date());
             updateValues.add(discount.isStatus());
-            updateValues.add(discount.isDeleted());
             return update(updateValues, "id = " + discount.getId());
         } catch (SQLException | IOException e) {
             System.out.println("Error occurred in DiscountDAL.updateDiscount(): " + e.getMessage());
-        }
-        return 0;
-    }
-
-    public int deleteDiscount(String... conditions) {
-        try {
-            List<Object> updateValues = new ArrayList<>();
-            updateValues.add(true);
-            return update(updateValues, conditions);
-        } catch (SQLException | IOException e) {
-            System.out.println("Error occurred in DiscountDAL.deleteDiscount(): " + e.getMessage());
         }
         return 0;
     }
