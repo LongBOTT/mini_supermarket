@@ -64,7 +64,7 @@ public class FormDetailCustomerGUI extends DialogForm{
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[]{"Mã khách hàng:", "Tên khách hàng:", "Giới tính:", "Ngày sinh:", "Số điện thoại:", "Thành viên:","Lần đăng nhập cuối:","Điểm thưởng:"}) {
+        for (String string : new String[]{"Mã khách hàng:", "Tên khách hàng:", "Giới tính:", "Ngày sinh:", "Số điện thoại:", "Thành viên:","Ngày đăng ký thành viên:","Điểm thưởng:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -93,7 +93,7 @@ public class FormDetailCustomerGUI extends DialogForm{
                 String membership = customer.isMembership()? "Có":"Không";
                 textField.setText(membership);
             }
-            if (string.equals("Lần đăng nhập cuối:")) {
+            if (string.equals("Ngày đăng ký thành viên:")) {
                 textField.setText(customer.getSigned_up_date().toString());
             }
             if (string.equals("Điểm thưởng:")) {

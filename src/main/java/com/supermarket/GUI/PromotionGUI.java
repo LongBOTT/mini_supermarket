@@ -88,7 +88,7 @@ public class PromotionGUI extends Layout3 {
             });
         scrollPanePromotion = new RoundedScrollPane(dataTablePromotion, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         dataTablePromotionDetail = new DataTable(new Object[][] {},
-            new String[] {"Mã sản phẩm", "Tên sản phẩm", "Giá cũ", "Giá mới", ""}, e -> {}, true);
+            new String[] {"Mã sản phẩm", "Tên sản phẩm", "Giá cũ", "Giá mới", ""}, e -> {}, 4);
         scrollPanePromotionDetail = new RoundedScrollPane(dataTablePromotionDetail, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         cbbAttributeProduct.setPreferredSize(new Dimension(130, 30));

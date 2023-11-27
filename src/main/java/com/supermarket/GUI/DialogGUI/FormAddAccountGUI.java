@@ -157,10 +157,10 @@ public class FormAddAccountGUI extends DialogForm{
         Account account = new Account(id, username, password, roleID, staffID, DateTime.parseDateTime(String.valueOf(new DateTime())), false);
 
         String[] options = new String[]{"Huỷ", "Xác nhận"};
-        int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm tài khoản?",
-            "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-        if (choice == 1) {
-            if (accountBLL.addAccount(account)) {
+            int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm tài khoản?",
+                "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+            if (choice == 1) {
+                if (accountBLL.addAccount(account)) {
                 JOptionPane.showMessageDialog(null, "Thêm tài khoản thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
@@ -200,7 +200,7 @@ public class FormAddAccountGUI extends DialogForm{
             Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(5).getText()))).get(0);
             int index = staffBLL.getIndex(staff, "id", staffBLL.getStaffList());
             dataTable.setRowSelectionInterval(index, index);
-            }
+        }
 
         containerTable.repaint();
         containerTable.revalidate();

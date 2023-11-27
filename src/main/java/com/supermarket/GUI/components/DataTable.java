@@ -56,7 +56,7 @@ public class DataTable extends JTable {
         });
     }
 
-    public DataTable(Object[][] data, Object[] columnNames, ActionListener actionListener, Boolean checkbox) {
+    public DataTable(Object[][] data, Object[] columnNames, ActionListener actionListener, int checkbox) {
         super(new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -65,7 +65,7 @@ public class DataTable extends JTable {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 4) {
+                if (columnIndex == checkbox) {
                     return Boolean.class;
                 }
                 return String.class;

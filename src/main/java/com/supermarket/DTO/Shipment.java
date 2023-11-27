@@ -17,6 +17,11 @@ public class Shipment {
     public Shipment() {
     }
 
+    public Shipment(int id, int product_id) {
+        this.id = id;
+        this.product_id = product_id;
+    }
+
     public Shipment(int id, int product_id, double unit_price, double quantity, double remain, Date mfg, Date exp, String sku, int import_id, boolean deleted) {
         this.id = id;
         this.product_id = product_id;

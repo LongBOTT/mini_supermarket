@@ -27,7 +27,7 @@ import java.util.Map;
 public class HomeGUI extends JFrame {
     private final StaffBLL staffBLL = new StaffBLL();
     private final RoleBLL roleBLL = new RoleBLL();
-    private Account account;
+    public static Account account;
     private JPanel contentPanel;
     private JPanel header;
     private JPanel center;
@@ -203,7 +203,7 @@ public class HomeGUI extends JFrame {
 
         addBanner.setLayout(new GridBagLayout());
 
-        addIcon.setIcon(new FlatSVGIcon("icon/addBanner.svg"));
+        addIcon.setIcon(new FlatSVGIcon("icon/image.svg"));
         addIcon.setBackground(new Color(0xF3DA9B));
         addIcon.setPreferredSize(new Dimension(70, 70));
         addIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -363,9 +363,9 @@ public class HomeGUI extends JFrame {
             case 3 -> new StatisticGUI();
             case 4 -> new DiscountGUI();
             case 5 -> new PromotionGUI();
-            case 6 -> new Layout2();
-            case 7 -> new Layout2();
-            case 8 -> new Layout2();
+            case 6 -> new ReceiptGUI();
+            case 7 -> new ImportGUI();
+            case 8 -> new ExportGUI();
             case 9 -> new ProductGUI();
             case 10 -> new SupplierGUI();
             case 11 -> new CustomerGUI();
