@@ -210,7 +210,9 @@ public class FormAddStaffGUI extends DialogForm{
             }
         }
         catch(Exception e){
-            System.out.println(e.getLocalizedMessage());
+            if(e.getMessage().equals("Invalid day.")){
+                JOptionPane.showMessageDialog(null, "Định dạng ngày không hợp lệ.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }

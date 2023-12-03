@@ -3,6 +3,7 @@ package com.supermarket.BLL;
 import com.supermarket.DAL.DiscountDAL;
 import com.supermarket.DTO.Discount;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,11 +38,20 @@ public class DiscountBLL extends Manager<Discount> {
     }
 
     public boolean addDiscount(Discount discount) {
+        if(!checkRangeOfPercent(String.valueOf(discount.getPercent()))){
+            JOptionPane.showMessageDialog(null,"Phần trăm giảm giá phải trong khoảng (0, 100)." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         discountList.add(discount);
         return discountDAL.addDiscount(discount) != 0;
     }
 
     public boolean updateDiscount(Discount discount) {
+        if(checkRangeOfPercent(String.valueOf(discount.getPercent()))){
+            JOptionPane.showMessageDialog(null,"Phần trăm giảm giá phải trong khoảng (0, 100)." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         discountList.set(getIndex(discount, "id", discountList), discount);
         return discountDAL.updateDiscount(discount) != 0;
     }
@@ -81,6 +91,14 @@ public class DiscountBLL extends Manager<Discount> {
         return !findDiscountsBy(conditions).isEmpty();
     }
 
+
+    public static boolean checkRangeOfPercent(String str) {
+        try {
+            return Double.parseDouble(str) > 0 && Double.parseDouble(str) < 100;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
     @Override
     public Object getValueByKey(Discount discount, String key) {
         return switch (key) {

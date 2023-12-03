@@ -121,7 +121,7 @@ public class FormAddAccountGUI extends DialogForm{
             }
             @Override
             public void mousePressed(MouseEvent e) {
-                refresh();
+                dispose();
             }
         });
         containerButton.add(buttonCancel);

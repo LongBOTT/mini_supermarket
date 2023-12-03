@@ -2,8 +2,10 @@ package com.supermarket.BLL;
 
 import com.supermarket.DAL.AccountDAL;
 import com.supermarket.DTO.Account;
+import com.supermarket.DTO.Staff;
 import com.supermarket.utils.DateTime;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,11 +40,37 @@ public class AccountBLL extends Manager<Account> {
     }
 
     public boolean addAccount(Account account) {
+        if(!validateUserName(account.getUsername())){
+            JOptionPane.showMessageDialog(null,"Tên người không không được chứa số và ký tự đặc biệt." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if(!validatePassWord(account.getPassword())){
+            JOptionPane.showMessageDialog(null,"Mật khẩu phải có tối thiểu một ký hiệu đặc biệt, một chữ số, một ký tự viết thường, và một ký tự viết hoa." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+
+        }
+
+        if(exists(account.getUsername())){
+            return false;
+        }
+
         accountList.add(account);
         return accountDAL.addAccount(account) != 0;
     }
 
     public boolean updateAccount(Account account) {
+        if(!validateUserName(account.getUsername())){
+            JOptionPane.showMessageDialog(null,"Tên người không không được chứa số và ký tự đặc biệt." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if(!validatePassWord(account.getPassword())){
+            JOptionPane.showMessageDialog(null,"Mật khẩu phải có tối thiểu một ký hiệu đặc biệt, một chữ số, một ký tự viết thường, và một ký tự viết hoa." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+
+        }
+        if(exists(account.getUsername())){
+            return false;
+        }
         accountList.set(getIndex(account, "id", accountList), account);
         return accountDAL.updateAccount(account) != 0;
     }
@@ -83,20 +111,57 @@ public class AccountBLL extends Manager<Account> {
         return accounts;
     }
 
-    public boolean exists(Account account) {
-        return !findAccountsBy(Map.of(
-            "username", account.getUsername(),
-            "role_id", account.getRoleID(),
-            "staff_id", account.getStaffID()
-        )).isEmpty();
-    }
-
-    public boolean exists(Map<String, Object> conditions) {
-        if (conditions.containsKey("username") && conditions.get("username").equals("admin")) {
+//    public boolean exists(Account account) {
+//        return !findAccountsBy(Map.of(
+//            "username", account.getUsername(),
+//            "role_id", account.getRoleID(),
+//            "staff_id", account.getStaffID()
+//        )).isEmpty();
+//    }
+//
+//    public boolean exists(Map<String, Object> conditions) {
+//        if (conditions.containsKey("username") && conditions.get("username").equals("admin")) {
+//            return true;
+//        }
+//        return !findAccountsBy(conditions).isEmpty();
+//    }
+public boolean exists(String userName) {
+    for (Account account : accountList) {
+        if (account.getUsername().equals(userName)) {
+            JOptionPane.showMessageDialog(null, "tên tài khoản đã tồn tại.", "Thông báo", JOptionPane.ERROR_MESSAGE);
             return true;
         }
-        return !findAccountsBy(conditions).isEmpty();
+        if (account.getUsername().equals("admin")) {
+            JOptionPane.showMessageDialog(null, "tên tài khoản không được đặt trùng tên admin.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return true;
+        }
     }
+    return false;
+}
+
+
+    public static boolean containsUpperCase(String str) {
+        return str.chars().anyMatch(Character::isUpperCase);
+    }
+    public static boolean containsNumber(String str) {
+        return str.chars().anyMatch(Character::isDigit);
+    }
+    public static boolean containsSpecial(String str) {
+        return str.chars().anyMatch(c -> !(Character.isLetterOrDigit(c) || Character.isWhitespace(c)));
+    }
+
+    public static boolean containsAlphabet(String str) {
+        return str.chars().anyMatch(Character::isAlphabetic);
+    }
+
+
+    public boolean validatePassWord(String passWord) {
+        return containsUpperCase(passWord) && containsNumber(passWord) && containsSpecial(passWord);
+    }
+    public boolean validateUserName(String username) {
+        return !containsNumber(username) && !containsSpecial(username);
+    }
+
 
     @Override
     public Object getValueByKey(Account account, String key) {
