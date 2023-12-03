@@ -104,25 +104,49 @@ public class StatisticGUI extends JPanel {
         statisticDay = new RoundedPanel();
         tabbedPane.add("Tổng quát", statistic);
         tabbedPane.addTab("Thống kê theo năm", statisticYear);
-        tabbedPane.addTab("Thống kê theo tháng", statisticMonth);
-        tabbedPane.addTab("Thống kê theo ngày", statisticDay);
+        tabbedPane.addTab("Thống kê theo quý", statisticMonth);
+        tabbedPane.addTab("Thống kê theo tháng", statisticDay);
 
         statistic.setLayout(new BorderLayout());
         statistic.add(genneral());
         tabbedPane.addChangeListener(new ChangeListener() {
             int currentMonth, currentYear, currentQuarter;
+            List<Double> expenses, amount;
+
             @Override
             public void stateChanged(ChangeEvent e) {
                 switch (tabbedPane.getSelectedIndex()) {
                     case 1 -> {
                         addChart(statisticYear);
+                        expenses = new ArrayList<>();
+                        amount = new ArrayList<>();
+                        labelText[0].setText("THỐNG KÊ THEO 3 NĂM GẦN NHẤT ");
                         chart.clear();
-                        chart.addData(new ModelChart("January", new double[]{500, 200, 80}));
-                        chart.addData(new ModelChart("February", new double[]{600, 750, 90}));
-                        chart.addData(new ModelChart("March", new double[]{200, 350, 460}));
-                        chart.addData(new ModelChart("April", new double[]{480, 150, 750}));
-                        chart.addData(new ModelChart("May", new double[]{350, 540, 300}));
-                        chart.addData(new ModelChart("June", new double[]{190, 280, 81}));
+                        int currentYear = Year.now().getValue();
+                        for (int i = currentYear - 2; i <= currentYear; i ++) {
+                            XYChart.Series<String, Number> series1 = new XYChart.Series<>();
+                            series1.setName("Năm " + i);
+                            try {
+                                List<List<String>> inventory = MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
+                                    "FROM `import` " +
+                                    "WHERE YEAR(`import`.received_date) = " + i);
+                                expenses.add(Double.parseDouble(inventory.get(0).get(0).split("\\.")[0]));
+
+                            } catch (SQLException | IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+
+                            try {
+                                List<List<String>> inventory = MySQL.executeQueryStatistic("SELECT SUM(`receipt`.total) " +
+                                    "FROM `receipt` " +
+                                    "WHERE YEAR(`receipt`.invoice_date) = " + i);
+                                amount.add(Double.parseDouble(inventory.get(0).get(0).split("\\.")[0]));
+
+                            } catch (SQLException | IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            chart.addData(new ModelChart(String.valueOf(i), new double[]{expenses.get(expenses.size() - 1), amount.get(expenses.size() - 1), amount.get(expenses.size() - 1) - expenses.get(expenses.size() - 1)}));
+                        }
                         chart.start();
                     }
                     case 2 -> {
@@ -130,17 +154,18 @@ public class StatisticGUI extends JPanel {
                         currentMonth = YearMonth.now().getMonthValue();
                         currentYear = Year.now().getValue();
                         currentQuarter = (currentMonth - 1) / 3 + 1;
+                        expenses = new ArrayList<>();
+                        amount = new ArrayList<>();
                         labelText[1].setText("THỐNG KÊ THEO QUÝ TRONG NĂM " + currentYear);
                         for (int i = 1; i <= currentQuarter; i++) {
-                            long expenses, amount;
                             XYChart.Series<String, Number> series1 = new XYChart.Series<>();
                             series1.setName("Quý " + i);
                             try {
                                 List<List<String>> inventory = MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
                                     "FROM `import` " +
                                     "WHERE YEAR(`import`.received_date) = " + currentYear + " AND QUARTER(`import`.received_date) = " + i);
-                                expenses = Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
-                                series1.getData().add(new XYChart.Data<>("Chi phí", expenses));
+                                expenses.add(Double.parseDouble(inventory.get(0).get(0).split("\\.")[0]));
+
 
                             } catch (SQLException | IOException ex) {
                                 throw new RuntimeException(ex);
@@ -150,20 +175,17 @@ public class StatisticGUI extends JPanel {
                                 List<List<String>> inventory = MySQL.executeQueryStatistic("SELECT SUM(`receipt`.total) " +
                                     "FROM `receipt` " +
                                     "WHERE YEAR(`receipt`.invoice_date) = " + currentYear + " AND QUARTER(`receipt`.invoice_date) = " + i);
-                                amount = Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
-                                series1.getData().add(new XYChart.Data<>("Doanh thu", amount));
+                                amount.add(Double.parseDouble(inventory.get(0).get(0).split("\\.")[0]));
 
                             } catch (SQLException | IOException ex) {
                                 throw new RuntimeException(ex);
                             }
                         }
                         chart.clear();
-                        chart.addData(new ModelChart("January", new double[]{500, 200, 80}));
-                        chart.addData(new ModelChart("February", new double[]{600, 750, 90}));
-                        chart.addData(new ModelChart("March", new double[]{200, 350, 460}));
-                        chart.addData(new ModelChart("April", new double[]{480, 150, 750}));
-                        chart.addData(new ModelChart("May", new double[]{350, 540, 300}));
-                        chart.addData(new ModelChart("June", new double[]{190, 280, 81}));
+                        chart.addData(new ModelChart("The First Quarter", new double[]{expenses.get(0), amount.get(0), amount.get(0) - expenses.get(0)}));
+                        chart.addData(new ModelChart("Second Quarter", new double[]{expenses.get(1), amount.get(1), amount.get(1) - expenses.get(1)}));
+                        chart.addData(new ModelChart("Third Quarter", new double[]{expenses.get(2), amount.get(2), amount.get(2) - expenses.get(2)}));
+                        chart.addData(new ModelChart("Fourth Quarter", new double[]{expenses.get(3), amount.get(3), amount.get(3) - expenses.get(3)}));
                         chart.start();
 
                     }
@@ -171,8 +193,8 @@ public class StatisticGUI extends JPanel {
                         addChart(statisticDay);
                         currentMonth = YearMonth.now().getMonthValue();
                         currentYear = Year.now().getValue();
-                        List<Double> expenses = new ArrayList<>();
-                        List<Double> amount = new ArrayList<>();
+                        expenses = new ArrayList<>();
+                        amount = new ArrayList<>();
                         labelText[2].setText("THỐNG KÊ THEO THÁNG TRONG NĂM " + currentYear);
                         for (int i = 1; i <= currentMonth; i++) {
                             try {
@@ -215,6 +237,7 @@ public class StatisticGUI extends JPanel {
         });
 
         for (int i = 0; i < labelText.length; i++) {
+            labelText[i] = new JLabel();
             labelText[i].setPreferredSize(new Dimension(getWidth(),80));
             labelText[i].setFont(new Font("Times New Roman",Font.PLAIN,16));
             labelText[i].setHorizontalAlignment(SwingConstants.CENTER);
@@ -226,9 +249,9 @@ public class StatisticGUI extends JPanel {
 
         layoutChartAndData = new RoundedPanel();
         chart = new Chart();
-        chart.addLegend("Vốn", new Color(135, 189, 245));
-        chart.addLegend("Lợi nhuận", new Color(189, 135, 245));
-        chart.addLegend("Doanh thu", new Color(139, 229, 222));
+        chart.addLegend("Vốn", Color.decode("#7b4397"));
+        chart.addLegend("Lợi nhuận", Color.decode("#e65c00"));
+        chart.addLegend("Doanh thu", Color.decode("#0099F7"));
         layoutChartAndData.setBackground(null);
         layoutChartAndData.setLayout(new BorderLayout());
         layoutChartAndData.add(chart, BorderLayout.CENTER);
@@ -285,8 +308,8 @@ public class StatisticGUI extends JPanel {
         listTitle.get(0).setText("<html>Số lượng khách hàng thành viên hiện tại<html>");
 
         listItem.get(0).add(listIcon.get(0));
-        listItem.get(0).add(listValue.get(0),"wrap");
-        listItem.get(0).add(listTitle.get(0),"span 2 1");
+        listItem.get(0).add(listValue.get(0), "wrap");
+        listItem.get(0).add(listTitle.get(0), "span 2 1");
 
         genneralTab.add(listItem.get(0));
 
@@ -302,14 +325,14 @@ public class StatisticGUI extends JPanel {
         listTitle.get(1).setText("<html>Số lượng nhân viên hiện tại<html>");
 
         listItem.get(1).add(listIcon.get(1));
-        listItem.get(1).add(listValue.get(1),"wrap");
-        listItem.get(1).add(listTitle.get(1),"span 2 1");
+        listItem.get(1).add(listValue.get(1), "wrap");
+        listItem.get(1).add(listTitle.get(1), "span 2 1");
 
         genneralTab.add(listItem.get(1));
 
 
         try {
-            List<List<String>> bestSeller= MySQL.executeQueryStatistic("SELECT product.id, product.image, SUM(receipt_detail.quantity) " +
+            List<List<String>> bestSeller = MySQL.executeQueryStatistic("SELECT product.id, product.image, SUM(receipt_detail.quantity) " +
                 "FROM receipt_detail JOIN product on receipt_detail.product_id = product.id " +
                 "JOIN receipt on receipt.id = receipt_detail.receipt_id " +
                 "WHERE (MONTH(CURDATE()) = MONTH(`receipt`.invoice_date)) AND (YEAR(CURDATE()) = YEAR(`receipt`.invoice_date)) " +
@@ -320,8 +343,8 @@ public class StatisticGUI extends JPanel {
                 listIcon.get(2).setIcon(new FlatSVGIcon(bestSeller.get(0).get(1)));
                 listValue.get(2).setText(bestSeller.get(0).get(2));
                 Product product = productBLL.findProductsBy(Map.of("id", Integer.parseInt(bestSeller.get(0).get(0)))).get(0);
-                listTitle.get(2).setText("<html>Sản phẩm bán chạy nhất tháng: <br>" + product.getName() +"<html>");
-            }else {
+                listTitle.get(2).setText("<html>Sản phẩm bán chạy nhất tháng: <br>" + product.getName() + "<html>");
+            } else {
                 listValue.get(2).setText("0");
                 listTitle.get(2).setText("<html>Sản phẩm bán chạy nhất tháng:<html>");
             }
@@ -332,13 +355,13 @@ public class StatisticGUI extends JPanel {
 
 
         listItem.get(2).add(listIcon.get(2));
-        listItem.get(2).add(listValue.get(2),"wrap");
-        listItem.get(2).add(listTitle.get(2),"span 2 1");
+        listItem.get(2).add(listValue.get(2), "wrap");
+        listItem.get(2).add(listTitle.get(2), "span 2 1");
 
         genneralTab.add(listItem.get(2));
 
         try {
-            List<List<String>> bestSeller= MySQL.executeQueryStatistic("SELECT product.id, product.image, SUM(receipt_detail.quantity) " +
+            List<List<String>> bestSeller = MySQL.executeQueryStatistic("SELECT product.id, product.image, SUM(receipt_detail.quantity) " +
                 "FROM receipt_detail JOIN product on receipt_detail.product_id = product.id " +
                 "JOIN receipt on receipt.id = receipt_detail.receipt_id " +
                 "WHERE (MONTH(CURDATE()) = MONTH(`receipt`.invoice_date)) AND (YEAR(CURDATE()) = YEAR(`receipt`.invoice_date)) " +
@@ -349,8 +372,8 @@ public class StatisticGUI extends JPanel {
                 listIcon.get(3).setIcon(new FlatSVGIcon(bestSeller.get(0).get(1)));
                 listValue.get(3).setText(bestSeller.get(0).get(2));
                 Product product = productBLL.findProductsBy(Map.of("id", Integer.parseInt(bestSeller.get(0).get(0)))).get(0);
-                listTitle.get(3).setText("<html>Sản phẩm bán ít nhất tháng: <br>" + product.getName() +"<html>");
-            }else {
+                listTitle.get(3).setText("<html>Sản phẩm bán ít nhất tháng: <br>" + product.getName() + "<html>");
+            } else {
                 listValue.get(3).setText("0");
                 listTitle.get(3).setText("<html>Sản phẩm bán ít nhất tháng:<html>");
             }
@@ -360,13 +383,13 @@ public class StatisticGUI extends JPanel {
         }
 
         listItem.get(3).add(listIcon.get(3));
-        listItem.get(3).add(listValue.get(3),"wrap");
-        listItem.get(3).add(listTitle.get(3),"span 2 1");
+        listItem.get(3).add(listValue.get(3), "wrap");
+        listItem.get(3).add(listTitle.get(3), "span 2 1");
 
         genneralTab.add(listItem.get(3), "wrap");
 
         try {
-            List<List<String>> bestStaff= MySQL.executeQueryStatistic("SELECT staff.id, staff.name, COUNT(receipt.id) " +
+            List<List<String>> bestStaff = MySQL.executeQueryStatistic("SELECT staff.id, staff.name, COUNT(receipt.id) " +
                 "FROM receipt JOIN staff on receipt.staff_id = staff.id " +
                 "WHERE (MONTH(CURDATE()) = MONTH(`receipt`.invoice_date)) AND (YEAR(CURDATE()) = YEAR(`receipt`.invoice_date)) " +
                 "GROUP BY staff.id, staff.name " +
@@ -377,8 +400,8 @@ public class StatisticGUI extends JPanel {
             if (!bestStaff.isEmpty()) {
                 listValue.get(4).setText(bestStaff.get(0).get(2));
                 Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(bestStaff.get(0).get(0)))).get(0);
-                listTitle.get(4).setText("<html>Nhân viên của tháng: <br>" + staff.getName() +"<html>");
-            }else {
+                listTitle.get(4).setText("<html>Nhân viên của tháng: <br>" + staff.getName() + "<html>");
+            } else {
                 listValue.get(4).setText("0");
                 listTitle.get(4).setText("<html>Nhân viên của tháng:<html>");
             }
@@ -387,13 +410,13 @@ public class StatisticGUI extends JPanel {
         }
 
         listItem.get(4).add(listIcon.get(4));
-        listItem.get(4).add(listValue.get(4),"wrap");
-        listItem.get(4).add(listTitle.get(4),"span 2 1");
+        listItem.get(4).add(listValue.get(4), "wrap");
+        listItem.get(4).add(listTitle.get(4), "span 2 1");
 
         genneralTab.add(listItem.get(4));
 
         try {
-            List<List<String>> mostInventory= MySQL.executeQueryStatistic("SELECT product.id, product.image, shipment.remain " +
+            List<List<String>> mostInventory = MySQL.executeQueryStatistic("SELECT product.id, product.image, shipment.remain " +
                 "FROM shipment JOIN product on shipment.product_id = product.id " +
                 "ORDER BY shipment.remain ASC" +
                 " LIMIT 1");
@@ -401,8 +424,8 @@ public class StatisticGUI extends JPanel {
                 listIcon.get(5).setIcon(new FlatSVGIcon(mostInventory.get(0).get(1)));
                 listValue.get(5).setText(mostInventory.get(0).get(2));
                 Product product = productBLL.findProductsBy(Map.of("id", Integer.parseInt(mostInventory.get(0).get(0)))).get(0);
-                listTitle.get(5).setText("<html>Sản phẩm tồn kho nhiều nhất: <br>" + product.getName() +"<html>");
-            }else {
+                listTitle.get(5).setText("<html>Sản phẩm tồn kho nhiều nhất: <br>" + product.getName() + "<html>");
+            } else {
                 listValue.get(5).setText("0");
                 listTitle.get(5).setText("<html>Sản phẩm tồn kho nhiều nhất:<html>");
             }
@@ -412,13 +435,13 @@ public class StatisticGUI extends JPanel {
         }
 
         listItem.get(5).add(listIcon.get(5));
-        listItem.get(5).add(listValue.get(5),"wrap");
-        listItem.get(5).add(listTitle.get(5),"span 2 1");
+        listItem.get(5).add(listValue.get(5), "wrap");
+        listItem.get(5).add(listTitle.get(5), "span 2 1");
 
         genneralTab.add(listItem.get(5));
 
         try {
-            List<List<String>> mostInventory= MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
+            List<List<String>> mostInventory = MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
                 "FROM `import` " +
                 "WHERE (MONTH(CURDATE()) - MONTH(`import`.received_date)) = 0 AND (YEAR(CURDATE()) - YEAR(`import`.received_date)) = 0");
             listIcon.get(6).setIcon(new FlatSVGIcon("icon/importGoods.svg"));
@@ -429,13 +452,13 @@ public class StatisticGUI extends JPanel {
         }
 
         listItem.get(6).add(listIcon.get(6), "wrap");
-        listItem.get(6).add(listValue.get(6),"wrap");
-        listItem.get(6).add(listTitle.get(6),"wrap");
+        listItem.get(6).add(listValue.get(6), "wrap");
+        listItem.get(6).add(listTitle.get(6), "wrap");
 
         genneralTab.add(listItem.get(6));
 
         try {
-            List<List<String>> mostInventory= MySQL.executeQueryStatistic("SELECT SUM(`receipt`.total) " +
+            List<List<String>> mostInventory = MySQL.executeQueryStatistic("SELECT SUM(`receipt`.total) " +
                 "FROM `receipt` " +
                 "WHERE (MONTH(CURDATE()) - MONTH(`receipt`.invoice_date)) = 0 AND (YEAR(CURDATE()) - YEAR(`receipt`.invoice_date)) = 0");
             listIcon.get(7).setIcon(new FlatSVGIcon("icon/imcome.svg"));
@@ -446,199 +469,11 @@ public class StatisticGUI extends JPanel {
         }
 
         listItem.get(7).add(listIcon.get(7), "wrap");
-        listItem.get(7).add(listValue.get(7),"wrap");
-        listItem.get(7).add(listTitle.get(7),"wrap");
+        listItem.get(7).add(listValue.get(7), "wrap");
+        listItem.get(7).add(listTitle.get(7), "wrap");
 
         genneralTab.add(listItem.get(7), "wrap");
-//        genneralTab.add(listItem.get(8));
-//        genneralTab.add(listItem.get(9));
-//        genneralTab.add(listItem.get(10));
-//        genneralTab.add(listItem.get(11), "wrap");
-
         return genneralTab;
     }
-//
-//    private Chart chart;
-//    private void statisticByYear() {
-//        statisticByYearPanel.setLayout(new BorderLayout());
-//        statisticByYearPanel.setPreferredSize(new Dimension(1140, 760));
-//        statisticByYearPanel.setBackground(new Color(0xFFBDD2DB, true));
-//
-//        chart = new Chart();
-//        chart.addLegend("Vốn", new Color(135, 189, 245));
-//        chart.addLegend("Lợi nhuận", new Color(189, 135, 245));
-//        chart.addLegend("Doanh thu", new Color(139, 229, 222));
-//
-//        SwingUtilities.invokeLater(() -> {
-//            JFXPanel jfxPanel = new JFXPanel();
-////            Chart<String, Number> barChart = createBarChart(1);
-////            Scene scene = new Scene(barChart, 800, 600);
-//
-////            jfxPanel.setScene(scene);
-//            JFXPanel newJFXPanel = new JFXPanel();
-////            newJFXPanel.setScene(scene);
-//            statisticByYearPanel.add(newJFXPanel, BorderLayout.CENTER);
-//            statisticByYearPanel.repaint();
-//            statisticByYearPanel.revalidate();
-//        });
-//    }
-//
-//    private RoundedPanel statisticByQuarter() {
-//        statisticByQuarterPanel.setLayout(new BorderLayout());
-//        statisticByQuarterPanel.setPreferredSize(new Dimension(1140, 760));
-//        statisticByQuarterPanel.setBackground(new Color(0xFFBDD2DB, true));
-//
-//        SwingUtilities.invokeLater(() -> {
-//            JFXPanel jfxPanel = new JFXPanel();
-////            Chart<String, Number> barChart = createBarChart(2);
-////            Scene scene = new Scene(barChart, 800, 600);
-//
-////            jfxPanel.setScene(scene);
-////            JFXPanel newJFXPanel = new JFXPanel();
-////            newJFXPanel.setScene(scene);
-////            statisticByQuarterPanel.add(newJFXPanel, BorderLayout.CENTER);
-//            statisticByQuarterPanel.repaint();
-//            statisticByQuarterPanel.revalidate();
-//        });
-//
-//        return statisticByQuarterPanel;
-//    }
-//
-//    private RoundedPanel statisticByMonth() {
-//        statisticByMonthPanel.setLayout(new BorderLayout());
-//        statisticByMonthPanel.setPreferredSize(new Dimension(1140, 760));
-//        statisticByMonthPanel.setBackground(new Color(0xFFBDD2DB, true));
-//
-//        SwingUtilities.invokeLater(() -> {
-//            JFXPanel jfxPanel = new JFXPanel();
-//            Chart<String, Number> barChart = createBarChart(3);
-//            Scene scene = new Scene(barChart, 800, 600);
-//
-//            jfxPanel.setScene(scene);
-//            JFXPanel newJFXPanel = new JFXPanel();
-//            newJFXPanel.setScene(scene);
-//            statisticByMonthPanel.add(newJFXPanel, BorderLayout.CENTER);
-//            statisticByMonthPanel.repaint();
-//            statisticByMonthPanel.revalidate();
-//        });
-//
-//        return statisticByMonthPanel;
-//    }
-//
-//    private Chart<String, Number> createBarChart(int flag) {
-//        CategoryAxis xAxis = new CategoryAxis();
-//        NumberAxis yAxis = new NumberAxis();
-////        Chart<String, Number> bc = new Chart<>(xAxis, yAxis);
-//        if (flag == 1) {
-//            bc.setTitle("THỐNG KÊ THEO 3 NĂM GẦN NHẤT ");
-//            xAxis.setLabel("Năm");
-//            yAxis.setLabel("VNĐ");
-//
-//            int currentYear = Year.now().getValue();
-//            for (int i = currentYear - 2; i <= currentYear; i ++) {
-//                long expenses, amount;
-//                XYChart.Series<String, Number> series1 = new XYChart.Series<>();
-//                series1.setName("Năm " + i);
-//                try {
-//                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
-//                        "FROM `import` " +
-//                        "WHERE YEAR(`import`.received_date) = " + i);
-//                    expenses = Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
-//                    series1.getData().add(new XYChart.Data<>("Chi phí", expenses));
-//
-//                } catch (SQLException | IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//                try {
-//                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`receipt`.total) " +
-//                        "FROM `receipt` " +
-//                        "WHERE YEAR(`receipt`.invoice_date) = " + i);
-//                    amount =  Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
-//                    series1.getData().add(new XYChart.Data<>("Doanh thu", amount));
-//
-//                } catch (SQLException | IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//                series1.getData().add(new XYChart.Data<>("Lợi nhuận", amount - expenses));
-//
-//                bc.getData().add(series1);
-//            }
-//        }
-//        if (flag == 2) {
-//            xAxis.setLabel("Quý");
-//            yAxis.setLabel("VNĐ");
-//
-//            int currentMonth = YearMonth.now().getMonthValue();
-//            int currentYear = Year.now().getValue();
-//            int currentQuarter = (currentMonth - 1) / 3 + 1;
-//            bc.setTitle("THỐNG KÊ THEO QUÝ TRONG NĂM " + currentYear);
-//            for (int i = 1; i <= currentQuarter; i++) {
-//                long expenses, amount;
-//                XYChart.Series<String, Number> series1 = new XYChart.Series<>();
-//                series1.setName("Quý " + i);
-//                try {
-//                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
-//                        "FROM `import` " +
-//                        "WHERE YEAR(`import`.received_date) = " + currentYear + " AND QUARTER(`import`.received_date) = " + i);
-//                    expenses = Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
-//                    series1.getData().add(new XYChart.Data<>("Chi phí", expenses));
-//
-//                } catch (SQLException | IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//                try {
-//                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`receipt`.total) " +
-//                        "FROM `receipt` " +
-//                        "WHERE YEAR(`receipt`.invoice_date) = " + currentYear + " AND QUARTER(`receipt`.invoice_date) = " + i);
-//                    amount =  Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
-//                    series1.getData().add(new XYChart.Data<>("Doanh thu", amount));
-//
-//                } catch (SQLException | IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//                series1.getData().add(new XYChart.Data<>("Lợi nhuận", amount - expenses));
-//
-//                bc.getData().add(series1);
-//            }
-//        }
-//        if (flag == 3) {
-//            xAxis.setLabel("Tháng");
-//            yAxis.setLabel("VNĐ");
-//
-//            int currentMonth = YearMonth.now().getMonthValue();
-//            int currentYear = Year.now().getValue();
-////            bc.setTitle("THỐNG KÊ THEO THÁNG TRONG NĂM " + currentYear);
-//            for (int i = 1; i <= currentMonth; i++) {
-//                long expenses, amount;
-//                try {
-//                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
-//                        "FROM `import` " +
-//                        "WHERE YEAR(`import`.received_date) = " + currentYear + " AND MONTH(`import`.received_date) = " + i);
-//                    expenses = Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
-//
-//                } catch (SQLException | IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//                try {
-//                    List<List<String>> inventory= MySQL.executeQueryStatistic("SELECT SUM(`receipt`.total) " +
-//                        "FROM `receipt` " +
-//                        "WHERE YEAR(`receipt`.invoice_date) = " + currentYear + " AND MONTH(`receipt`.invoice_date) = " + i);
-//                    amount = Long.parseLong(inventory.get(0).get(0).split("\\.")[0]);
-//
-//
-//                } catch (SQLException | IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//
-//            }
-//        }
-//        return bc;
-//    }
 
 }
