@@ -3,6 +3,7 @@ package com.supermarket.BLL;
 import com.supermarket.DAL.ProductDAL;
 import com.supermarket.DTO.Product;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,11 +39,30 @@ public class ProductBLL extends Manager<Product> {
     }
 
     public boolean addProduct(Product product) {
+        if(!validateName(product.getName())){
+            JOptionPane.showMessageDialog(null, "tên tài sản phẩm không được chứa ký tự đặc biệt.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(!validateBarCode(product.getBarcode())){
+            JOptionPane.showMessageDialog(null, "Mã vạch sản phẩm không được chứa ký tự đặc biệt.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+
+        }
+
+
+
         productList.add(product);
         return productDAL.addProduct(product) != 0;
     }
 
     public boolean updateProduct(Product product) {
+        if(!validateName(product.getName())){
+            JOptionPane.showMessageDialog(null, "tên tài sản phẩm không được chứa ký tự đặc biệt.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(!validateBarCode(product.getBarcode())){
+            JOptionPane.showMessageDialog(null, "Mã vạch sản phẩm không được chứa ký tự đặc biệt.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+
+        }
         productList.set(getIndex(product, "id", productList), product);
         return productDAL.updateProduct(product) != 0;
     }
@@ -81,9 +101,36 @@ public class ProductBLL extends Manager<Product> {
             "barcode",product.getBarcode()
         )).isEmpty();
     }
-
     public boolean exists(Map<String, Object> conditions) {
         return !findProductsBy(conditions).isEmpty();
+    }
+
+
+    public static boolean containsNumber(String str) {
+        return str.chars().anyMatch(Character::isDigit);
+    }
+    public static boolean containsSpecial(String str) {
+        return str.chars().anyMatch(c -> !(Character.isLetterOrDigit(c) || Character.isWhitespace(c)));
+    }
+
+    public static boolean containsAlphabet(String str) {
+        return str.chars().anyMatch(Character::isAlphabetic);
+    }
+
+    public boolean validateName(String name) {
+        return !containsSpecial(name);
+    }
+
+    public boolean validateCost(String cost) {
+        return !containsAlphabet(cost);
+    }
+
+    public boolean validateQuantity(String quantity) {
+        return !containsAlphabet(quantity);
+    }
+
+    public boolean validateBarCode(String barCode) {
+        return !containsSpecial(barCode);
     }
 
     @Override

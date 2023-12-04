@@ -1,8 +1,10 @@
 package com.supermarket.BLL;
 
 import com.supermarket.DAL.SupplierDAL;
+import com.supermarket.DTO.Staff;
 import com.supermarket.DTO.Supplier;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,11 +39,47 @@ public class SupplierBLL extends Manager<Supplier> {
     }
 
     public boolean addSupplier(Supplier supplier) {
+        if (!validateName(supplier.getName())) {
+            JOptionPane.showMessageDialog(null,"Tên không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+
+        if(!validatePhone(supplier.getPhone())){
+            JOptionPane.showMessageDialog(null,"Số điện thoại không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if(!validateEmail(supplier.getEmail())){
+            JOptionPane.showMessageDialog(null,"Email không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (exists(supplier.getPhone(),supplier.getEmail())) {
+            return false;
+        }
         supplierList.add(supplier);
         return supplierDAL.addSupplier(supplier) != 0;
     }
 
     public boolean updateSupplier(Supplier supplier) {
+        if (!validateName(supplier.getName())) {
+            JOptionPane.showMessageDialog(null,"Tên không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+
+        if(!validatePhone(supplier.getPhone())){
+            JOptionPane.showMessageDialog(null,"Số điện thoại không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if(!validateEmail(supplier.getEmail())){
+            JOptionPane.showMessageDialog(null,"Email không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (exists(supplier.getPhone(),supplier.getEmail())) {
+            return false;
+        }
         supplierList.set(getIndex(supplier, "id", supplierList), supplier);
         return supplierDAL.updateSupplier(supplier) != 0;
     }
@@ -72,19 +110,50 @@ public class SupplierBLL extends Manager<Supplier> {
         return suppliers;
     }
 
-    public boolean exists(Supplier supplier) {
-        return !findSuppliersBy(Map.of(
-            "id", supplier.getId(),
-            "name", supplier.getName(),
-            "phone", supplier.getPhone(),
-            "address", supplier.getAddress(),
-            "email", supplier.getEmail()
-        )).isEmpty();
+//    public boolean exists(Supplier supplier) {
+//        return !findSuppliersBy(Map.of(
+//            "id", supplier.getId(),
+//            "name", supplier.getName(),
+//            "phone", supplier.getPhone(),
+//            "address", supplier.getAddress(),
+//            "email", supplier.getEmail()
+//        )).isEmpty();
+//    }
+//
+//    public boolean exists(Map<String, Object> conditions) {
+//        return !findSuppliersBy(conditions).isEmpty();
+//    }
+
+    public boolean exists(String phone, String email) {
+        for (Supplier supplier : supplierList) {
+            if (supplier.getPhone().equals(phone)) {
+                JOptionPane.showMessageDialog(null, "Số điện thoại nhà cung cấp đã tồn tại.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+
+                return true;
+            }
+            if(supplier.getEmail().equals(email)){
+                JOptionPane.showMessageDialog(null, "Email nhà cung cấp đã tồn tại.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                return true;
+            }
+        }
+        return false;
     }
 
-    public boolean exists(Map<String, Object> conditions) {
-        return !findSuppliersBy(conditions).isEmpty();
+    public boolean validateName(String name) {
+        // Kiểm tra tên có tồn tại và có đúng định dạng tiếng Việt có dấu câu, có thể viết hoa, viết thường, không được để trống
+        return name != null && !name.isEmpty() && name.matches("[\\p{L}\\p{P}\\s]+");
     }
+
+    public  boolean validatePhone(String phone){
+        return phone.matches("^(\\+?84|0)[35789]\\d{8}$");
+    }
+
+
+    public boolean validateEmail(String email){
+        return email.matches("^\\w+(\\.\\w+)*@\\w+(\\.\\w+)+");
+    }
+
+
 
     @Override
     public Object getValueByKey(Supplier supplier, String key) {
