@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 27, 2023 at 03:59 AM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 7.4.29
+-- Generation Time: Dec 04, 2023 at 03:13 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,7 +35,7 @@ CREATE TABLE `account` (
   `staff_id` bigint(20) DEFAULT NULL,
   `last_signed_in` datetime(6) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `account`
@@ -56,7 +56,7 @@ CREATE TABLE `brand` (
   `name` varchar(255) DEFAULT NULL,
   `supplier_id` bigint(20) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `brand`
@@ -93,7 +93,7 @@ CREATE TABLE `category` (
   `name` varchar(255) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `category`
@@ -112,41 +112,6 @@ INSERT INTO `category` (`id`, `name`, `quantity`, `deleted`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `customer`
---
-
-CREATE TABLE `customer` (
-  `id` bigint(20) NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `gender` bit(1) DEFAULT NULL,
-  `birthdate` date DEFAULT NULL,
-  `phone` varchar(255) DEFAULT NULL,
-  `membership` bit(1) DEFAULT NULL,
-  `signed_up_date` date DEFAULT NULL,
-  `point` int(11) DEFAULT NULL,
-  `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `customer`
---
-
-INSERT INTO `customer` (`id`, `name`, `gender`, `birthdate`, `phone`, `membership`, `signed_up_date`, `point`, `deleted`) VALUES
-(1, 'VÃNG LAI', b'0', '1000-01-01', '', b'0', '1000-01-01', 0, b'0'),
-(2, 'NGUYỄN VĂN NAM', b'1', '2000-12-01', '0963333946', b'1', '2020-09-08', 1000, b'0'),
-(3, 'HOÀNG XUÂN BẮC', b'1', '2001-09-03', '0967563268', b'1', '2021-02-07', 123, b'0'),
-(4, 'NGUYỄN THỊ THU HIỀN', b'0', '2004-05-04', '0981485618', b'1', '2021-05-06', 500, b'0'),
-(5, 'NGUYỄN VĂN THẮNG', b'1', '1999-08-10', '0861149539', b'1', '2021-08-03', 2300, b'0'),
-(6, 'NGUYỄN THỊ YẾN NHI', b'0', '1000-01-01', '', b'0', '1000-01-01', 0, b'0'),
-(7, 'ĐẶNG NGUYỄN GIA HUY', b'1', '1000-01-01', '', b'0', '1000-01-01', 0, b'0'),
-(8, 'NGUYỄN THI DIỆU CHI', b'0', '2000-04-09', '0378367833', b'1', '2022-05-05', 450, b'0'),
-(9, 'NGUYỄN THỊ THANH NHÀN', b'0', '2001-08-03', '0323373316', b'1', '2022-09-08', 3000, b'0'),
-(10, 'NGUYỄN TRUNG TÍN', b'1', '1000-01-01', '', b'0', '1000-01-01', 0, b'0'),
-(11, 'ĐINH XUÂN HOÀI', b'1', '2004-07-06', '0964745278', b'1', '2023-03-07', 200, b'0');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `decentralization`
 --
 
@@ -154,54 +119,126 @@ CREATE TABLE `decentralization` (
   `role_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   `function_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `decentralization`
 --
 
 INSERT INTO `decentralization` (`role_id`, `module_id`, `function_id`) VALUES
-(1, 1, 1),
-(1, 2, 1),
-(1, 3, 1),
-(1, 4, 1),
-(1, 4, 2),
-(1, 4, 3),
-(1, 4, 4),
-(1, 5, 1),
-(1, 5, 2),
-(1, 5, 3),
-(1, 5, 4),
-(1, 6, 1),
-(1, 6, 2),
-(1, 7, 1),
-(1, 7, 2),
-(1, 8, 1),
-(1, 8, 2),
-(1, 9, 1),
-(1, 9, 2),
-(1, 9, 3),
-(1, 9, 4),
-(1, 10, 1),
-(1, 10, 2),
-(1, 10, 3),
-(1, 10, 4),
-(1, 11, 1),
-(1, 11, 2),
-(1, 11, 3),
-(1, 11, 4),
+(0, 1, 1),
+(0, 2, 1),
+(0, 2, 5),
+(0, 3, 1),
+(0, 4, 1),
+(0, 5, 1),
+(0, 6, 1),
+(0, 6, 5),
+(0, 6, 7),
+(0, 7, 1),
+(0, 7, 2),
+(0, 7, 5),
+(0, 7, 7),
+(0, 8, 1),
+(0, 8, 2),
+(0, 8, 5),
+(0, 8, 7),
+(0, 9, 1),
+(0, 9, 2),
+(0, 9, 3),
+(0, 9, 4),
+(0, 9, 5),
+(0, 10, 1),
+(0, 10, 2),
+(0, 10, 3),
+(0, 10, 4),
+(0, 10, 5),
+(0, 10, 6),
+(0, 10, 7),
+(0, 11, 1),
+(0, 11, 2),
+(0, 11, 3),
+(0, 11, 4),
+(0, 11, 5),
+(0, 11, 6),
+(0, 11, 7),
+(0, 12, 1),
+(0, 12, 2),
+(0, 12, 3),
+(0, 12, 4),
+(0, 12, 5),
+(0, 13, 1),
+(0, 13, 2),
+(0, 13, 3),
+(0, 13, 4),
 (1, 12, 1),
 (1, 12, 2),
 (1, 12, 3),
 (1, 12, 4),
+(1, 12, 5),
 (1, 13, 1),
 (1, 13, 2),
 (1, 13, 3),
 (1, 13, 4),
-(1, 14, 1),
-(1, 14, 2),
-(1, 14, 3),
-(1, 14, 4);
+(2, 1, 1),
+(2, 2, 1),
+(2, 2, 5),
+(2, 3, 1),
+(2, 4, 1),
+(2, 5, 1),
+(2, 6, 1),
+(2, 6, 5),
+(2, 6, 7),
+(2, 7, 1),
+(2, 7, 2),
+(2, 7, 5),
+(2, 7, 7),
+(2, 8, 1),
+(2, 8, 2),
+(2, 8, 5),
+(2, 8, 7),
+(2, 9, 1),
+(2, 9, 2),
+(2, 9, 3),
+(2, 9, 4),
+(2, 9, 5),
+(2, 10, 1),
+(2, 10, 2),
+(2, 10, 3),
+(2, 10, 4),
+(2, 10, 5),
+(2, 10, 6),
+(2, 10, 7),
+(2, 11, 1),
+(2, 11, 2),
+(2, 11, 3),
+(2, 11, 4),
+(2, 11, 5),
+(2, 11, 6),
+(2, 11, 7),
+(3, 1, 1),
+(3, 4, 1),
+(3, 5, 1),
+(3, 6, 1),
+(3, 6, 5),
+(3, 9, 1),
+(3, 9, 5),
+(4, 2, 1),
+(4, 2, 5),
+(4, 4, 1),
+(4, 5, 1),
+(4, 7, 1),
+(4, 7, 2),
+(4, 7, 5),
+(4, 7, 7),
+(4, 8, 1),
+(4, 8, 2),
+(4, 8, 5),
+(4, 8, 7),
+(4, 9, 1),
+(4, 9, 5),
+(4, 10, 1),
+(4, 10, 5);
 
 -- --------------------------------------------------------
 
@@ -215,7 +252,7 @@ CREATE TABLE `discount` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `status` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `discount`
@@ -238,7 +275,7 @@ CREATE TABLE `discount_detail` (
   `discount_id` bigint(20) NOT NULL,
   `product_id` bigint(20) NOT NULL,
   `status` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `discount_detail`
@@ -271,7 +308,7 @@ CREATE TABLE `export` (
   `total` bigint(20) DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `export`
@@ -302,7 +339,7 @@ CREATE TABLE `export_detail` (
   `shipment_id` bigint(20) NOT NULL,
   `quantity` double DEFAULT NULL,
   `total` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `export_detail`
@@ -328,7 +365,7 @@ CREATE TABLE `function` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `function`
@@ -338,7 +375,10 @@ INSERT INTO `function` (`id`, `name`, `deleted`) VALUES
 (1, 'Xem', b'0'),
 (2, 'Thêm', b'0'),
 (3, 'Sửa', b'0'),
-(4, 'Xóa', b'0');
+(4, 'Xóa', b'0'),
+(5, 'Chi tiết', b'0'),
+(6, 'Nhập', b'0'),
+(7, 'Xuất', b'0');
 
 -- --------------------------------------------------------
 
@@ -352,7 +392,7 @@ CREATE TABLE `import` (
   `received_date` date DEFAULT NULL,
   `total` bigint(20) DEFAULT NULL,
   `supplier_id` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `import`
@@ -402,27 +442,26 @@ CREATE TABLE `module` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `module`
 --
 
 INSERT INTO `module` (`id`, `name`, `deleted`) VALUES
-(1, 'Quản lý bán hàng', b'0'),
-(2, 'Quản lý kho', b'0'),
-(3, 'Quản lý thống kê', b'0'),
-(4, 'Quản lý giảm giá', b'0'),
-(5, 'Quản lý khuyến mãi', b'0'),
-(6, 'Quản lý hóa đơn', b'0'),
-(7, 'Quản lý phiếu xuất', b'0'),
-(8, 'Quản lý phiếu nhập', b'0'),
-(9, 'Quản lý sản phẩm', b'0'),
-(10, 'Quản lý nhà cung cấp', b'0'),
-(11, 'Quản lý khách hàng', b'0'),
-(12, 'Quản lý nhân viên', b'0'),
-(13, 'Quản lý tài khoản', b'0'),
-(14, 'Quản lý phân quyền', b'0');
+(1, 'Bán hàng', b'0'),
+(2, 'Kho hàng', b'0'),
+(3, 'Thống kê', b'0'),
+(4, 'Giảm giá', b'0'),
+(5, 'Khuyến mãi', b'0'),
+(6, 'Hóa đơn', b'0'),
+(7, 'Phiếu xuất', b'0'),
+(8, 'Phiếu nhập', b'0'),
+(9, 'Sản phẩm', b'0'),
+(10, 'Nhà cung cấp', b'0'),
+(11, 'Nhân viên', b'0'),
+(12, 'Tài khoản', b'0'),
+(13, 'Phân quyền', b'0');
 
 -- --------------------------------------------------------
 
@@ -441,7 +480,7 @@ CREATE TABLE `product` (
   `image` varchar(255) DEFAULT NULL,
   `barcode` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `product`
@@ -502,7 +541,7 @@ CREATE TABLE `promotion` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `status` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `promotion`
@@ -523,7 +562,7 @@ CREATE TABLE `promotion_gift` (
   `promotion_id` bigint(20) NOT NULL,
   `product_id` bigint(20) NOT NULL,
   `quantity` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `promotion_gift`
@@ -543,7 +582,7 @@ CREATE TABLE `promotion_item` (
   `promotion_id` bigint(20) NOT NULL,
   `product_id` bigint(20) NOT NULL,
   `quantity` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `promotion_item`
@@ -562,56 +601,55 @@ INSERT INTO `promotion_item` (`promotion_id`, `product_id`, `quantity`) VALUES
 CREATE TABLE `receipt` (
   `id` bigint(20) NOT NULL,
   `staff_id` bigint(20) DEFAULT NULL,
-  `customer_id` bigint(20) DEFAULT NULL,
   `invoice_date` date DEFAULT NULL,
   `total` bigint(20) DEFAULT NULL,
   `received` bigint(20) DEFAULT NULL,
   `excess` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `receipt`
 --
 
-INSERT INTO `receipt` (`id`, `staff_id`, `customer_id`, `invoice_date`, `total`, `received`, `excess`) VALUES
-(1, 4, 2, '2023-11-15', 150000, 150000, 0),
-(2, 4, 3, '2023-11-16', 200000, 200000, 0),
-(3, 4, 4, '2023-11-17', 300000, 300000, 0),
-(4, 4, 5, '2023-11-18', 250000, 250000, 0),
-(5, 4, 6, '2023-11-19', 180000, 180000, 0),
-(6, 4, 7, '2023-11-20', 120000, 120000, 0),
-(7, 4, 8, '2023-11-21', 350000, 350000, 0),
-(8, 4, 9, '2023-11-22', 400000, 400000, 0),
-(9, 4, 10, '2023-11-23', 280000, 280000, 0),
-(10, 4, 11, '2023-11-24', 320000, 320000, 0),
-(11, 4, 2, '2023-11-15', 180000, 180000, 0),
-(12, 4, 3, '2023-11-16', 210000, 210000, 0),
-(13, 4, 4, '2023-11-17', 320000, 320000, 0),
-(14, 4, 5, '2023-11-18', 280000, 280000, 0),
-(31, 4, 2, '2023-09-05', 120000, 120000, 0),
-(32, 4, 3, '2023-09-12', 180000, 180000, 0),
-(33, 4, 4, '2023-09-20', 250000, 250000, 0),
-(34, 4, 5, '2023-09-25', 300000, 300000, 0),
-(35, 4, 6, '2023-10-05', 200000, 200000, 0),
-(36, 4, 7, '2023-10-10', 150000, 150000, 0),
-(37, 4, 8, '2023-10-15', 280000, 280000, 0),
-(38, 4, 9, '2023-10-20', 320000, 320000, 0),
-(39, 4, 10, '2023-10-25', 180000, 180000, 0),
-(40, 4, 11, '2023-10-30', 220000, 220000, 0),
-(41, 4, 2, '2023-09-02', 150000, 150000, 0),
-(42, 4, 3, '2023-09-08', 220000, 220000, 0),
-(43, 4, 4, '2023-09-15', 180000, 180000, 0),
-(44, 4, 5, '2023-09-22', 250000, 250000, 0),
-(45, 4, 6, '2023-10-01', 100000, 120000, 0),
-(46, 4, 7, '2023-10-08', 190000, 190000, 0),
-(47, 4, 8, '2023-10-14', 280000, 280000, 0),
-(48, 4, 9, '2023-10-21', 320000, 320000, 0),
-(49, 4, 10, '2023-10-27', 180000, 180000, 0),
-(50, 4, 11, '2023-11-03', 220000, 220000, 0),
-(51, 4, 2, '2023-11-09', 150000, 150000, 0),
-(52, 4, 3, '2023-11-16', 220000, 220000, 0),
-(53, 4, 4, '2023-11-23', 180000, 180000, 0),
-(54, 4, 5, '2023-11-30', 250000, 250000, 0);
+INSERT INTO `receipt` (`id`, `staff_id`, `invoice_date`, `total`, `received`, `excess`) VALUES
+(1, 4, '2023-11-15', 150000, 150000, 0),
+(2, 4, '2023-11-16', 200000, 200000, 0),
+(3, 4, '2023-11-17', 300000, 300000, 0),
+(4, 4, '2023-11-18', 250000, 250000, 0),
+(5, 4, '2023-11-19', 180000, 180000, 0),
+(6, 4, '2023-11-20', 120000, 120000, 0),
+(7, 4, '2023-11-21', 350000, 350000, 0),
+(8, 4, '2023-11-22', 400000, 400000, 0),
+(9, 4, '2023-11-23', 280000, 280000, 0),
+(10, 4, '2023-11-24', 320000, 320000, 0),
+(11, 4, '2023-11-15', 180000, 180000, 0),
+(12, 4, '2023-11-16', 210000, 210000, 0),
+(13, 4, '2023-11-17', 320000, 320000, 0),
+(14, 4, '2023-11-18', 280000, 280000, 0),
+(31, 4, '2023-09-05', 120000, 120000, 0),
+(32, 4, '2023-09-12', 180000, 180000, 0),
+(33, 4, '2023-09-20', 250000, 250000, 0),
+(34, 4, '2023-09-25', 300000, 300000, 0),
+(35, 4, '2023-10-05', 200000, 200000, 0),
+(36, 4, '2023-10-10', 150000, 150000, 0),
+(37, 4, '2023-10-15', 280000, 280000, 0),
+(38, 4, '2023-10-20', 320000, 320000, 0),
+(39, 4, '2023-10-25', 180000, 180000, 0),
+(40, 4, '2023-10-30', 220000, 220000, 0),
+(41, 4, '2023-09-02', 150000, 150000, 0),
+(42, 4, '2023-09-08', 220000, 220000, 0),
+(43, 4, '2023-09-15', 180000, 180000, 0),
+(44, 4, '2023-09-22', 250000, 250000, 0),
+(45, 4, '2023-10-01', 100000, 120000, 0),
+(46, 4, '2023-10-08', 190000, 190000, 0),
+(47, 4, '2023-10-14', 280000, 280000, 0),
+(48, 4, '2023-10-21', 320000, 320000, 0),
+(49, 4, '2023-10-27', 180000, 180000, 0),
+(50, 4, '2023-11-03', 220000, 220000, 0),
+(51, 4, '2023-11-09', 150000, 150000, 0),
+(52, 4, '2023-11-16', 220000, 220000, 0),
+(53, 4, '2023-11-23', 180000, 180000, 0),
+(54, 4, '2023-11-30', 250000, 250000, 0);
 
 -- --------------------------------------------------------
 
@@ -624,7 +662,7 @@ CREATE TABLE `receipt_detail` (
   `product_id` bigint(20) NOT NULL,
   `quantity` double DEFAULT NULL,
   `total` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `receipt_detail`
@@ -718,13 +756,14 @@ CREATE TABLE `role` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `role`
 --
 
 INSERT INTO `role` (`id`, `name`, `deleted`) VALUES
+(0, 'Super Admin', b'1'),
 (1, 'Admin', b'0'),
 (2, 'Quản lý cửa hàng', b'0'),
 (3, 'Nhân viên bán hàng', b'0'),
@@ -747,7 +786,7 @@ CREATE TABLE `shipment` (
   `sku` varchar(255) DEFAULT NULL,
   `import_id` bigint(20) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `shipment`
@@ -785,7 +824,7 @@ CREATE TABLE `staff` (
   `email` varchar(255) DEFAULT NULL,
   `entry_date` date DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `staff`
@@ -815,7 +854,7 @@ CREATE TABLE `statistic` (
   `amount` double DEFAULT NULL,
   `expenses` double DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -830,7 +869,7 @@ CREATE TABLE `supplier` (
   `address` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `supplier`
@@ -865,12 +904,6 @@ ALTER TABLE `brand`
 -- Indexes for table `category`
 --
 ALTER TABLE `category`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `customer`
---
-ALTER TABLE `customer`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -961,8 +994,7 @@ ALTER TABLE `promotion_item`
 --
 ALTER TABLE `receipt`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_STAFF3` (`staff_id`),
-  ADD KEY `FK_CUSTOMER` (`customer_id`);
+  ADD KEY `FK_STAFF3` (`staff_id`);
 
 --
 -- Indexes for table `receipt_detail`
@@ -1011,7 +1043,7 @@ ALTER TABLE `supplier`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `brand`
@@ -1024,12 +1056,6 @@ ALTER TABLE `brand`
 --
 ALTER TABLE `category`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `customer`
---
-ALTER TABLE `customer`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `discount`
@@ -1047,7 +1073,7 @@ ALTER TABLE `export`
 -- AUTO_INCREMENT for table `function`
 --
 ALTER TABLE `function`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `import`
@@ -1186,7 +1212,6 @@ ALTER TABLE `promotion_item`
 -- Constraints for table `receipt`
 --
 ALTER TABLE `receipt`
-  ADD CONSTRAINT `FK_CUSTOMER` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
   ADD CONSTRAINT `FK_STAFF3` FOREIGN KEY (`staff_id`) REFERENCES `staff` (`id`);
 
 --

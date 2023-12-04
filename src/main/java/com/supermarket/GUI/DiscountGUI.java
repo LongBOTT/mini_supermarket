@@ -48,13 +48,13 @@ public class DiscountGUI extends Layout3 {
     private JButton buttonAdd;
     private JButton buttonCancel;
     private static List<Integer> productIDInDiscount;
-    public DiscountGUI() {
+    public DiscountGUI(List<Function> functions) {
         super();
-        init();
+        init(functions);
 
     }
 
-    public void init() {
+    public void init(List<Function> functions) {
         containerDiscount = new RoundedPanel();
         jTextFieldSearch = new JTextField();
         jTextFieldDiscount = new ArrayList<>();

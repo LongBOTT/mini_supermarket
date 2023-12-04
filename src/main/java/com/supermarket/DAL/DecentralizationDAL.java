@@ -39,6 +39,7 @@ public class DecentralizationDAL extends Manager{
         }
         return 0;
     }
+
     public int updateDecentralization(Decentralization decentralization) {
         try {
             List<Object> updateValues = new ArrayList<>();
@@ -54,6 +55,16 @@ public class DecentralizationDAL extends Manager{
         }
         return 0;
     }
+
+    public int deleteDecentralization(String... conditions) {
+        try {
+            return delete(conditions);
+        } catch (SQLException | IOException e) {
+            System.out.println("Error occurred in DecentralizationDAL.deleteDecentralization() " + e.getMessage());
+        }
+        return 0;
+    }
+
     public List<Decentralization> searchDecentralizations(String... conditions) {
         try {
             return convertToDecentralizations(read(conditions));

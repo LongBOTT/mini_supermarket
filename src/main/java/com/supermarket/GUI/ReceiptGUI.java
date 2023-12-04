@@ -2,10 +2,7 @@ package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.*;
-import com.supermarket.DTO.Customer;
-import com.supermarket.DTO.Product;
-import com.supermarket.DTO.Receipt;
-import com.supermarket.DTO.Staff;
+import com.supermarket.DTO.*;
 import com.supermarket.GUI.DialogGUI.FormDetailProductGUI;
 import com.supermarket.GUI.DialogGUI.FormDetailReceiptGUI;
 import com.supermarket.GUI.components.DataTable;
@@ -44,16 +41,16 @@ public class ReceiptGUI extends Layout2 {
     private JTextField[] dateTextField;
     private static Object[][] receiptList;
     private static List<Receipt> receipts;
-    public ReceiptGUI() {
+    public ReceiptGUI(List<Function> functions) {
         super();
-        initComponent();
+        initComponent(functions);
     }
 
-    private void initComponent() {
+    private void initComponent(List<Function> functions) {
         jTextFieldSearch = new ArrayList<>();
         receiptList = new Object[0][0];
         receipts = new ArrayList<>();
-        dataTable = new DataTable(new Object[][]{}, new String[]{"Mã hoá đơn","Tên nhân viên","Tên khách hàng", "Ngày lập", "Tổng tiền"}, e -> {});
+        dataTable = new DataTable(new Object[][]{}, new String[]{"Mã hoá đơn","Tên nhân viên", "Ngày lập", "Tổng tiền"}, e -> {});
         scrollPane = new RoundedScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         rightContent.add(scrollPane, BorderLayout.CENTER);
 
@@ -105,15 +102,17 @@ public class ReceiptGUI extends Layout2 {
 //            });
         }
 
-        iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
-        iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconDetail.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                showDetailReceipt();
-            }
-        });
-        leftMenu.add(iconDetail);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Chi tiết"))) {
+            iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
+            iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconDetail.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    showDetailReceipt();
+                }
+            });
+            leftMenu.add(iconDetail);
+        }
 
         cbbSort.setPreferredSize(new Dimension(230, 30));
         cbbSort.addActionListener(e -> selectSortFilter());
@@ -121,7 +120,7 @@ public class ReceiptGUI extends Layout2 {
         selectSortFilter();
         rightMenu.add(cbbSort);
 
-        for (String string : new String[] {"Tên nhân viên:", "Tên khách hàng:", "Từ ngày:", "Đến ngày:"}) {
+        for (String string : new String[] {"Tên nhân viên:", "Từ ngày:", "Đến ngày:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -175,7 +174,7 @@ public class ReceiptGUI extends Layout2 {
 
     private void search() {
         String staffName = jTextFieldSearch.get(0).getText();
-        String customerName = jTextFieldSearch.get(1).getText();
+//        String customerName = jTextFieldSearch.get(1).getText();
         Date startDate = null;
         if (jDateChooser[0].getDateEditor().getDate() != null) {
             try {
@@ -197,7 +196,7 @@ public class ReceiptGUI extends Layout2 {
                 return;
             }
         }
-        if (staffName.isEmpty() && customerName.isEmpty() && jDateChooser[0].getDateEditor().getDate() == null && jDateChooser[1].getDateEditor().getDate() == null) {
+        if (staffName.isEmpty() && jDateChooser[0].getDateEditor().getDate() == null && jDateChooser[1].getDateEditor().getDate() == null) {
             loadDataTable(receiptBLL.getReceiptList());
             return;
         }
@@ -210,15 +209,15 @@ public class ReceiptGUI extends Layout2 {
             }
             receipts = list;
         }
-        if (!Objects.equals(customerName, "")) {
-            List<Receipt> list = new ArrayList<>();
-            for (Receipt receipt : receipts) {
-                Customer customer = customerBLL.findCustomersBy(Map.of("id", receipt.getCustomer_id())).get(0);
-                if (customer.getName().toLowerCase().contains(customerName.toLowerCase()))
-                    list.add(receipt);
-            }
-            receipts = list;
-        }
+//        if (!Objects.equals(customerName, "")) {
+//            List<Receipt> list = new ArrayList<>();
+//            for (Receipt receipt : receipts) {
+//                Customer customer = customerBLL.findCustomersBy(Map.of("id", receipt.getCustomer_id())).get(0);
+//                if (customer.getName().toLowerCase().contains(customerName.toLowerCase()))
+//                    list.add(receipt);
+//            }
+//            receipts = list;
+//        }
         if (startDate != null) {
             System.out.println(startDate);
             List<Receipt> list = new ArrayList<>();
@@ -246,12 +245,12 @@ public class ReceiptGUI extends Layout2 {
         StaffBLL staffBLL = new StaffBLL();
         CustomerBLL customerBLL = new CustomerBLL();
         for (Receipt receipt : receipts) {
-            Object[] object = new Object[6];
+            Object[] object = new Object[5];
             object[0] = receipt.getId();
             object[1] = staffBLL.findStaffsBy(Map.of("id", receipt.getStaff_id())).get(0).getName();
-            object[2] = customerBLL.findCustomersBy(Map.of("id", receipt.getCustomer_id())).get(0).getName();
-            object[3] = receipt.getInvoice_date();
-            object[4] = receipt.getTotal();
+//            object[2] = customerBLL.findCustomersBy(Map.of("id", receipt.getCustomer_id())).get(0).getName();
+            object[2] = receipt.getInvoice_date();
+            object[3] = receipt.getTotal();
             receiptList = Arrays.copyOf(receiptList, receiptList.length + 1);
             receiptList[receiptList.length - 1] = object;
         }

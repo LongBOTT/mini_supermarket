@@ -134,22 +134,22 @@ public class StatisticGUI extends StatisticPanel {
             listTitle.add(label2);
         }
 
-        listIcon.get(0).setIcon(new FlatSVGIcon("icon/customerr.svg"));
-
-        try {
-            List<List<String>> numberOfCustomer = MySQL.executeQueryStatistic("SELECT COUNT(customer.id) FROM customer WHERE customer.membership = 1 and customer.deleted = 0");
-            listValue.get(0).setText(numberOfCustomer.get(0).get(0));
-        } catch (SQLException | IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        listTitle.get(0).setText("<html>Số lượng khách hàng thành viên hiện tại<html>");
-
-        listItem.get(0).add(listIcon.get(0));
-        listItem.get(0).add(listValue.get(0),"wrap");
-        listItem.get(0).add(listTitle.get(0),"span 2 1");
-
-        genneralTab.add(listItem.get(0));
+//        listIcon.get(0).setIcon(new FlatSVGIcon("icon/customerr.svg"));
+//
+//        try {
+//            List<List<String>> numberOfCustomer = MySQL.executeQueryStatistic("SELECT COUNT(customer.id) FROM customer WHERE customer.membership = 1 and customer.deleted = 0");
+//            listValue.get(0).setText(numberOfCustomer.get(0).get(0));
+//        } catch (SQLException | IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        listTitle.get(0).setText("<html>Số lượng khách hàng thành viên hiện tại<html>");
+//
+//        listItem.get(0).add(listIcon.get(0));
+//        listItem.get(0).add(listValue.get(0),"wrap");
+//        listItem.get(0).add(listTitle.get(0),"span 2 1");
+//
+//        genneralTab.add(listItem.get(0));
 
         listIcon.get(1).setIcon(new FlatSVGIcon("icon/stafff.svg"));
 

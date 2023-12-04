@@ -13,7 +13,6 @@ public class ReceiptDAL extends Manager {
         super("receipt",
             List.of("id",
                 "staff_id",
-                "customer_id",
                 "invoice_date",
                 "total",
                 "received",
@@ -26,11 +25,10 @@ public class ReceiptDAL extends Manager {
                 return new Receipt(
                     Integer.parseInt(row.get(0)), // id
                     Integer.parseInt(row.get(1)), // staff_id
-                    Integer.parseInt(row.get(2)), // customer_id
-                    Date.parseDate(row.get(3)), // invoice_date
-                    Double.parseDouble(row.get(4)), // total
-                    Double.parseDouble(row.get(5)), // received
-                    Double.parseDouble(row.get(6)) // excess
+                    Date.parseDate(row.get(2)), // invoice_date
+                    Double.parseDouble(row.get(3)), // total
+                    Double.parseDouble(row.get(4)), // received
+                    Double.parseDouble(row.get(5)) // excess
                 );
             } catch (Exception e) {
                 System.out.println("Error occurred in ReceiptDAL.convertToReceipts(): " + e.getMessage());
@@ -43,7 +41,6 @@ public class ReceiptDAL extends Manager {
         try {
             return create(receipt.getId(),
                 receipt.getStaff_id(),
-                receipt.getCustomer_id(),
                 receipt.getInvoice_date(),
                 receipt.getTotal(),
                 receipt.getReceived(),

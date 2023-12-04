@@ -42,9 +42,18 @@ public class DecentralizationBLL extends Manager<Decentralization> {
         return decentralizationDAL.updateDecentralization(decentralization) != 0;
     }
 
+    public boolean deleteDecentralization(Decentralization decentralization) {
+        decentralizationList.remove(getIndex(decentralization, List.of("role_id", "module_id", "function_id"), decentralizationList));
+        return decentralizationDAL.deleteDecentralization(
+            "role_id = " + decentralization.getRole_id(),
+            "module_id = " + decentralization.getModule_id(),
+            "function_id = " + decentralization.getFunction_id()) != 0;
+    }
+
     public List<Decentralization> searchDecentralizations(String... conditions) {
         return decentralizationDAL.searchDecentralizations(conditions);
     }
+
     public List<Decentralization> findDecemtralizations(String key, String value) {
         List<Decentralization> list = new ArrayList<>();
         for (Decentralization decentralization : decentralizationList) {

@@ -65,7 +65,6 @@ public class ReceiptBLL extends Manager<Receipt>{
     public boolean exists(Receipt receipt) {
         return !findReceiptsBy(Map.of(
             "staff_id", receipt.getStaff_id(),
-            "customer_id", receipt.getCustomer_id(),
             "invoice_date", receipt.getInvoice_date(),
             "total", receipt.getTotal(),
             "received", receipt.getReceived(),
@@ -82,7 +81,6 @@ public class ReceiptBLL extends Manager<Receipt>{
         return switch (key) {
             case "id" -> receipt.getId();
             case "staff_id" -> receipt.getStaff_id();
-            case "customer_id" -> receipt.getCustomer_id();
             case "invoice_date" -> receipt.getInvoice_date();
             case "total" -> receipt.getTotal();
             case "received" -> receipt.getReceived();

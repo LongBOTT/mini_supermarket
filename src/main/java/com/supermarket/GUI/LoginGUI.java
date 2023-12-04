@@ -33,7 +33,6 @@ public class LoginGUI extends JFrame {
     private JButton jButtonLogin;
     public LoginGUI() {
         initComponents();
-        setVisible(true);
     }
 
     private void initComponents() {
@@ -231,16 +230,17 @@ public class LoginGUI extends JFrame {
             throw new RuntimeException(e);
         }
 
-        JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         try {
             Thread thread = new Thread(() -> Mini_supermarketManagement.homeGUI.setAccount(account));
             thread.start();
+            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             thread.join();
+            dispose();
+            System.gc();
+            Mini_supermarketManagement.homeGUI.setVisible(true);
         } catch (Exception ignored) {
 
         }
-        dispose();
-        Mini_supermarketManagement.homeGUI.setVisible(true);
     }
 
     private void forgotPassword() {

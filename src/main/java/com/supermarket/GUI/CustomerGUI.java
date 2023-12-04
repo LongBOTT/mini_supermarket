@@ -6,15 +6,17 @@ import com.supermarket.BLL.CustomerBLL;
 import com.supermarket.BLL.RoleBLL;
 import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DTO.Customer;
+import com.supermarket.DTO.Function;
 import com.supermarket.DTO.Role;
 import com.supermarket.DTO.Staff;
+import com.supermarket.GUI.DialogGUI.*;
 import com.supermarket.GUI.DialogGUI.FormAddCustomerGUI;
-import com.supermarket.GUI.DialogGUI.FormAddCustomerGUI;
-import com.supermarket.GUI.DialogGUI.FormDetailCustomerGUI;
-import com.supermarket.GUI.DialogGUI.FormUpdateCustomerGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout1;
 import com.supermarket.GUI.components.RoundedScrollPane;
+import com.supermarket.main.Mini_supermarketManagement;
+import com.supermarket.utils.Excel;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -23,6 +25,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -36,6 +40,7 @@ public class CustomerGUI extends Layout1 {
     private JLabel iconDelete;
     private JLabel iconPDF;
     private JLabel iconExcel;
+    private ExcelDialog dialogExcel;
     private static DataTable dataTable;
     private RoundedScrollPane scrollPane;
     private JTextField jTextFieldSearch;
@@ -44,16 +49,16 @@ public class CustomerGUI extends Layout1 {
     private JComboBox cbbMembership;
     private Object[][] customerList;
 
-    public CustomerGUI() {
+    public CustomerGUI(List<Function> functions) {
         super();
-        init();
+        init(functions);
 
     }
 
-    public void init() {
+    public void init(List<Function> functions) {
         customerList = new Object[0][0];
         dataTable = new DataTable(new Object[][] {},
-            new String[] {"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Số điện thoại", "Thành viên","Lần đăng nhập cuối","Điểm thưởng"}, e -> {});
+            new String[] {"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Số điện thoại", "Thành viên","Ngày đăng ký","Điểm thưởng"}, e -> {});
         scrollPane = new RoundedScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         iconDetail = new JLabel();
         iconAdd = new JLabel();
@@ -67,53 +72,85 @@ public class CustomerGUI extends Layout1 {
         cbbMembership = new JComboBox<>();
 //
 
-        iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
-        iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconDetail.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                showDetailCustomer();
-            }
-        });
-        leftMenu.add(iconDetail);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Chi tiết"))) {
+            iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
+            iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconDetail.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    showDetailCustomer();
+                }
+            });
+            leftMenu.add(iconDetail);
+        }
 
-        iconAdd.setIcon(new FlatSVGIcon("icon/add.svg"));
-        iconAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                addCustomer();
-            }
-        });
-        leftMenu.add(iconAdd);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Thêm"))) {
+            iconAdd.setIcon(new FlatSVGIcon("icon/add.svg"));
+            iconAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    addCustomer();
+                }
+            });
+            leftMenu.add(iconAdd);
+        }
 
-        iconEdit.setIcon(new FlatSVGIcon("icon/edit.svg"));
-        iconEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconEdit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                updateCustomer();
-            }
-        });
-        leftMenu.add(iconEdit);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Sửa"))) {
+            iconEdit.setIcon(new FlatSVGIcon("icon/edit.svg"));
+            iconEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconEdit.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    updateCustomer();
+                }
+            });
+            leftMenu.add(iconEdit);
+        }
 
-        iconDelete.setIcon(new FlatSVGIcon("icon/remove.svg"));
-        iconDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconDelete.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                deleteCustomer();
-            }
-        });
-        leftMenu.add(iconDelete);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Xóa"))) {
+            iconDelete.setIcon(new FlatSVGIcon("icon/remove.svg"));
+            iconDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconDelete.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    deleteCustomer();
+                }
+            });
+            leftMenu.add(iconDelete);
+        }
 
-        iconPDF.setIcon(new FlatSVGIcon("icon/pdf.svg"));
-        iconPDF.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        leftMenu.add(iconPDF);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Xuất"))) {
+            iconPDF.setIcon(new FlatSVGIcon("icon/pdf.svg"));
+            iconPDF.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconPDF.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    exportCustomer();
+                }
+            });
+            leftMenu.add(iconPDF);
+        }
 
-        iconExcel.setIcon(new FlatSVGIcon("icon/excel.svg"));
-        iconExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        leftMenu.add(iconExcel);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Nhập"))) {
+            dialogExcel = new ExcelDialog(List.of(
+                new Pair<>("Tên", Excel.Type.STRING),
+                new Pair<>("Giới tính", Excel.Type.STRING),
+                new Pair<>("Ngày sinh", Excel.Type.STRING),
+                new Pair<>("SĐT", Excel.Type.STRING)
+            ), row -> {
+                return null;
+            });
+            iconExcel.setIcon(new FlatSVGIcon("icon/excel.svg"));
+            iconExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconExcel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    importCustomer();
+                }
+            });
+            leftMenu.add(iconExcel);
+        }
 
         cbbAttributeProduct.setPreferredSize(new Dimension(130, 30));
         cbbAttributeProduct.addActionListener(e -> selectSearchFilter());
@@ -255,6 +292,26 @@ public class CustomerGUI extends Layout1 {
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    private void importCustomer() {
+        dialogExcel.setVisible(true);
+        if (!dialogExcel.isCancel()) {
+            JOptionPane.showMessageDialog(Mini_supermarketManagement.homeGUI,
+                "Nhập dữ liệu thành công.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            loadDataTable(customerBLL.getData());
+        }
+    }
+
+    private void exportCustomer() {
+        File file = Excel.saveFile();
+        if (file == null)
+            return;
+        Pair<Boolean, String> result = Excel.exportExcel(file, dataTable.getModel());
+        if (result.getKey())
+            JOptionPane.showMessageDialog(Mini_supermarketManagement.homeGUI, result.getValue(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(Mini_supermarketManagement.homeGUI, result.getValue(), "Lỗi", JOptionPane.ERROR_MESSAGE);
     }
 
     public static void loadDataTable(Object[][] objects) {

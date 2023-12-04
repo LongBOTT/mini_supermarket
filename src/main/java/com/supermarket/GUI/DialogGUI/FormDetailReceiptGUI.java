@@ -52,7 +52,7 @@ public class FormDetailReceiptGUI extends DialogForm{
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[] {"Mã hoá đơn:", "Mã nhân viên:", "Mã khách hàng:", "Ngày lập:", "Tổng tiền:", "Tiền nhận:", "Tiền thừa:"}) {
+        for (String string : new String[] {"Mã hoá đơn:", "Mã nhân viên:", "Ngày lập:", "Tổng tiền:", "Tiền nhận:", "Tiền thừa:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -79,15 +79,15 @@ public class FormDetailReceiptGUI extends DialogForm{
                     }
                 });
             }
-            if (string.equals("Mã khách hàng:")) {
-                textField.setText(String.valueOf(receipt.getCustomer_id()));
-                textField.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        loadTableCustomer();
-                    }
-                });
-            }
+//            if (string.equals("Mã khách hàng:")) {
+//                textField.setText(String.valueOf(receipt.getCustomer_id()));
+//                textField.addMouseListener(new MouseAdapter() {
+//                    @Override
+//                    public void mousePressed(MouseEvent e) {
+//                        loadTableCustomer();
+//                    }
+//                });
+//            }
             if (string.equals("Ngày lập:")) {
                 textField.setText(String.valueOf(receipt.getInvoice_date()));
                 textField.addMouseListener(new MouseAdapter() {
@@ -177,20 +177,20 @@ public class FormDetailReceiptGUI extends DialogForm{
         scrollPaneDatatable.setViewportView(containerTable);
     }
 
-    private void loadTableCustomer() {
-        CustomerBLL staffBLL = new CustomerBLL();
-        dataTable = new DataTable(staffBLL.getData(), new String[] {"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Số điện thoại", "Thành viên","Lần đăng nhập cuối","Điểm thưởng"}, e -> {});
-        dataTable.setPreferredSize(new Dimension(1500, 700));
-        containerTable.removeAll();
-        containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
-        containerTable.add(dataTable, BorderLayout.CENTER);
-
-        Customer staff = staffBLL.findCustomersBy(Map.of("id", receipt.getCustomer_id())).get(0);
-        int index = staffBLL.getIndex(staff, "id", staffBLL.getCustomerList());
-        dataTable.setRowSelectionInterval(index, index);
-
-        containerTable.repaint();
-        containerTable.revalidate();
-        scrollPaneDatatable.setViewportView(containerTable);
-    }
+//    private void loadTableCustomer() {
+//        CustomerBLL staffBLL = new CustomerBLL();
+//        dataTable = new DataTable(staffBLL.getData(), new String[] {"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Số điện thoại", "Thành viên","Lần đăng nhập cuối","Điểm thưởng"}, e -> {});
+//        dataTable.setPreferredSize(new Dimension(1500, 700));
+//        containerTable.removeAll();
+//        containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
+//        containerTable.add(dataTable, BorderLayout.CENTER);
+//
+//        Customer staff = staffBLL.findCustomersBy(Map.of("id", receipt.getCustomer_id())).get(0);
+//        int index = staffBLL.getIndex(staff, "id", staffBLL.getCustomerList());
+//        dataTable.setRowSelectionInterval(index, index);
+//
+//        containerTable.repaint();
+//        containerTable.revalidate();
+//        scrollPaneDatatable.setViewportView(containerTable);
+//    }
 }

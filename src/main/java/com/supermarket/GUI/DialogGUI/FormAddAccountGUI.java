@@ -196,7 +196,7 @@ public class FormAddAccountGUI extends DialogForm{
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);
 
-        if (!jTextFieldAccount.get(3).getText().isEmpty()) {
+        if (!jTextFieldAccount.get(5).getText().isEmpty()) {
             Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(5).getText()))).get(0);
             int index = staffBLL.getIndex(staff, "id", staffBLL.getStaffList());
             dataTable.setRowSelectionInterval(index, index);

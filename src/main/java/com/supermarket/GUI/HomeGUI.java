@@ -1,15 +1,14 @@
 package com.supermarket.GUI;
 
-import com.supermarket.BLL.RoleBLL;
-import com.supermarket.DTO.Account;
-import com.supermarket.BLL.StaffBLL;
-import com.supermarket.DTO.Role;
-import com.supermarket.DTO.Staff;
+import com.supermarket.BLL.*;
+import com.supermarket.DTO.*;
+import com.supermarket.DTO.Module;
 import com.supermarket.GUI.components.*;
 import com.supermarket.main.Mini_supermarketManagement;
 import com.supermarket.utils.Date;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.utils.DateTime;
+import javafx.util.Pair;
 
 
 import javax.swing.*;
@@ -37,14 +36,15 @@ public class HomeGUI extends JFrame {
     private RoundedPanel menu;
     private RoundedPanel content;
     private RoundedPanel function;
-    private RoundedPanel[] modules = new RoundedPanel[15];
+    private RoundedPanel[] modules;
     private RoundedPanel currentModule;
     private RoundedPanel addBanner;
     private JLabel time;
     private JLabel staffName;
     private JLabel iconLogout;
     private JLabel addIcon;
-    private JLabel[] moduleNames = new JLabel[15];
+    private JLabel[] moduleNames;
+    private JPanel[] allPanelModules;
     public List<JLabel> banners = new ArrayList<>(0);
     private boolean over = false;
     private boolean pressover;
@@ -53,7 +53,9 @@ public class HomeGUI extends JFrame {
     private int currentPanel = 0;
     private int currentBanner = 0;
     private Thread autoRenderBanner;
+
     public HomeGUI () {
+        initComponents();
     }
 
     public Account getAccount() {
@@ -62,12 +64,9 @@ public class HomeGUI extends JFrame {
 
     public void setAccount(Account account) {
         this.account = account;
-        initComponents();
         getUser();
         initMenu();
-        selectRoundPanel(currentPanel);
     }
-
 
     public void getUser() {
         Staff staff = staffBLL.findStaffsBy(Map.of("id", account.getStaffID())).get(0);
@@ -105,10 +104,6 @@ public class HomeGUI extends JFrame {
         staffName = new JLabel();
         iconLogout = new JLabel();
         addIcon = new JLabel();
-        for (int i = 0; i < modules.length; i++) {
-            modules[i] = new RoundedPanel();
-            moduleNames[i] = new JLabel();
-        }
         for (int i = 0; i<3; i++) {
             banners.add(new JLabel());
         }
@@ -196,7 +191,7 @@ public class HomeGUI extends JFrame {
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                        new ManageBannersGUI();
+                    new ManageBannersGUI();
                 }
             });
         }
@@ -218,12 +213,24 @@ public class HomeGUI extends JFrame {
     }
 
     private void initMenu() {
+        menu.removeAll();
+        Pair<List<Module>, List<List<Function>>> result = getModulesAndFunctionsFromRole(account.getRoleID());
+        List<Module> moduleList = result.getKey();
+        List<List<Function>> function2D = result.getValue();
+
+        allPanelModules = new RoundedPanel[moduleList.size()];
+        modules = new RoundedPanel[moduleList.size()];
+        moduleNames = new JLabel[moduleList.size()];
         for (int i = 0; i < modules.length; i++) {
-            int index = i;
+            modules[i] = new RoundedPanel();
             modules[i].setLayout(new FlowLayout());
             modules[i].setPreferredSize(new Dimension(220, 41));
             modules[i].setBackground(new Color(0xFFFFFF));
             modules[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            Module module = moduleList.get(i);
+            List<Function> functions = function2D.get(i);
+            allPanelModules[i] = getPanelModule(module.getId(), functions);
+            int index = i;
             modules[i].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
@@ -251,95 +258,106 @@ public class HomeGUI extends JFrame {
                 }
 
                 public void mousePressed(MouseEvent e) {
-                    selectRoundPanel(index);
+                    openModule(allPanelModules[index]);
+                    Active(modules[index]);
+                    currentPanel = index;
                 }
             });
             menu.add(modules[i]);
 
+            moduleNames[i] = new JLabel(module.getName());
+            moduleNames[i].setIcon(getIconModule(module.getId()));
             moduleNames[i].setPreferredSize(new Dimension(190, 35));
             moduleNames[i].setHorizontalAlignment(SwingConstants.LEFT);
             moduleNames[i].setVerticalAlignment(SwingConstants.CENTER);
             moduleNames[i].setFont((new Font("FlatLaf.style", Font.PLAIN, 15)));
             moduleNames[i].setIconTextGap(30);
             moduleNames[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
-            moduleNames[i].addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    if (!pressover && index != currentPanel) {
-                        e.getComponent().getParent().setBackground(colorOver);
-                        over = true;
-                    }
-                }
-
-                public void mouseExited(MouseEvent e) {
-                    if (!pressover && index != currentPanel) {
-                        e.getComponent().getParent().setBackground(color);
-                        over = false;
-                    }
-                }
-
-                public void mouseReleased(MouseEvent e) {
-                    if (!pressover && index != currentPanel) {
-                        if (over) {
-                            e.getComponent().getParent().setBackground(colorOver);
-                        } else {
-                            e.getComponent().getParent().setBackground(color);
-                        }
-                    }
-                }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    selectRoundPanel(index);
-                }
-            });
             modules[i].add(moduleNames[i]);
         }
+        openModule(allPanelModules[0]);
+        Active(modules[0]);
+    }
 
-        moduleNames[0].setIcon(new FlatSVGIcon("icon/home.svg"));
-        moduleNames[0].setText("Trang chủ");
+    public Pair<List<Module>, List<List<Function>>> getModulesAndFunctionsFromRole(int roleID) {
+        DecentralizationBLL decentralizationBLL = new DecentralizationBLL();
+        List<Decentralization> decentralizations = decentralizationBLL.searchDecentralizations("role_id = " + roleID);
+        List<Module> modules = new ArrayList<>();
+        modules.add(new Module(0, "Trang chủ", false));
+        List<List<Function>> function2D = new ArrayList<>();
+        function2D.add(new ArrayList<>());
+        ModuleBLL moduleBLL = new ModuleBLL();
+        FunctionBLL functionBLL = new FunctionBLL();
+        for (int i = 0; i < decentralizations.size(); i++) {
+            int moduleID = decentralizations.get(i).getModule_id();
+            List<Function> functions = new ArrayList<>();
+            boolean canView = false;
+            do {
+                int functionID = decentralizations.get(i).getFunction_id();
+                Function function = functionBLL.findFunctionsBy(Map.of("id", functionID)).get(0);
+                if (function.getId() == 1) // view
+                    canView = true;
+                functions.add(function);
+            } while (++i < decentralizations.size() && decentralizations.get(i).getModule_id() == moduleID);
+            if (canView) {
+                modules.add(moduleBLL.findModulesBy(Map.of("id", moduleID)).get(0));
+                function2D.add(functions);
+            }
+            i--;
+        }
+        return new Pair<>(modules, function2D);
+    }
 
-        moduleNames[1].setIcon(new FlatSVGIcon("icon/sales.svg"));
-        moduleNames[1].setText("Bán hàng");
+    public JPanel[] getAllPanelModules() {
+        return allPanelModules;
+    }
 
-        moduleNames[2].setIcon(new FlatSVGIcon("icon/warehouse.svg"));
-        moduleNames[2].setText("Kho hàng");
+    public JPanel getPanelModule(int id, List<Function> functions) {
+        return switch (id) {
+            case 0 -> home();
+            case 1 -> new SaleGUI(account);
+            case 2 -> new ShipmentGUI(functions);
+            case 3 -> new StatisticGUI();
+            case 4 -> new DiscountGUI(functions);
+            case 5 -> new PromotionGUI(functions);
+            case 6 -> new ReceiptGUI(functions);
+            case 7 -> new ExportGUI(functions);
+            case 8 -> new ImportGUI(functions);
+            case 9 -> new ProductGUI(functions);
+            case 10 -> new SupplierGUI(functions);
+            case 11 -> new StaffGUI(functions);
+            case 12 -> new AccountGUI(functions);
+            case 13 -> new DecentralizationGUI(functions);
+            default -> null;
+        };
+    }
 
-        moduleNames[3].setIcon(new FlatSVGIcon("icon/statistic.svg"));
-        moduleNames[3].setText("Thống kê");
+    public Icon getIconModule(int id) {
+        return switch (id) {
+            case 0 -> new FlatSVGIcon("icon/home.svg");
+            case 1 -> new FlatSVGIcon("icon/sales.svg");
+            case 2 -> new FlatSVGIcon("icon/warehouse.svg");
+            case 3 -> new FlatSVGIcon("icon/statistic.svg");
+            case 4 -> new FlatSVGIcon("icon/discount.svg");
+            case 5 -> new FlatSVGIcon("icon/promotion.svg");
+            case 6 -> new FlatSVGIcon("icon/receipt.svg");
+            case 7 -> new FlatSVGIcon("icon/export.svg");
+            case 8 -> new FlatSVGIcon("icon/import.svg");
+            case 9 -> new FlatSVGIcon("icon/product.svg");
+            case 10 -> new FlatSVGIcon("icon/supplier.svg");
+            case 11 -> new FlatSVGIcon("icon/staff.svg");
+            case 12 -> new FlatSVGIcon("icon/account.svg");
+            case 13 -> new FlatSVGIcon("icon/decentralization.svg");
+            default -> null;
+        };
+    }
 
-        moduleNames[4].setIcon(new FlatSVGIcon("icon/discount.svg"));
-        moduleNames[4].setText("Giảm giá");
-
-        moduleNames[5].setIcon(new FlatSVGIcon("icon/promotion.svg"));
-        moduleNames[5].setText("Khuyến mãi");
-
-        moduleNames[6].setIcon(new FlatSVGIcon("icon/receipt.svg"));
-        moduleNames[6].setText("Hoá đơn");
-
-        moduleNames[7].setIcon(new FlatSVGIcon("icon/import.svg"));
-        moduleNames[7].setText("Phiếu nhập");
-
-        moduleNames[8].setIcon(new FlatSVGIcon("icon/export.svg"));
-        moduleNames[8].setText("Phiếu xuất");
-
-        moduleNames[9].setIcon(new FlatSVGIcon("icon/product.svg"));
-        moduleNames[9].setText("Sản phẩm");
-
-        moduleNames[10].setIcon(new FlatSVGIcon("icon/supplier.svg"));
-        moduleNames[10].setText("Nhà cung cấp");
-
-        moduleNames[11].setIcon(new FlatSVGIcon("icon/customer.svg"));
-        moduleNames[11].setText("Khách hàng");
-
-        moduleNames[12].setIcon(new FlatSVGIcon("icon/staff.svg"));
-        moduleNames[12].setText("Nhân viên");
-
-        moduleNames[13].setIcon(new FlatSVGIcon("icon/account.svg"));
-        moduleNames[13].setText("Tài khoản");
-
-        moduleNames[14].setIcon(new FlatSVGIcon("icon/decentralization.svg"));
-        moduleNames[14].setText("Phân quyền");
+    public void openModule(JPanel module) {
+        content.removeAll();
+        content.add(module, BorderLayout.CENTER);
+        content.repaint();
+        content.revalidate();
+        System.gc();
     }
 
     private void Disable() {
@@ -352,30 +370,6 @@ public class HomeGUI extends JFrame {
         Disable();
         currentModule = module;
         module.setBackground(colorOver);
-    }
-
-    public void selectRoundPanel(int index) {
-        Active(modules[index]);
-        JPanel panel = switch (index) {
-            case 0 -> home();
-            case 1 -> new SaleGUI(account);
-            case 2 -> new ShipmentGUI();
-            case 3 -> new StatisticGUI();
-            case 4 -> new DiscountGUI();
-            case 5 -> new PromotionGUI();
-            case 6 -> new ReceiptGUI();
-            case 7 -> new ImportGUI();
-            case 8 -> new ExportGUI();
-            case 9 -> new ProductGUI();
-            case 10 -> new SupplierGUI();
-            case 11 -> new CustomerGUI();
-            case 12 -> new StaffGUI();
-            case 13 -> new AccountGUI();
-            case 14 -> new Layout4();
-            default -> null;
-        };
-        currentPanel = index;
-        OpenChildForm(panel);
     }
 
     private JPanel home() {
@@ -412,7 +406,7 @@ public class HomeGUI extends JFrame {
             while (!Thread.currentThread().isInterrupted()) {
                 if (!banners.isEmpty()) {
                     if (DateTime.calculateTime(start, new DateTime()) == 3) {
-                        if (currentBanner == banners.size()-1)
+                        if (currentBanner >= banners.size() - 1)
                             currentBanner = 0;
                         else
                             currentBanner += 1;
@@ -461,6 +455,7 @@ public class HomeGUI extends JFrame {
             "Đăng xuất");
         if (message == JOptionPane.YES_OPTION) {
             this.dispose();
+            System.gc();
             Mini_supermarketManagement.loginGUI.setVisible(true);
         }
     }

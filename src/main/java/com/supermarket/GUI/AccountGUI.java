@@ -4,10 +4,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.AccountBLL;
 import com.supermarket.BLL.RoleBLL;
 import com.supermarket.BLL.StaffBLL;
-import com.supermarket.DTO.Brand;
-import com.supermarket.DTO.Category;
-import com.supermarket.DTO.Role;
-import com.supermarket.DTO.Staff;
+import com.supermarket.DTO.*;
 import com.supermarket.GUI.DialogGUI.FormAddAccountGUI;
 import com.supermarket.GUI.DialogGUI.FormDetailAccountGUI;
 import com.supermarket.GUI.DialogGUI.FormUpdateAccountGUI;
@@ -22,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,12 +39,12 @@ public class AccountGUI extends Layout1 {
     private JComboBox cbbStaff;
     private Object[][] accountList;
 
-    public AccountGUI() {
+    public AccountGUI(List<Function> functions) {
         super();
-        init();
+        init(functions);
     }
 
-    public void init() {
+    public void init(List<Function> functions) {
         accountList = new Object[0][0];
         dataTable = new DataTable(new Object[][] {},
             new String[] {"Mã tài khoản", "Tên tài khoản", "Mật khẩu", "Chức vụ", "Lần đăng nhập cuối", "Nhân viên"}, e -> {});
@@ -60,45 +58,53 @@ public class AccountGUI extends Layout1 {
         cbbRole = new JComboBox<>();
         cbbStaff = new JComboBox<>();
 
-        iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
-        iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconDetail.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                showDetailAccount();
-            }
-        });
-        leftMenu.add(iconDetail);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Chi tiết"))) {
+            iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
+            iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconDetail.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    showDetailAccount();
+                }
+            });
+            leftMenu.add(iconDetail);
+        }
 
-        iconAdd.setIcon(new FlatSVGIcon("icon/add.svg"));
-        iconAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                addAccount();
-            }
-        });
-        leftMenu.add(iconAdd);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Thêm"))) {
+            iconAdd.setIcon(new FlatSVGIcon("icon/add.svg"));
+            iconAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    addAccount();
+                }
+            });
+            leftMenu.add(iconAdd);
+        }
 
-        iconEdit.setIcon(new FlatSVGIcon("icon/edit.svg"));
-        iconEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconEdit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                updateAccount();
-            }
-        });
-        leftMenu.add(iconEdit);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Sửa"))) {
+            iconEdit.setIcon(new FlatSVGIcon("icon/edit.svg"));
+            iconEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconEdit.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    updateAccount();
+                }
+            });
+            leftMenu.add(iconEdit);
+        }
 
-        iconDelete.setIcon(new FlatSVGIcon("icon/remove.svg"));
-        iconDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconDelete.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                deleteAccount();
-            }
-        });
-        leftMenu.add(iconDelete);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Xóa"))) {
+            iconDelete.setIcon(new FlatSVGIcon("icon/remove.svg"));
+            iconDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconDelete.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    deleteAccount();
+                }
+            });
+            leftMenu.add(iconDelete);
+        }
 
         cbbAttributeAccount.setPreferredSize(new Dimension(130, 30));
         cbbAttributeAccount.addActionListener(e -> selectSearchFilter());

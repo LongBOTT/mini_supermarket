@@ -4,6 +4,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.SupplierBLL;
 import com.supermarket.BLL.ImportBLL;
 import com.supermarket.BLL.StaffBLL;
+import com.supermarket.DTO.Function;
 import com.supermarket.DTO.Supplier;
 import com.supermarket.DTO.Import;
 import com.supermarket.DTO.Staff;
@@ -43,12 +44,12 @@ public class ImportGUI extends Layout2 {
     private JTextField[] dateTextField;
     private static Object[][] importNoteList;
     private static List<Import> imports;
-    public ImportGUI() {
+    public ImportGUI(List<Function> functions) {
         super();
-        initComponent();
+        initComponent(functions);
     }
 
-    private void initComponent() {
+    private void initComponent(List<Function> functions) {
         jTextFieldSearch = new ArrayList<>();
         importNoteList = new Object[0][0];
         imports = new ArrayList<>();
@@ -107,25 +108,29 @@ public class ImportGUI extends Layout2 {
 //            });
         }
 
-        iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
-        iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconDetail.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                showDetailImport();
-            }
-        });
-        leftMenu.add(iconDetail);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Chi tiết"))) {
+            iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
+            iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconDetail.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    showDetailImport();
+                }
+            });
+            leftMenu.add(iconDetail);
+        }
 
-        iconAdd.setIcon(new FlatSVGIcon("icon/add.svg"));
-        iconAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                addImport();
-            }
-        });
-        leftMenu.add(iconAdd);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Thêm"))) {
+            iconAdd.setIcon(new FlatSVGIcon("icon/add.svg"));
+            iconAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    addImport();
+                }
+            });
+            leftMenu.add(iconAdd);
+        }
 
         cbbSort.setPreferredSize(new Dimension(230, 30));
         cbbSort.addActionListener(e -> selectSortFilter());

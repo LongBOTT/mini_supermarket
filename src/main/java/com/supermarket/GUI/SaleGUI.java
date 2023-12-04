@@ -287,37 +287,37 @@ public class SaleGUI extends SalePanel {
         containerBill.setBackground(new Color(0x93D3D3D3, true));
         BillPanel.add(containerBill, BorderLayout.CENTER);
 
-        seachCustomer.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
-        containerBill.add(seachCustomer);
+//        seachCustomer.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
+//        containerBill.add(seachCustomer);
 
-        jTextFieldSearchCustomer.setPreferredSize(new Dimension(230, 30));
-        jTextFieldSearchCustomer.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (!Character.isDigit(e.getKeyChar())) {
-                    e.consume();
-                }
-            }
-        });
-        jTextFieldSearchCustomer.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                searchCustomerByPhone();
-            }
+//        jTextFieldSearchCustomer.setPreferredSize(new Dimension(230, 30));
+//        jTextFieldSearchCustomer.addKeyListener(new KeyAdapter() {
+//            @Override
+//            public void keyTyped(KeyEvent e) {
+//                if (!Character.isDigit(e.getKeyChar())) {
+//                    e.consume();
+//                }
+//            }
+//        });
+//        jTextFieldSearchCustomer.getDocument().addDocumentListener(new DocumentListener() {
+//            @Override
+//            public void insertUpdate(DocumentEvent e) {
+//                searchCustomerByPhone();
+//            }
+//
+//            @Override
+//            public void removeUpdate(DocumentEvent e) {
+//                searchCustomerByPhone();
+//            }
+//
+//            @Override
+//            public void changedUpdate(DocumentEvent e) {
+//                searchCustomerByPhone();
+//            }
+//        });
+//        containerBill.add(jTextFieldSearchCustomer, "wrap");
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                searchCustomerByPhone();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                searchCustomerByPhone();
-            }
-        });
-        containerBill.add(jTextFieldSearchCustomer, "wrap");
-
-        for (String string : new String[]{"Tên nhân viên:", "Tên khách hàng:", "Ngày mua:"}) {
+        for (String string : new String[]{"Tên nhân viên:", "Ngày mua:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -468,19 +468,19 @@ public class SaleGUI extends SalePanel {
         ReceiptBLL receiptBLL = new ReceiptBLL();
         receipt.setId(receiptBLL.getAutoID(receiptBLL.getReceiptList()));
         receipt.setStaff_id(account.getStaffID());
-        if (Objects.equals(jTextFieldBill.get(1).getText(), ""))
-            receipt.setCustomer_id(1);
-        else {
-            List<Customer> customers = customerBLL.findCustomersBy(Map.of("phone", jTextFieldSearchCustomer.getText()));
-            if (customers.isEmpty()) {
-                if (Objects.equals(jTextFieldBill.get(3).getText(), "")) {
-                    JOptionPane.showMessageDialog(null, "Không tìm thấy khách hàng!.",
-                        "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                receipt.setCustomer_id((customers.get(0).getId()));
-            }
-        }
+//        if (Objects.equals(jTextFieldBill.get(1).getText(), ""))
+//            receipt.setCustomer_id(1);
+//        else {
+//            List<Customer> customers = customerBLL.findCustomersBy(Map.of("phone", jTextFieldSearchCustomer.getText()));
+//            if (customers.isEmpty()) {
+//                if (Objects.equals(jTextFieldBill.get(3).getText(), "")) {
+//                    JOptionPane.showMessageDialog(null, "Không tìm thấy khách hàng!.",
+//                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+//                    return;
+//                }
+//                receipt.setCustomer_id((customers.get(0).getId()));
+//            }
+//        }
 
         try {
             receipt.setInvoice_date(Date.parseDate(jTextFieldBill.get(2).getText()));

@@ -2,6 +2,7 @@ package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.*;
+import com.supermarket.DTO.Function;
 import com.supermarket.DTO.Product;
 import com.supermarket.DTO.Shipment;
 import com.supermarket.GUI.DialogGUI.FormDetailShipmentGUI;
@@ -30,12 +31,12 @@ public class ShipmentGUI extends Layout1 {
     private JComboBox cbbProduct;
     private JComboBox cbbDate;
     private Object[][] shipmentList;
-    public ShipmentGUI (){
+    public ShipmentGUI (List<Function> functions) {
         super();
-        init();
+        init(functions);
     }
 
-    private void init() {
+    private void init(List<Function> functions) {
         shipmentList = new Object[0][0];
         dataTable = new DataTable(new Object[][] {},
             new String[] {"Mã lô hàng", "Tên sản phẩm", "Đơn giá", "Số lượng nhập", "Tồn kho", "Ngày sản xuất", "Ngày hết hạn", "Ngày nhập hàng"}, e -> {});
@@ -45,15 +46,17 @@ public class ShipmentGUI extends Layout1 {
         cbbProduct = new JComboBox<>();
         cbbDate = new JComboBox<>(new String[] {"Hết hạn", "Sắp hết hạn"});
 
-        iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
-        iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconDetail.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                showDetailShipment();
-            }
-        });
-        leftMenu.add(iconDetail);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Chi tiết"))) {
+            iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
+            iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconDetail.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    showDetailShipment();
+                }
+            });
+            leftMenu.add(iconDetail);
+        }
 
         cbbAttributeShipment.setPreferredSize(new Dimension(130, 30));
         cbbAttributeShipment.addActionListener(e -> selectSearchFilter());

@@ -141,7 +141,7 @@ public class FormAddImportGUI extends DialogForm{
         jTextFieldImport.get(0).setText(String.valueOf(importBLL.getAutoID(importBLL.searchImport())));
         jTextFieldImport.get(0).setEnabled(false);
         jTextFieldImport.get(1).setEnabled(true);
-        jTextFieldImport.get(1).setText("");
+        jTextFieldImport.get(1).setText(String.valueOf(HomeGUI.account.getStaffID()));
         jTextFieldImport.get(1).setEnabled(false);
         jTextFieldImport.get(2).setEnabled(true);
         jTextFieldImport.get(2).setText(Date.dateNow());

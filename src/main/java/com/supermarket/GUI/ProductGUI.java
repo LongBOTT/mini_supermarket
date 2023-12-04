@@ -42,12 +42,12 @@ public class ProductGUI extends Layout4 {
     private BrandBLL brandBLL = new BrandBLL();
     private CategoryBLL categoryBLL = new CategoryBLL();
     private static Object[][] productlist;
-    public ProductGUI(){
+    public ProductGUI(List<Function> functions) {
         super();
-        initComponent();
+        initComponent(functions);
     }
 
-    public void initComponent(){
+    public void initComponent(List<Function> functions) {
         productlist = new Object[0][0];
 
         formDetail = new RoundedPanel();
@@ -69,44 +69,53 @@ public class ProductGUI extends Layout4 {
         cbbBrand= new JComboBox<>();
         cbbCategory = new JComboBox<>();
 
-        iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
-        iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconDetail.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                showDetailAccount();
-            }
-        });
-        leftMenu.add(iconDetail);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Chi tiết"))) {
+            iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
+            iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconDetail.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    showDetailAccount();
+                }
+            });
+            leftMenu.add(iconDetail);
+        }
 
-        iconAdd.setIcon(new FlatSVGIcon("icon/add.svg"));
-        iconAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                addProduct();
-            }
-        });
-        leftMenu.add(iconAdd);
-        iconEdit.setIcon(new FlatSVGIcon("icon/edit.svg"));
-        iconEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconEdit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                updateProduct();
-            }
-        });
-        leftMenu.add(iconEdit);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Thêm"))) {
+            iconAdd.setIcon(new FlatSVGIcon("icon/add.svg"));
+            iconAdd.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    addProduct();
+                }
+            });
+            leftMenu.add(iconAdd);
+        }
 
-        iconDelete.setIcon(new FlatSVGIcon("icon/remove.svg"));
-        iconDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        iconDelete.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                deleteProduct();
-            }
-        });
-        leftMenu.add(iconDelete);
+        if (functions.stream().anyMatch(f -> f.getName().equals("Sửa"))) {
+            iconEdit.setIcon(new FlatSVGIcon("icon/edit.svg"));
+            iconEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconEdit.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    updateProduct();
+                }
+            });
+            leftMenu.add(iconEdit);
+        }
+
+        if (functions.stream().anyMatch(f -> f.getName().equals("Xóa"))) {
+            iconDelete.setIcon(new FlatSVGIcon("icon/remove.svg"));
+            iconDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            iconDelete.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    deleteProduct();
+                }
+            });
+            leftMenu.add(iconDelete);
+        }
 
         cbbAttributeProduct.setPreferredSize(new Dimension(130, 30));
         cbbAttributeProduct.addActionListener(e -> selectSearchFilter());

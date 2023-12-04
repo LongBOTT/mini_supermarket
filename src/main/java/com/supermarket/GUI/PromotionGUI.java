@@ -48,13 +48,13 @@ public class PromotionGUI extends Layout3 {
     private JButton buttonAdd;
     private JButton buttonCancel;
     private static List<Integer> productIDInPromotion;
-    public PromotionGUI() {
+    public PromotionGUI(List<Function> functions) {
         super();
-        init();
+        init(functions);
 
     }
 
-    public void init() {
+    public void init(List<Function> functions) {
         containerPromotion = new RoundedPanel();
         jTextFieldSearch = new JTextField();
         jTextFieldPromotion = new ArrayList<>();

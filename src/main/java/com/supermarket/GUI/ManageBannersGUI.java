@@ -67,7 +67,7 @@ public class ManageBannersGUI extends JDialog {
                             if (banners.get(i) == e.getComponent()) {
                                 banners.remove(e.getComponent());
                                 Mini_supermarketManagement.homeGUI.banners.remove(i);
-                                Mini_supermarketManagement.homeGUI.selectRoundPanel(0);
+//                                Mini_supermarketManagement.homeGUI.selectRoundPanel(0);
                             }
                         }
                         reloadBanners();
@@ -122,7 +122,7 @@ public class ManageBannersGUI extends JDialog {
                     });
                     reloadBanners();
                     Mini_supermarketManagement.homeGUI.banners.add(label);
-                    Mini_supermarketManagement.homeGUI.selectRoundPanel(0);
+//                    Mini_supermarketManagement.homeGUI.selectRoundPanel(0);
                 }
             }
         });

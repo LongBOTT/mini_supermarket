@@ -2,20 +2,11 @@ package com.supermarket.main;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.AccountBLL;
-import com.supermarket.BLL.BrandBLL;
-import com.supermarket.BLL.CategoryBLL;
-import com.supermarket.BLL.CustomerBLL;
-import com.supermarket.DTO.Brand;
-import com.supermarket.DTO.Category;
-import com.supermarket.DTO.Customer;
 import com.supermarket.GUI.HomeGUI;
 import com.supermarket.GUI.LoginGUI;
-import com.supermarket.utils.Date;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 
 public class Mini_supermarketManagement {
     public static LoginGUI loginGUI;
@@ -36,12 +27,10 @@ public class Mini_supermarketManagement {
         UIManager.put("TitlePane.iconSize", new Dimension(25, 25));
         UIManager.put("TitlePane.iconMargins", new Insets(3, 5, 0, 20));
 
-        Thread thread = new Thread( () -> {
-            homeGUI = new HomeGUI();
-            homeGUI.setAccount(new AccountBLL().getAccountList().get(0));
-        });
+        Thread thread = new Thread(() -> homeGUI = new HomeGUI());
         thread.start();
         loginGUI = new LoginGUI();
+        loginGUI.setVisible(true);
     }
 
     public static void exit(int status) {

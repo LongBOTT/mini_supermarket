@@ -5,7 +5,6 @@ import com.supermarket.utils.Date;
 public class Receipt {
     private int id;
     private int staff_id;
-    private int customer_id;
     private Date invoice_date;
     private double total;
     private double received;
@@ -13,10 +12,9 @@ public class Receipt {
     public Receipt() {
     }
 
-    public Receipt(int id, int staff_id, int customer_id, Date invoice_date, double total, double received, double excess) {
+    public Receipt(int id, int staff_id, Date invoice_date, double total, double received, double excess) {
         this.id = id;
         this.staff_id = staff_id;
-        this.customer_id = customer_id;
         this.invoice_date = invoice_date;
         this.total = total;
         this.received = received;
@@ -37,14 +35,6 @@ public class Receipt {
 
     public void setStaff_id(int staff_id) {
         this.staff_id = staff_id;
-    }
-
-    public int getCustomer_id() {
-        return customer_id;
-    }
-
-    public void setCustomer_id(int customer_id) {
-        this.customer_id = customer_id;
     }
 
     public Date getInvoice_date() {
@@ -84,7 +74,6 @@ public class Receipt {
     public String toString() {
         return id + " | " +
             staff_id + " | " +
-            customer_id + " | " +
             invoice_date + " | " +
             total + " | " +
             received + " | " +
