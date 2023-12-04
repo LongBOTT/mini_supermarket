@@ -144,13 +144,13 @@ public class FormUpdateSupplierGUI extends DialogForm{
         int choice = JOptionPane.showOptionDialog(null, "Xác nhận cập nhật nhà cung cấp?",
             "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == 1) {
-            if (supplierBLL.addSupplier(supplier).getKey()) {
+            if (supplierBLL.updateSupplier(supplier).getKey()) {
                 JOptionPane.showMessageDialog(null, "Cập nhật nhà cung cấp thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 SupplierGUI.loadDataTable(supplierBLL.getData());
                 dispose();
             } else {
-                SmallDialog.showResult(supplierBLL.addSupplier(supplier).getValue());
+                SmallDialog.showResult(supplierBLL.updateSupplier(supplier).getValue());
             }
         }
 

@@ -86,11 +86,6 @@ public class StaffBLL extends Manager<Staff>{
         if(!result.getKey()){
             return new Pair<>(false,result.getValue());
         }
-        result = exists(staff);
-        if (result.getKey()) {
-            return new Pair<>(false,result.getValue());
-
-        }
         staffList.set(getIndex(staff, "id", staffList), staff);
         staffDAL.updateStaff(staff);
         return new Pair<>(true,"");

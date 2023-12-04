@@ -86,10 +86,6 @@ public class ProductBLL extends Manager<Product> {
         if(!result.getKey()){
             return new Pair<>(false,result.getValue());
         }
-        result = exists(product);
-        if (result.getKey()) {
-            return new Pair<>(false,result.getValue());
-        }
         productList.set(getIndex(product, "id", productList), product);
         productDAL.updateProduct(product);
         return new Pair<>(true,"");
@@ -125,7 +121,7 @@ public class ProductBLL extends Manager<Product> {
     public Pair<Boolean, String> exists(Product newProduct){
         List<Product> products = productDAL.searchProducts("phone = '" + newProduct.getId() + "'", "deleted = 0");
         if(!products.isEmpty()){
-            return new Pair<>(true, "ản phẩm đã tồn tại.");
+            return new Pair<>(true, "Sản phẩm đã tồn tại.");
         }
         products = productDAL.searchProducts("email = '" + newProduct.getName()+ "'", "deleted = 0");
         if(!products.isEmpty()){

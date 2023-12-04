@@ -4,9 +4,11 @@ import com.supermarket.BLL.AccountBLL;
 import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DTO.Account;
 import com.supermarket.DTO.Staff;
+import com.supermarket.GUI.DialogGUI.SmallDialog;
 import com.supermarket.main.Mini_supermarketManagement;
 import com.supermarket.utils.DateTime;
 import com.supermarket.utils.Email;
+import com.supermarket.utils.VNString;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -276,6 +278,9 @@ public class ForgotPasswordGUI extends JDialog {
         if (email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập email của bạn.");
             return;
+        }
+        if(!VNString.checkFormatOfEmail(email)){
+            SmallDialog.showResult("Vui lòng nhập email đúng định dạng");
         }
         List<Staff> foundStaffs = new StaffBLL().findStaffsBy(Map.of("email", email));
         if (foundStaffs.isEmpty()) {

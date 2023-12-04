@@ -78,10 +78,6 @@ public class AccountBLL extends Manager<Account> {
             return new Pair<>(false,result.getValue());
         }
 
-        result = exists(account);
-        if (result.getKey()) {
-            return new Pair<>(false,result.getValue());
-        }
         accountList.set(getIndex(account, "id", accountList), account);
         accountDAL.updateAccount(account);
         return new Pair<>(true,"");
@@ -170,14 +166,14 @@ public class AccountBLL extends Manager<Account> {
     public Pair<Boolean, String> validatePassWord(String passWord){
         if(passWord.isBlank())
             return new Pair<>(false,"Mật khẩu tài khoản không được bỏ trống.");
+        if(passWord.contains(" "))
+            return new Pair<>(false,"Mật khẩu tài khoản không được có khoảng trắng.");
         if(!VNString.containsUpperCase(passWord))
             return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ cái in hoa.");
         if(!VNString.containsNumber(passWord))
             return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ số.");
         if(!VNString.containsSpecial(passWord))
             return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt.");
-        if(!VNString.containsUnicode(passWord))
-            return new Pair<>(false,"Mật khẩu tài khoản không được chứa kí tự không hỗ trợ.");
         if(!VNString.containsLowerCase(passWord))
             return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ cái thường.");
         return new Pair<>(true,passWord);

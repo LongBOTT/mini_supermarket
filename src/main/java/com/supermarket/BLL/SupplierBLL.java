@@ -84,10 +84,6 @@ public class SupplierBLL extends Manager<Supplier> {
         if(!result.getKey()){
             return new Pair<>(false,result.getValue());
         }
-        result = exists(supplier);
-        if (result.getKey()) {
-            return new Pair<>(false,result.getValue());
-        }
         supplierList.set(getIndex(supplier, "id", supplierList), supplier);
         supplierDAL.updateSupplier(supplier);
         return new Pair<>(true,"");
@@ -122,11 +118,11 @@ public class SupplierBLL extends Manager<Supplier> {
     public Pair<Boolean, String> exists(Supplier newSupplier){
         List<Supplier> suppliers = supplierDAL.searchSuppliers("phone = '" + newSupplier.getPhone() + "'", "deleted = 0");
         if(!suppliers.isEmpty()){
-            return new Pair<>(true, "Số điện thoại nhân viên đã tồn tại.");
+            return new Pair<>(true, "Số điện thoại nhà cung cấp đã tồn tại.");
         }
         suppliers = supplierDAL.searchSuppliers("email = '" + newSupplier.getEmail()+ "'", "deleted = 0");
         if(!suppliers.isEmpty()){
-            return new Pair<>(true, "Email nhân viên đã tồn tại.");
+            return new Pair<>(true, "Email nhà cung cấp đã tồn tại.");
         }
         return new Pair<>(false, "");
     }
@@ -159,20 +155,6 @@ public class SupplierBLL extends Manager<Supplier> {
             return new Pair<>(false,"Email nhà cung cấp phải theo định dạng (username@domain.name).");
         return new Pair<>(true,email);
     }
-//    public boolean validateName(String name) {
-//        // Kiểm tra tên có tồn tại và có đúng định dạng tiếng Việt có dấu câu, có thể viết hoa, viết thường, không được để trống
-//        return name != null && !name.isEmpty() && name.matches("[\\p{L}\\p{P}\\s]+");
-//    }
-//
-//    public  boolean validatePhone(String phone){
-//        return phone.matches("^(\\+?84|0)[35789]\\d{8}$");
-//    }
-//
-//
-//    public boolean validateEmail(String email){
-//        return email.matches("^\\w+(\\.\\w+)*@\\w+(\\.\\w+)+");
-//    }
-
 
 
     @Override
