@@ -2,8 +2,13 @@ package com.supermarket.BLL;
 
 import com.supermarket.DAL.AccountDAL;
 import com.supermarket.DTO.Account;
+import com.supermarket.DTO.Supplier;
+import com.supermarket.GUI.DialogGUI.SmallDialog;
 import com.supermarket.utils.DateTime;
+import com.supermarket.utils.VNString;
+import javafx.util.Pair;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,17 +42,60 @@ public class AccountBLL extends Manager<Account> {
         return getData(accountList);
     }
 
-    public boolean addAccount(Account account) {
+    public Pair<Boolean, String> addAccount(Account account) {
+        Pair<Boolean, String> result;
+
+        result = validateUserName(account.getUsername());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = validatePassWord(account.getPassword());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = exists(account);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
+        }
+
         accountList.add(account);
-        return accountDAL.addAccount(account) != 0;
+        accountDAL.addAccount(account);
+        return new Pair<>(true,"");
     }
 
-    public boolean updateAccount(Account account) {
+    public Pair<Boolean, String> updateAccount(Account account) {
+        Pair<Boolean, String> result;
+
+        result = validateUserName(account.getUsername());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = validatePassWord(account.getPassword());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = exists(account);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
+        }
         accountList.set(getIndex(account, "id", accountList), account);
-        return accountDAL.updateAccount(account) != 0;
+        accountDAL.updateAccount(account);
+        return new Pair<>(true,"");
+
     }
 
     public boolean updateAccountPassword(Account account) {
+        Pair<Boolean, String> result;
+        result = validatePassWord(account.getPassword());
+        if(!result.getKey()){
+            SmallDialog.showResult(result.getValue());
+            return false;
+        }
+
         accountList.set(getIndex(account, "id", accountList), account);
         return accountDAL.updateAccountPassword(account) != 0;
     }
@@ -83,19 +131,67 @@ public class AccountBLL extends Manager<Account> {
         return accounts;
     }
 
-    public boolean exists(Account account) {
-        return !findAccountsBy(Map.of(
-            "username", account.getUsername(),
-            "role_id", account.getRoleID(),
-            "staff_id", account.getStaffID()
-        )).isEmpty();
+//    public boolean exists(Account account) {
+//        return !findAccountsBy(Map.of(
+//            "username", account.getUsername(),
+//            "role_id", account.getRoleID(),
+//            "staff_id", account.getStaffID()
+//        )).isEmpty();
+//    }
+//
+//    public boolean exists(Map<String, Object> conditions) {
+//        if (conditions.containsKey("username") && conditions.get("username").equals("admin")) {
+//            return true;
+//        }
+//        return !findAccountsBy(conditions).isEmpty();
+//    }
+//public boolean exists(String userName) {
+//    for (Account account : accountList) {
+//        if (account.getUsername().equals(userName)) {
+//            SmallDialog.showResult("Tên tài khoản đã tồn tại.");
+//            return true;
+//        }
+//        if (account.getUsername().equals("admin")) {
+//            SmallDialog.showResult("Tên tài khoản không được đặt trùng tên admin.");
+//            return true;
+//        }
+//    }
+//    return false;
+//}
+    public Pair<Boolean, String> exists(Account newAccount){
+        List<Account> accounts = accountDAL.searchAccounts("username = '" + newAccount.getUsername() + "'", "deleted = 0");
+        if(!accounts.isEmpty()){
+            return new Pair<>(true, "Tên tài khoản đã tồn tại.");
+        }
+        return new Pair<>(false, "");
     }
 
-    public boolean exists(Map<String, Object> conditions) {
-        if (conditions.containsKey("username") && conditions.get("username").equals("admin")) {
-            return true;
-        }
-        return !findAccountsBy(conditions).isEmpty();
+
+    public Pair<Boolean, String> validatePassWord(String passWord){
+        if(passWord.isBlank())
+            return new Pair<>(false,"Mật khẩu tài khoản không được bỏ trống.");
+        if(!VNString.containsUpperCase(passWord))
+            return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ cái in hoa.");
+        if(!VNString.containsNumber(passWord))
+            return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ số.");
+        if(!VNString.containsSpecial(passWord))
+            return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt.");
+        if(!VNString.containsUnicode(passWord))
+            return new Pair<>(false,"Mật khẩu tài khoản không được chứa kí tự không hỗ trợ.");
+        if(!VNString.containsLowerCase(passWord))
+            return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ cái thường.");
+        return new Pair<>(true,passWord);
+    }
+
+
+    public Pair<Boolean, String> validateUserName(String username){
+        if(username.isBlank())
+            return new Pair<>(false,"Tên tài khoản không được để trống.");
+        if(VNString.containsUnicode(username))
+            return new Pair<>(false,"Tên tài khoản không được chứa ký tự không hỗ trợ.");
+        if(VNString.containsSpecial(username))
+            return new Pair<>(false,"Tên tài khoản không được chứa ký tự đặc biệt.");
+        return new Pair<>(true,username);
     }
 
     @Override

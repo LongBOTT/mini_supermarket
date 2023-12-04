@@ -1,8 +1,13 @@
 package com.supermarket.BLL;
 
 import com.supermarket.DAL.SupplierDAL;
+import com.supermarket.DTO.Staff;
 import com.supermarket.DTO.Supplier;
+import com.supermarket.GUI.DialogGUI.SmallDialog;
+import com.supermarket.utils.VNString;
+import javafx.util.Pair;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,14 +41,56 @@ public class SupplierBLL extends Manager<Supplier> {
         return getData(supplierList);
     }
 
-    public boolean addSupplier(Supplier supplier) {
+    public Pair<Boolean, String> addSupplier(Supplier supplier) {
+        Pair<Boolean, String> result;
+
+        result = validateName(supplier.getName());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = validatePhone(supplier.getPhone());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = validateEmail(supplier.getEmail());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+        result = exists(supplier);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
+        }
         supplierList.add(supplier);
-        return supplierDAL.addSupplier(supplier) != 0;
+        supplierDAL.addSupplier(supplier);
+        return new Pair<>(true,"");
     }
 
-    public boolean updateSupplier(Supplier supplier) {
+    public Pair<Boolean, String>  updateSupplier(Supplier supplier) {
+        Pair<Boolean, String> result;
+
+        result = validateName(supplier.getName());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = validatePhone(supplier.getPhone());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = validateEmail(supplier.getEmail());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+        result = exists(supplier);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
+        }
         supplierList.set(getIndex(supplier, "id", supplierList), supplier);
-        return supplierDAL.updateSupplier(supplier) != 0;
+        supplierDAL.updateSupplier(supplier);
+        return new Pair<>(true,"");
     }
 
     public boolean deleteSupplier(Supplier supplier) {
@@ -72,19 +119,61 @@ public class SupplierBLL extends Manager<Supplier> {
         return suppliers;
     }
 
-    public boolean exists(Supplier supplier) {
-        return !findSuppliersBy(Map.of(
-            "id", supplier.getId(),
-            "name", supplier.getName(),
-            "phone", supplier.getPhone(),
-            "address", supplier.getAddress(),
-            "email", supplier.getEmail()
-        )).isEmpty();
+    public Pair<Boolean, String> exists(Supplier newSupplier){
+        List<Supplier> suppliers = supplierDAL.searchSuppliers("phone = '" + newSupplier.getPhone() + "'", "deleted = 0");
+        if(!suppliers.isEmpty()){
+            return new Pair<>(true, "Số điện thoại nhân viên đã tồn tại.");
+        }
+        suppliers = supplierDAL.searchSuppliers("email = '" + newSupplier.getEmail()+ "'", "deleted = 0");
+        if(!suppliers.isEmpty()){
+            return new Pair<>(true, "Email nhân viên đã tồn tại.");
+        }
+        return new Pair<>(false, "");
     }
 
-    public boolean exists(Map<String, Object> conditions) {
-        return !findSuppliersBy(conditions).isEmpty();
+    private static Pair<Boolean, String> validateName(String name) {
+        if (name.isBlank())
+            return new Pair<>(false, "Tên nhà cung cấp không được để trống.");
+        if (VNString.containsSpecial(name))
+            return new Pair<>(false, "Tên nhà cung cấp không được chứa ký tự đặc biệt.");
+        if (VNString.containsNumber(name))
+            return new Pair<>(false, "Tên nhà cung cấp không được chứa số.");
+        return new Pair<>(true, name);
     }
+    public Pair<Boolean, String>validatePhone(String phone){
+        if(phone.isBlank())
+            return new Pair<>(false,"Số điện thoại nhà cung cấp không được bỏ trống.");
+        if(!VNString.checkFormatPhone(phone))
+            return new Pair<>(false,"Số điện thoại nhà cung cấp phải bắt đầu với \"0x\" hoặc \"+84x\" hoặc \"84x\" với \"x\" thuộc \\{\\\\3, 5, 7, 8, 9\\}\\\\.");
+        return new Pair<>(true,phone);
+    }
+
+
+
+    public Pair<Boolean, String>validateEmail(String email){
+        if(email.isBlank())
+            return new Pair<>(false,"Email nhà cung cấp không được để trống.");
+        if(VNString.containsUnicode(email))
+            return new Pair<>(false,"Email nhà cung cấp không được chứa unicode.");
+        if(!VNString.checkFormatOfEmail(email))
+            return new Pair<>(false,"Email nhà cung cấp phải theo định dạng (username@domain.name).");
+        return new Pair<>(true,email);
+    }
+//    public boolean validateName(String name) {
+//        // Kiểm tra tên có tồn tại và có đúng định dạng tiếng Việt có dấu câu, có thể viết hoa, viết thường, không được để trống
+//        return name != null && !name.isEmpty() && name.matches("[\\p{L}\\p{P}\\s]+");
+//    }
+//
+//    public  boolean validatePhone(String phone){
+//        return phone.matches("^(\\+?84|0)[35789]\\d{8}$");
+//    }
+//
+//
+//    public boolean validateEmail(String email){
+//        return email.matches("^\\w+(\\.\\w+)*@\\w+(\\.\\w+)+");
+//    }
+
+
 
     @Override
     public Object getValueByKey(Supplier supplier, String key) {

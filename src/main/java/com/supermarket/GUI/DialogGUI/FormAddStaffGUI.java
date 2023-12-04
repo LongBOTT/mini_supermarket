@@ -197,20 +197,20 @@ public class FormAddStaffGUI extends DialogForm{
             int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm nhân viên?",
                 "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
             if (choice == 1) {
-                if (staffBLL.addStaff(staff)) {
+                if (staffBLL.addStaff(staff).getKey()) {
                     JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công!",
                         "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-
                     StaffGUI.loadDataTable(staffBLL.getData());
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Thêm nhân viên không thành công!",
-                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    SmallDialog.showResult(staffBLL.addStaff(staff).getValue());
                 }
             }
         }
         catch(Exception e){
-            System.out.println(e.getLocalizedMessage());
+            if(e.getMessage().equals("Invalid day.")){
+                JOptionPane.showMessageDialog(null, "Định dạng ngày không hợp lệ.", "Thông báo", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }

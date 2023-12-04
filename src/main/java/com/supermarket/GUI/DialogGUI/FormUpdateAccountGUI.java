@@ -168,15 +168,13 @@ public class FormUpdateAccountGUI extends DialogForm {
         int choice = JOptionPane.showOptionDialog(null, "Xác nhận cập nhật tài khoản?",
             "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == 1) {
-            if (accountBLL.updateAccount(account)) {
+            if (accountBLL.addAccount(account).getKey()) {
                 JOptionPane.showMessageDialog(null, "Cập nhật tài khoản thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-
                 AccountGUI.loadDataTable(accountBLL.getData());
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(null, "Cập nhật khoản không thành công!",
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+                SmallDialog.showResult(accountBLL.addAccount(account).getValue());
             }
         }
 

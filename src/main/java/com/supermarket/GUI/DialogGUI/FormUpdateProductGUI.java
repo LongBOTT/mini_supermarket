@@ -249,7 +249,7 @@ public class FormUpdateProductGUI extends DialogForm {
         int choice = JOptionPane.showOptionDialog(null, "Xác nhận cập nhật sản phẩm?",
             "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == 1) {
-            if (productBLL.updateProduct(product)) {
+            if (productBLL.updateProduct(product).getKey()) {
                 JOptionPane.showMessageDialog(null, "Cập nhật sản phẩm thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
@@ -257,10 +257,9 @@ public class FormUpdateProductGUI extends DialogForm {
                 Category category = categoryBLL.findCategoriesBy(Map.of("id", categoryID)).get(0);
                 category.setQuantity(category.getQuantity() + 1);
                 categoryBLL.updateCategory(category);
-                refresh();
+                dispose();
             } else {
-                JOptionPane.showMessageDialog(null, "Cập nhật sản phẩm không thành công!",
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+                SmallDialog.showResult(productBLL.updateProduct(product).getValue());
             }
         }
 

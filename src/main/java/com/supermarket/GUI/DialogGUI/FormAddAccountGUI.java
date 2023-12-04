@@ -121,7 +121,7 @@ public class FormAddAccountGUI extends DialogForm{
             }
             @Override
             public void mousePressed(MouseEvent e) {
-                refresh();
+                dispose();
             }
         });
         containerButton.add(buttonCancel);
@@ -160,16 +160,14 @@ public class FormAddAccountGUI extends DialogForm{
             int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm tài khoản?",
                 "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
             if (choice == 1) {
-                if (accountBLL.addAccount(account)) {
+                if (accountBLL.addAccount(account).getKey()) {
                 JOptionPane.showMessageDialog(null, "Thêm tài khoản thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-
                 AccountGUI.loadDataTable(accountBLL.getData());
-                refresh();
+                dispose();
             } else {
-                JOptionPane.showMessageDialog(null, "Thêm tài khoản không thành công!",
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
+                    SmallDialog.showResult(accountBLL.addAccount(account).getValue());
+                }
         }
 
     }

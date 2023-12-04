@@ -2,7 +2,12 @@ package com.supermarket.BLL;
 
 import com.supermarket.DAL.ProductDAL;
 import com.supermarket.DTO.Product;
+import com.supermarket.DTO.Supplier;
+import com.supermarket.GUI.DialogGUI.SmallDialog;
+import com.supermarket.utils.VNString;
+import javafx.util.Pair;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,14 +42,58 @@ public class ProductBLL extends Manager<Product> {
         return getData(productList);
     }
 
-    public boolean addProduct(Product product) {
+    public Pair<Boolean, String> addProduct(Product product) {
+        Pair<Boolean, String> result;
+
+        result = validateName(product.getName());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = validateCost(String.valueOf(product.getCost()));
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = validateBarcode(product.getBarcode());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+        result = exists(product);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
+        }
+
         productList.add(product);
-        return productDAL.addProduct(product) != 0;
+        productDAL.addProduct(product);
+        return new Pair<>(true,"");
     }
 
-    public boolean updateProduct(Product product) {
+    public Pair<Boolean, String> updateProduct(Product product) {
+        Pair<Boolean, String> result;
+
+        result = validateName(product.getName());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = validateCost(String.valueOf(product.getCost()));
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = validateBarcode(product.getBarcode());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+        result = exists(product);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
+        }
         productList.set(getIndex(product, "id", productList), product);
-        return productDAL.updateProduct(product) != 0;
+        productDAL.updateProduct(product);
+        return new Pair<>(true,"");
+
     }
 
     public boolean deleteProduct(Product product) {
@@ -73,18 +122,45 @@ public class ProductBLL extends Manager<Product> {
         return products;
     }
 
-    public boolean exists(Product product) {
-        return !findProductsBy(Map.of(
-            "name", product.getName(),
-            "brand_id", product.getBrand_id(),
-            "category_id", product.getCategory_id(),
-            "barcode",product.getBarcode()
-        )).isEmpty();
+    public Pair<Boolean, String> exists(Product newProduct){
+        List<Product> products = productDAL.searchProducts("phone = '" + newProduct.getId() + "'", "deleted = 0");
+        if(!products.isEmpty()){
+            return new Pair<>(true, "ản phẩm đã tồn tại.");
+        }
+        products = productDAL.searchProducts("email = '" + newProduct.getName()+ "'", "deleted = 0");
+        if(!products.isEmpty()){
+            return new Pair<>(true, "Tên sản phẩm đã tồn tại.");
+        }
+        return new Pair<>(false, "");
     }
 
-    public boolean exists(Map<String, Object> conditions) {
-        return !findProductsBy(conditions).isEmpty();
+
+    private static Pair<Boolean, String> validateName(String name) {
+        if (name.isBlank())
+            return new Pair<>(false, "Tên sản phẩm không được để trống.");
+        if (VNString.containsSpecial(name))
+            return new Pair<>(false, "Tên sản phẩm không được chứa ký tự đặc biệt.");
+        return new Pair<>(true, name);
     }
+
+    private static Pair<Boolean, String> validateCost(String cost) {
+        if (cost.isBlank())
+            return new Pair<>(false, "Giá bán của sản phẩm không được để trống.");
+        if (!VNString.checkUnsignedNumber(cost))
+            return new Pair<>(false,"Giá bán của sản phẩm phải lớn hơn 0.");
+        return new Pair<>(true,cost);
+    }
+
+    private static Pair<Boolean, String> validateBarcode(String barcode) {
+        if (barcode.isBlank())
+            return new Pair<>(false, "Mã vạch sản phẩm không được để trống.");
+        if (VNString.containsSpecial(barcode))
+            return new Pair<>(false, "Mã vạch sản phẩm không được chứa ký tự đặc biệt.");
+        if(VNString.containsUnicode(barcode))
+            return new Pair<>(false, "Mã vạch không được chứa ký tự không hỗ trợ.");
+        return new Pair<>(true, barcode);
+    }
+
 
     @Override
     public Object getValueByKey(Product product, String key) {
