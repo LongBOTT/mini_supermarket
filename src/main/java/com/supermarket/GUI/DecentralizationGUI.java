@@ -6,6 +6,7 @@ import com.supermarket.BLL.RoleBLL;
 import com.supermarket.DTO.Function;
 import com.supermarket.DTO.Role;
 import com.supermarket.GUI.DialogGUI.FormAddRoleGUI;
+import com.supermarket.GUI.DialogGUI.FormUpdateRoleGUI;
 import com.supermarket.GUI.components.*;
 
 import javax.swing.*;
@@ -148,7 +149,7 @@ public class DecentralizationGUI extends Layout4 {
             return;
         }
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        new FormAddRoleGUI();
+        new FormUpdateRoleGUI(roleBLL.findRolesBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0));
     }
 
     private void deleteRole() {
