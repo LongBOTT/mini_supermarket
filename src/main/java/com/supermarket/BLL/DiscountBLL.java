@@ -65,11 +65,7 @@ public class DiscountBLL extends Manager<Discount> {
         if(!result.getKey()){
             return new Pair<>(false,result.getValue());
         }
-
-        result = exists(discount);
-        if (result.getKey()) {
-            return new Pair<>(false,result.getValue());
-        }
+        
         discountList.set(getIndex(discount, "id", discountList), discount);
         discountDAL.updateDiscount(discount);
         return new Pair<>(true,"");
