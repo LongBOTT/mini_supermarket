@@ -188,15 +188,12 @@ public class FormUpdateStaffGUI extends DialogForm {
             int choice = JOptionPane.showOptionDialog(null, "Xác nhận cập nhật khách hàng?",
                 "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
             if (choice == 1) {
-                if (staffBLL.updateStaff(staff)) {
-                    JOptionPane.showMessageDialog(null, "Cập nhật khách hàng thành công!",
-                        "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-
+                if (staffBLL.updateStaff(staff).getKey()) {
+                    JOptionPane.showMessageDialog(null, "Cập nhật nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                     StaffGUI.loadDataTable(staffBLL.getData());
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Cập nhật khách hàng không thành công!",
-                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    SmallDialog.showResult(staffBLL.updateStaff(staff).getValue());
                 }
             }
         }

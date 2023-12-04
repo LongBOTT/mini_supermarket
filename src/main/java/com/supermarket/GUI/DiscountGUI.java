@@ -2,6 +2,7 @@ package com.supermarket.GUI;
 
 import com.supermarket.BLL.*;
 import com.supermarket.DTO.*;
+import com.supermarket.GUI.DialogGUI.SmallDialog;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout3;
 import com.supermarket.GUI.components.RoundedPanel;
@@ -283,7 +284,7 @@ public class DiscountGUI extends Layout3 {
             int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm đợt giảm giá?",
                 "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
             if (choice == 1) {
-                if (discountBLL.addDiscount(newDiscount)) {
+                if (discountBLL.addDiscount(newDiscount).getKey()) {
                     JOptionPane.showMessageDialog(null, "Thêm đợt giảm giá thành công!",
                         "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
@@ -303,8 +304,7 @@ public class DiscountGUI extends Layout3 {
                     productIDInDiscount.removeAll(productIDInDiscount);
                     refresh();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Thêm đợt giảm giá không thành công!",
-                        "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    SmallDialog.showResult(discountBLL.addDiscount(newDiscount).getValue());
                 }
             }
         }

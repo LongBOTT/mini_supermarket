@@ -2,6 +2,10 @@ package com.supermarket.BLL;
 
 import com.supermarket.DAL.DiscountDAL;
 import com.supermarket.DTO.Discount;
+import com.supermarket.DTO.Supplier;
+import com.supermarket.GUI.DialogGUI.SmallDialog;
+import com.supermarket.utils.VNString;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -37,23 +41,39 @@ public class DiscountBLL extends Manager<Discount> {
         return getData(discountList);
     }
 
-    public boolean addDiscount(Discount discount) {
-        if(!checkRangeOfPercent(String.valueOf(discount.getPercent()))){
-            JOptionPane.showMessageDialog(null,"Phần trăm giảm giá phải trong khoảng (0, 100)." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-            return false;
+    public Pair<Boolean, String> addDiscount(Discount discount) {
+        Pair<Boolean, String> result;
+
+        result = validatePercent(String.valueOf(discount.getPercent()));
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
         }
 
+        result = exists(discount);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
+        }
         discountList.add(discount);
-        return discountDAL.addDiscount(discount) != 0;
+        discountDAL.addDiscount(discount);
+        return new Pair<>(true,"");
     }
 
-    public boolean updateDiscount(Discount discount) {
-        if(checkRangeOfPercent(String.valueOf(discount.getPercent()))){
-            JOptionPane.showMessageDialog(null,"Phần trăm giảm giá phải trong khoảng (0, 100)." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-            return false;
+    public Pair<Boolean, String> updateDiscount(Discount discount) {
+        Pair<Boolean, String> result;
+
+        result = validatePercent(String.valueOf(discount.getPercent()));
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
+        }
+
+        result = exists(discount);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
         }
         discountList.set(getIndex(discount, "id", discountList), discount);
-        return discountDAL.updateDiscount(discount) != 0;
+        discountDAL.updateDiscount(discount);
+        return new Pair<>(true,"");
+
     }
 
     public List<Discount> searchDiscounts(String... conditions) {
@@ -77,27 +97,21 @@ public class DiscountBLL extends Manager<Discount> {
         return discounts;
     }
 
-    public boolean exists(Discount discount) {
-        return !findDiscountsBy(Map.of(
-            "id", discount.getId(),
-            "percent", discount.getPercent(),
-            "start_date", discount.getStart_date(),
-            "end_date",discount.getEnd_date(),
-            "status",discount.isStatus()
-        )).isEmpty();
-    }
-
-    public boolean exists(Map<String, Object> conditions) {
-        return !findDiscountsBy(conditions).isEmpty();
-    }
-
-
-    public static boolean checkRangeOfPercent(String str) {
-        try {
-            return Double.parseDouble(str) > 0 && Double.parseDouble(str) < 100;
-        } catch (NumberFormatException e) {
-            return false;
+    public Pair<Boolean, String> exists(Discount newDiscount){
+        List<Discount> discounts = discountDAL.searchDiscounts("id = '" + newDiscount.getId() + "'", "deleted = 0");
+        if(!discounts.isEmpty()){
+            return new Pair<>(true, "Đợt khuyến mãi đã tồn tại.");
         }
+
+        return new Pair<>(false, "");
+    }
+
+    private static Pair<Boolean, String> validatePercent(String percent){
+        if (percent.isBlank())
+            return new Pair<>(false, "Phần trăm giảm giá không được để trống.");
+        if (!VNString.checkRangeOfPercent(percent))
+            return new Pair<>(false, "Phần trăm giảm giá phải trong khoảng (0, 100).");
+        return new Pair<>(true, percent);
     }
     @Override
     public Object getValueByKey(Discount discount, String key) {
