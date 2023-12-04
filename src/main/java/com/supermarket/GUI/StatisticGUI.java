@@ -182,10 +182,10 @@ public class StatisticGUI extends JPanel {
                             }
                         }
                         chart.clear();
-                        chart.addData(new ModelChart("The First Quarter", new double[]{expenses.get(0), amount.get(0), amount.get(0) - expenses.get(0)}));
-                        chart.addData(new ModelChart("Second Quarter", new double[]{expenses.get(1), amount.get(1), amount.get(1) - expenses.get(1)}));
-                        chart.addData(new ModelChart("Third Quarter", new double[]{expenses.get(2), amount.get(2), amount.get(2) - expenses.get(2)}));
-                        chart.addData(new ModelChart("Fourth Quarter", new double[]{expenses.get(3), amount.get(3), amount.get(3) - expenses.get(3)}));
+                        chart.addData(new ModelChart("Quý 1", new double[]{expenses.get(0), amount.get(0), amount.get(0) - expenses.get(0)}));
+                        chart.addData(new ModelChart("Quý 2", new double[]{expenses.get(1), amount.get(1), amount.get(1) - expenses.get(1)}));
+                        chart.addData(new ModelChart("Quý 3", new double[]{expenses.get(2), amount.get(2), amount.get(2) - expenses.get(2)}));
+                        chart.addData(new ModelChart("Quý 4", new double[]{expenses.get(3), amount.get(3), amount.get(3) - expenses.get(3)}));
                         chart.start();
 
                     }
@@ -218,18 +218,18 @@ public class StatisticGUI extends JPanel {
                             }
                         }
                         chart.clear();
-                        chart.addData(new ModelChart("January", new double[]{expenses.get(0), amount.get(0), amount.get(0) - expenses.get(0)}));
-                        chart.addData(new ModelChart("February", new double[]{expenses.get(1), amount.get(1), amount.get(1) - expenses.get(1)}));
-                        chart.addData(new ModelChart("March", new double[]{expenses.get(2), amount.get(2), amount.get(2) - expenses.get(2)}));
-                        chart.addData(new ModelChart("April", new double[]{expenses.get(3), amount.get(3), amount.get(3) - expenses.get(3)}));
-                        chart.addData(new ModelChart("May", new double[]{expenses.get(4), amount.get(4), amount.get(4) - expenses.get(4)}));
-                        chart.addData(new ModelChart("June", new double[]{expenses.get(5), amount.get(5), amount.get(5) - expenses.get(5)}));
-                        chart.addData(new ModelChart("July", new double[]{expenses.get(6), amount.get(6), amount.get(6) - expenses.get(6)}));
-                        chart.addData(new ModelChart("August", new double[]{expenses.get(7), amount.get(7), amount.get(7) - expenses.get(7)}));
-                        chart.addData(new ModelChart("September", new double[]{expenses.get(8), amount.get(8), amount.get(8) - expenses.get(8)}));
-                        chart.addData(new ModelChart("October", new double[]{expenses.get(9), amount.get(9), amount.get(9) - expenses.get(9)}));
-                        chart.addData(new ModelChart("November", new double[]{expenses.get(10), amount.get(10), amount.get(10) - expenses.get(10)}));
-                        chart.addData(new ModelChart("December", new double[]{expenses.get(11), amount.get(11), amount.get(11) - expenses.get(11)}));
+                        chart.addData(new ModelChart("Tháng 1", new double[]{expenses.get(0), amount.get(0), amount.get(0) - expenses.get(0)}));
+                        chart.addData(new ModelChart("Tháng 2", new double[]{expenses.get(1), amount.get(1), amount.get(1) - expenses.get(1)}));
+                        chart.addData(new ModelChart("Tháng 3", new double[]{expenses.get(2), amount.get(2), amount.get(2) - expenses.get(2)}));
+                        chart.addData(new ModelChart("Tháng 4", new double[]{expenses.get(3), amount.get(3), amount.get(3) - expenses.get(3)}));
+                        chart.addData(new ModelChart("Tháng 5", new double[]{expenses.get(4), amount.get(4), amount.get(4) - expenses.get(4)}));
+                        chart.addData(new ModelChart("Tháng 6", new double[]{expenses.get(5), amount.get(5), amount.get(5) - expenses.get(5)}));
+                        chart.addData(new ModelChart("Tháng 7", new double[]{expenses.get(6), amount.get(6), amount.get(6) - expenses.get(6)}));
+                        chart.addData(new ModelChart("Tháng 8", new double[]{expenses.get(7), amount.get(7), amount.get(7) - expenses.get(7)}));
+                        chart.addData(new ModelChart("Tháng 9", new double[]{expenses.get(8), amount.get(8), amount.get(8) - expenses.get(8)}));
+                        chart.addData(new ModelChart("Tháng 10", new double[]{expenses.get(9), amount.get(9), amount.get(9) - expenses.get(9)}));
+                        chart.addData(new ModelChart("Tháng 11", new double[]{expenses.get(10), amount.get(10), amount.get(10) - expenses.get(10)}));
+                        chart.addData(new ModelChart("Tháng 12", new double[]{expenses.get(11), amount.get(11), amount.get(11) - expenses.get(11)}));
                         chart.start();
                     }
                 }
@@ -250,8 +250,8 @@ public class StatisticGUI extends JPanel {
         layoutChartAndData = new RoundedPanel();
         chart = new Chart();
         chart.addLegend("Vốn", Color.decode("#7b4397"));
-        chart.addLegend("Lợi nhuận", Color.decode("#e65c00"));
-        chart.addLegend("Doanh thu", Color.decode("#0099F7"));
+        chart.addLegend("Doanh thu", Color.decode("#e65c00"));
+        chart.addLegend("Lợi nhuận", Color.decode("#0099F7"));
         layoutChartAndData.setBackground(null);
         layoutChartAndData.setLayout(new BorderLayout());
         layoutChartAndData.add(chart, BorderLayout.CENTER);
