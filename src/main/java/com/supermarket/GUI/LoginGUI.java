@@ -107,7 +107,6 @@ public class LoginGUI extends JFrame {
         jTextFieldUserName.setPreferredSize(new Dimension(350, 40));
         jTextFieldUserName.setFont(new Font("open sans", Font.PLAIN, 15));
         jTextFieldUserName.putClientProperty("JTextField.placeholderText", "Nhập tài khoản");
-        jTextFieldUserName.setText("admin");
         jTextFieldUserName.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent keyEvent) {
                 if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER)
@@ -127,7 +126,6 @@ public class LoginGUI extends JFrame {
         jTextFieldPassword.setPreferredSize(new Dimension(350, 40));
         jTextFieldPassword.setFont(new Font("open sans", Font.PLAIN, 15));
         jTextFieldPassword.putClientProperty("JTextField.placeholderText", "Nhập mật khẩu");;
-        jTextFieldPassword.setText("Admin123");
         jTextFieldPassword.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent keyEvent) {
                 if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER)
