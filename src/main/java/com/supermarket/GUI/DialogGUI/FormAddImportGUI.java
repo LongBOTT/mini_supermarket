@@ -3,6 +3,7 @@ package com.supermarket.GUI.DialogGUI;
 import com.supermarket.BLL.*;
 import com.supermarket.DTO.*;
 import com.supermarket.GUI.HomeGUI;
+import com.supermarket.GUI.ProductGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
@@ -23,7 +24,7 @@ import java.util.Map;
 public class FormAddImportGUI extends DialogForm{
     private Import newImport;
     private final ImportBLL importBLL = new ImportBLL();
-    private final ProductBLL productBLL = new ProductBLL();
+    private ProductBLL productBLL = new ProductBLL();
     private DataTable dataTable;
     private RoundedPanel formDetail;
     private RoundedScrollPane scrollPaneDatatable;
@@ -32,6 +33,7 @@ public class FormAddImportGUI extends DialogForm{
     private List<JTextField> jTextFieldImport;
     private JButton buttonCancel;
     private JButton buttonAdd;
+    private JButton buttonAddProduct;
     private boolean flag;
     private static List<Integer> productIDInImport;
 
@@ -52,6 +54,7 @@ public class FormAddImportGUI extends DialogForm{
         scrollPaneImportDetail = new RoundedScrollPane(formDetail, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         buttonCancel = new JButton("Huỷ");
         buttonAdd = new JButton("Thêm");
+        buttonAddProduct = new JButton("Thêm sản phẩm");
         productIDInImport = new ArrayList<>();
 
         scrollPaneDatatable.setPreferredSize(new Dimension(600, 700));
@@ -134,6 +137,20 @@ public class FormAddImportGUI extends DialogForm{
         });
         containerButton.add(buttonAdd);
 
+        buttonAddProduct.setPreferredSize(new Dimension(100,40));
+        buttonAddProduct.setFont(new Font("FlatLaf.style", Font.BOLD, 15));
+        buttonAddProduct.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        buttonAddProduct.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                new ProductGUI().setVisible(false);
+                new FormAddProductGUI();
+                productBLL = new ProductBLL();
+                addImport();
+            }
+        });
+        formDetail.add(buttonAddProduct);
+        buttonAddProduct.setVisible(false);
     }
 
     private void refresh() {
@@ -156,6 +173,7 @@ public class FormAddImportGUI extends DialogForm{
         containerTable.removeAll();
         containerTable.repaint();
         containerTable.revalidate();
+        buttonAddProduct.setVisible(false);
     }
 
     private void addImport() {
@@ -189,6 +207,7 @@ public class FormAddImportGUI extends DialogForm{
                 }
             }
             loadTableProduct(list);
+            buttonAddProduct.setVisible(true);
             JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm nhập", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         } else {
             String[] options = new String[]{"Huỷ", "Xác nhận"};
@@ -229,6 +248,9 @@ public class FormAddImportGUI extends DialogForm{
         containerTable.repaint();
         containerTable.revalidate();
         scrollPaneDatatable.setViewportView(containerTable);
+
+
+
     }
 
     private void addToDetail() {
