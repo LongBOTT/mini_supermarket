@@ -176,8 +176,8 @@ public class AccountBLL extends Manager<Account> {
             return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ số.");
         if(!VNString.containsSpecial(passWord))
             return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt.");
-        if(!VNString.containsUnicode(passWord))
-            return new Pair<>(false,"Mật khẩu tài khoản không được chứa kí tự không hỗ trợ.");
+//        if(!VNString.containsUnicode(passWord))
+//            return new Pair<>(false,"Mật khẩu tài khoản không được chứa kí tự không hỗ trợ.");
         if(!VNString.containsLowerCase(passWord))
             return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ cái thường.");
         return new Pair<>(true,passWord);
