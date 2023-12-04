@@ -130,15 +130,13 @@ public class FormAddSupplierGUI extends DialogForm{
         int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm nhà cung cấp?",
             "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == 1) {
-            if (supplierBLL.addSupplier(supplier)) {
+            if (supplierBLL.addSupplier(supplier).getKey()) {
                 JOptionPane.showMessageDialog(null, "Thêm nhà cung cấp thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-
                 SupplierGUI.loadDataTable(supplierBLL.getData());
-                refresh();
+                dispose();
             } else {
-                JOptionPane.showMessageDialog(null, "Thêm nhà cung cấp không thành công!",
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+                SmallDialog.showResult(supplierBLL.addSupplier(supplier).getValue());
             }
         }
 

@@ -234,7 +234,7 @@ public class FormAddProductGUI extends DialogForm{
         int choice = JOptionPane.showOptionDialog(null, "Xác nhận thêm sản phẩm?",
             "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == 1) {
-            if (productBLL.addProduct(product)) {
+            if (productBLL.addProduct(product).getKey()) {
                 JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 
@@ -242,10 +242,9 @@ public class FormAddProductGUI extends DialogForm{
                 Category category = categoryBLL.findCategoriesBy(Map.of("id", categoryID)).get(0);
                 category.setQuantity(category.getQuantity() + 1);
                 categoryBLL.updateCategory(category);
-                refresh();
+                dispose();
             } else {
-                JOptionPane.showMessageDialog(null, "Thêm sản phẩm không thành công!",
-                    "Lỗi", JOptionPane.ERROR_MESSAGE);
+                SmallDialog.showResult(productBLL.addProduct(product).getValue());
             }
         }
 

@@ -2,14 +2,15 @@ package com.supermarket.BLL;
 
 import com.supermarket.DAL.StaffDAL;
 import com.supermarket.DTO.Staff;
-import com.supermarket.utils.Date;
+import com.supermarket.utils.VNString;
+import javafx.util.Pair;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.supermarket.utils.Date.parseDate;
+import com.supermarket.utils.Date;
 
 public class StaffBLL extends Manager<Staff>{
     private StaffDAL staffDAL;
@@ -42,68 +43,57 @@ public class StaffBLL extends Manager<Staff>{
 
 
 
-    public boolean addStaff(Staff staff) throws Exception {
-        if (!validateName(staff.getName())) {
-            JOptionPane.showMessageDialog(null,"Tên không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-            return false;
+    public Pair<Boolean, String> addStaff(Staff staff) {
+        Pair<Boolean, String> result;
+        result = validateName(staff.getName());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
         }
+        result = validatePhone(staff.getPhone());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
 
-
-        if(!validatePhone(staff.getPhone())){
-            JOptionPane.showMessageDialog(null,"Số điện thoại không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-            return false;
         }
+        result = validateEmail(staff.getEmail());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
 
-        if(!validateEmail(staff.getEmail())){
-            JOptionPane.showMessageDialog(null,"Email không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-            return false;
         }
+        result = exists(staff);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
 
-
-
-        if (exists(staff.getPhone(),staff.getEmail())) {
-            return false;
         }
-
-
-//        if (!validateDate(staff.getBirthday())) {
-////            JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ.", "Thông báo", JOptionPane.ERROR_MESSAGE);
-//            return false;
-//        }
-//
-//        if (!validateDate(staff.getEntry_date())) {
-////            JOptionPane.showMessageDialog(null, "Ngày vào làm không hợp lệ.", "Thông báo", JOptionPane.ERROR_MESSAGE);
-//            return false;
-//        }
-
-
-
-
         staffList.add(staff);
-        return staffDAL.addStaff(staff) != 0;
+        staffDAL.addStaff(staff);
+        return new Pair<>(true,"");
     }
 
-    public boolean updateStaff(Staff staff) {
-        if (!validateName(staff.getName())) {
-            JOptionPane.showMessageDialog(null,"Tên không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-            return false;
+    public Pair<Boolean, String> updateStaff(Staff staff) {
+        Pair<Boolean, String> result;
+
+        result = validateName(staff.getName());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
         }
 
-
-        if(!validatePhone(staff.getPhone())){
-            JOptionPane.showMessageDialog(null,"Số điện thoại không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-            return false;
+        result = validatePhone(staff.getPhone());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
         }
 
-        if(!validateEmail(staff.getEmail())){
-            JOptionPane.showMessageDialog(null,"Email không hợp lệ." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-            return false;
+        result = validateEmail(staff.getEmail());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
         }
-        if (exists(staff.getPhone(),staff.getEmail())) {
-            return false;
+        result = exists(staff);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
+
         }
         staffList.set(getIndex(staff, "id", staffList), staff);
-        return staffDAL.updateStaff(staff) != 0;
+        staffDAL.updateStaff(staff);
+        return new Pair<>(true,"");
     }
 
     public boolean deleteStaff(Staff staff) {
@@ -132,51 +122,54 @@ public class StaffBLL extends Manager<Staff>{
         return staffs;
     }
 
-//    public boolean exists(Staff staff) {
-//        return !findStaffsBy(Map.of(
-//            "name", staff.getName(),
-//            "gender", staff.getGender(),
-//            "birthday", staff.getBirthday(),
-//            "phone", staff.getPhone(),
-//            "address", staff.getAddress(),
-//            "email", staff.getEmail(),
-//            "entry_date", staff.getEntry_date()
-//        )).isEmpty();
-//    }
-//
-//    public boolean exists(Map<String, Object> conditions) {
-//        return !findStaffsBy(conditions).isEmpty();
-//    }
 
-
-    public boolean exists(String phone, String email) {
-        for (Staff staff : staffList) {
-            if (staff.getPhone().equals(phone)) {
-                JOptionPane.showMessageDialog(null, "Số điện thoại nhân viên đã tồn tại.", "Thông báo", JOptionPane.ERROR_MESSAGE);
-
-                return true;
-            }
-            if(staff.getEmail().equals(email)){
-                JOptionPane.showMessageDialog(null, "Email nhân viên đã tồn tại.", "Thông báo", JOptionPane.ERROR_MESSAGE);
-                return true;
-            }
+    public Pair<Boolean, String> exists(Staff newStaff){
+        List<Staff> staffs = staffDAL.searchStaffs("phone = '" + newStaff.getPhone() + "'", "deleted = 0");
+        if(!staffs.isEmpty()){
+            return new Pair<>(true, "Số điện thoại nhân viên đã tồn tại.");
         }
-        return false;
-    }
-
-    public boolean validateName(String name) {
-        // Kiểm tra tên có tồn tại và có đúng định dạng tiếng Việt có dấu câu, có thể viết hoa, viết thường, không được để trống
-        return name != null && !name.isEmpty() && name.matches("[\\p{L}\\p{P}\\s]+");
-    }
-
-    public  boolean validatePhone(String phone){
-        return phone.matches("^(\\+?84|0)[35789]\\d{8}$");
+        staffs = staffDAL.searchStaffs("email = '" + newStaff.getEmail()+ "'", "deleted = 0");
+        if(!staffs.isEmpty()){
+            return new Pair<>(true, "Email nhân viên đã tồn tại.");
+        }
+        return new Pair<>(false, "");
     }
 
 
-    public boolean validateEmail(String email){
-        return email.matches("^\\w+(\\.\\w+)*@\\w+(\\.\\w+)+");
+
+
+    public Pair<Boolean, String>validateName(String name){
+        if(name.isBlank())
+            return new Pair<>(false,"Tên nhân viên không được bỏ trống.");
+        if(VNString.containsNumber(name))
+            return new Pair<>(false,"Tên nhân viên không không được chứa số.");
+        if(VNString.containsSpecial(name))
+            return new Pair<>(false,"Tên nhân viên không không được chứa ký tự đặc biệt.");
+        return new Pair<>(true,name);
     }
+
+
+
+    public Pair<Boolean, String>validatePhone(String phone){
+        if(phone.isBlank())
+            return new Pair<>(false,"Số điện thoại nhân viên không được bỏ trống.");
+        if(!VNString.checkFormatPhone(phone))
+            return new Pair<>(false,"Số điện thoại nhân viên phải bắt đầu với \"0x\" hoặc \"+84x\" hoặc \"84x\" với \"x\" thuộc \\{\\\\3, 5, 7, 8, 9\\}\\\\.");
+        return new Pair<>(true,phone);
+    }
+
+
+
+    public Pair<Boolean, String>validateEmail(String email){
+        if(email.isBlank())
+            return new Pair<>(false,"Email nhân viên không được để trống.");
+        if(VNString.containsUnicode(email))
+            return new Pair<>(false,"Email nhân viên không được chứa unicode.");
+        if(!VNString.checkFormatOfEmail(email))
+            return new Pair<>(false,"Email nhân viên phải theo định dạng (username@domain.name).");
+        return new Pair<>(true,email);
+    }
+
 
 
 //    public boolean validateDate(Date date) throws Exception {

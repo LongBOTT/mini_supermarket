@@ -2,8 +2,11 @@ package com.supermarket.BLL;
 
 import com.supermarket.DAL.AccountDAL;
 import com.supermarket.DTO.Account;
-import com.supermarket.DTO.Staff;
+import com.supermarket.DTO.Supplier;
+import com.supermarket.GUI.DialogGUI.SmallDialog;
 import com.supermarket.utils.DateTime;
+import com.supermarket.utils.VNString;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -39,43 +42,60 @@ public class AccountBLL extends Manager<Account> {
         return getData(accountList);
     }
 
-    public boolean addAccount(Account account) {
-        if(!validateUserName(account.getUsername())){
-            JOptionPane.showMessageDialog(null,"Tên người không không được chứa số và ký tự đặc biệt." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-            return false;
+    public Pair<Boolean, String> addAccount(Account account) {
+        Pair<Boolean, String> result;
+
+        result = validateUserName(account.getUsername());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
         }
 
-        if(!validatePassWord(account.getPassword())){
-            JOptionPane.showMessageDialog(null,"Mật khẩu phải có tối thiểu một ký hiệu đặc biệt, một chữ số, một ký tự viết thường, và một ký tự viết hoa." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-
+        result = validatePassWord(account.getPassword());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
         }
 
-        if(exists(account.getUsername())){
-            return false;
+        result = exists(account);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
         }
 
         accountList.add(account);
-        return accountDAL.addAccount(account) != 0;
+        accountDAL.addAccount(account);
+        return new Pair<>(true,"");
     }
 
-    public boolean updateAccount(Account account) {
-        if(!validateUserName(account.getUsername())){
-            JOptionPane.showMessageDialog(null,"Tên người không không được chứa số và ký tự đặc biệt." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-            return false;
+    public Pair<Boolean, String> updateAccount(Account account) {
+        Pair<Boolean, String> result;
+
+        result = validateUserName(account.getUsername());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
         }
 
-        if(!validatePassWord(account.getPassword())){
-            JOptionPane.showMessageDialog(null,"Mật khẩu phải có tối thiểu một ký hiệu đặc biệt, một chữ số, một ký tự viết thường, và một ký tự viết hoa." ,"Thông báo",JOptionPane.ERROR_MESSAGE);
-
+        result = validatePassWord(account.getPassword());
+        if(!result.getKey()){
+            return new Pair<>(false,result.getValue());
         }
-        if(exists(account.getUsername())){
-            return false;
+
+        result = exists(account);
+        if (result.getKey()) {
+            return new Pair<>(false,result.getValue());
         }
         accountList.set(getIndex(account, "id", accountList), account);
-        return accountDAL.updateAccount(account) != 0;
+        accountDAL.updateAccount(account);
+        return new Pair<>(true,"");
+
     }
 
     public boolean updateAccountPassword(Account account) {
+        Pair<Boolean, String> result;
+        result = validatePassWord(account.getPassword());
+        if(!result.getKey()){
+            SmallDialog.showResult(result.getValue());
+            return false;
+        }
+
         accountList.set(getIndex(account, "id", accountList), account);
         return accountDAL.updateAccountPassword(account) != 0;
     }
@@ -125,43 +145,54 @@ public class AccountBLL extends Manager<Account> {
 //        }
 //        return !findAccountsBy(conditions).isEmpty();
 //    }
-public boolean exists(String userName) {
-    for (Account account : accountList) {
-        if (account.getUsername().equals(userName)) {
-            JOptionPane.showMessageDialog(null, "tên tài khoản đã tồn tại.", "Thông báo", JOptionPane.ERROR_MESSAGE);
-            return true;
+//public boolean exists(String userName) {
+//    for (Account account : accountList) {
+//        if (account.getUsername().equals(userName)) {
+//            SmallDialog.showResult("Tên tài khoản đã tồn tại.");
+//            return true;
+//        }
+//        if (account.getUsername().equals("admin")) {
+//            SmallDialog.showResult("Tên tài khoản không được đặt trùng tên admin.");
+//            return true;
+//        }
+//    }
+//    return false;
+//}
+    public Pair<Boolean, String> exists(Account newAccount){
+        List<Account> accounts = accountDAL.searchAccounts("username = '" + newAccount.getUsername() + "'", "deleted = 0");
+        if(!accounts.isEmpty()){
+            return new Pair<>(true, "Tên tài khoản đã tồn tại.");
         }
-        if (account.getUsername().equals("admin")) {
-            JOptionPane.showMessageDialog(null, "tên tài khoản không được đặt trùng tên admin.", "Thông báo", JOptionPane.ERROR_MESSAGE);
-            return true;
-        }
-    }
-    return false;
-}
-
-
-    public static boolean containsUpperCase(String str) {
-        return str.chars().anyMatch(Character::isUpperCase);
-    }
-    public static boolean containsNumber(String str) {
-        return str.chars().anyMatch(Character::isDigit);
-    }
-    public static boolean containsSpecial(String str) {
-        return str.chars().anyMatch(c -> !(Character.isLetterOrDigit(c) || Character.isWhitespace(c)));
-    }
-
-    public static boolean containsAlphabet(String str) {
-        return str.chars().anyMatch(Character::isAlphabetic);
+        return new Pair<>(false, "");
     }
 
 
-    public boolean validatePassWord(String passWord) {
-        return containsUpperCase(passWord) && containsNumber(passWord) && containsSpecial(passWord);
-    }
-    public boolean validateUserName(String username) {
-        return !containsNumber(username) && !containsSpecial(username);
+    public Pair<Boolean, String> validatePassWord(String passWord){
+        if(passWord.isBlank())
+            return new Pair<>(false,"Mật khẩu tài khoản không được bỏ trống.");
+        if(!VNString.containsUpperCase(passWord))
+            return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ cái in hoa.");
+        if(!VNString.containsNumber(passWord))
+            return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ số.");
+        if(!VNString.containsSpecial(passWord))
+            return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt.");
+        if(!VNString.containsUnicode(passWord))
+            return new Pair<>(false,"Mật khẩu tài khoản không được chứa kí tự không hỗ trợ.");
+        if(!VNString.containsLowerCase(passWord))
+            return new Pair<>(false,"Mật khẩu phải chứa ít nhất 1 chữ cái thường.");
+        return new Pair<>(true,passWord);
     }
 
+
+    public Pair<Boolean, String> validateUserName(String username){
+        if(username.isBlank())
+            return new Pair<>(false,"Tên tài khoản không được để trống.");
+        if(VNString.containsUnicode(username))
+            return new Pair<>(false,"Tên tài khoản không được chứa ký tự không hỗ trợ.");
+        if(VNString.containsSpecial(username))
+            return new Pair<>(false,"Tên tài khoản không được chứa ký tự đặc biệt.");
+        return new Pair<>(true,username);
+    }
 
     @Override
     public Object getValueByKey(Account account, String key) {
