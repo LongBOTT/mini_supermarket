@@ -37,7 +37,7 @@ public class ExcelDialog extends JDialog {
     protected final JButton btnReadFile;
     protected final List<Pair<String, Excel.Type>> columns;
 
-    public ExcelDialog(List<Pair<String, Excel.Type>> columns, Function<List<String>, Boolean> runWhenConfirm) {
+    public ExcelDialog(List<Pair<String, Excel.Type>> columns, Function<List<String>, Pair<Boolean, String>> runWhenConfirm) {
         super((Frame) null, true);
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -122,7 +122,7 @@ public class ExcelDialog extends JDialog {
         this.cancel = cancel;
     }
 
-    public void addListenerToButtons(Function<List<String>, Boolean> runWhenConfirm) {
+    public void addListenerToButtons(Function<List<String>, Pair<Boolean, String>> runWhenConfirm) {
         btnConfirm.addActionListener(e -> {
             cancel = false;
             List<List<String>> data = getData();
@@ -134,8 +134,9 @@ public class ExcelDialog extends JDialog {
                 String messageArgument = data.get(i).toString();
                 try {
                     List<String> row = data.get(i);
-                    boolean result = runWhenConfirm.apply(row);
-                    if (!result) {
+                    Pair<Boolean, String> result = runWhenConfirm.apply(row);
+                    if (!result.getKey()) {
+                        messageArgument = result.getValue();
                         throw new RuntimeException();
                     }
                     data.remove(i);
