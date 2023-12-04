@@ -42,6 +42,9 @@ public class ProductGUI extends Layout4 {
     private BrandBLL brandBLL = new BrandBLL();
     private CategoryBLL categoryBLL = new CategoryBLL();
     private static Object[][] productlist;
+    private  DefaultComboBoxModel<String> comboBoxBrand;
+    private  DefaultComboBoxModel<String> comboBoxCategory;
+
     public ProductGUI(List<Function> functions) {
         super();
         initComponent(functions);
@@ -63,11 +66,13 @@ public class ProductGUI extends Layout4 {
         jTextFieldBrand = new ArrayList<>();
 
         formDetail.setBackground(new Color(0xFFBDD2DB));
-        formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
+        formDetail.setLayout(new FlowLayout(FlowLayout.LEFT, 20,20));
 
         cbbAttributeProduct= new JComboBox(new String[] {"Tên sản phẩm","Thương hiệu","Thể loại", "Sắp hết hàng"});
-        cbbBrand= new JComboBox<>();
-        cbbCategory = new JComboBox<>();
+        comboBoxBrand = new DefaultComboBoxModel<>();
+        comboBoxCategory = new DefaultComboBoxModel<>();
+        cbbBrand= new JComboBox<>(comboBoxBrand);
+        cbbCategory = new JComboBox<>(comboBoxCategory);
 
         if (functions.stream().anyMatch(f -> f.getName().equals("Chi tiết"))) {
             iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
@@ -176,13 +181,18 @@ public class ProductGUI extends Layout4 {
         }
     }
 
+    private RoundedPanel panelBtn;
+    private JButton btnAdd,btnRemove,btnEdit;
+
     private void searchByBrand() {
         bottom.removeAll();
         formDetail.removeAll();
+        jTextFieldBrand = new ArrayList<>();
         JLabel title = new JLabel("THƯƠNG HIỆU");
+        title.setPreferredSize(new Dimension(300,50));
         title.setFont((new Font("FlatLaf.style", Font.BOLD, 23)));
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        formDetail.add(title, "span 2 1, wrap");
+        formDetail.add(title);
 
         SupplierBLL supplierBLL = new SupplierBLL();
         Brand brand1 = brandBLL.getBrandList().get(cbbBrand.getSelectedIndex());
@@ -192,7 +202,7 @@ public class ProductGUI extends Layout4 {
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
             label.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
-            formDetail.add(label, "wrap");
+            formDetail.add(label);
 
             JTextField textField = new JTextField();
             if (string.equals("Tên thương hiệu:")) {
@@ -201,11 +211,33 @@ public class ProductGUI extends Layout4 {
             if (string.equals("Nhà cung cấp:")) {
                 textField.setText(supplier.getName());
             }
-            textField.setPreferredSize(new Dimension(400, 50));
+            textField.setPreferredSize(new Dimension(300, 50));
             textField.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
             jTextFieldBrand.add(textField);
-            formDetail.add(textField, "wrap");
+            formDetail.add(textField);
+
         }
+        btnAdd = new JButton();
+        btnAdd.setText("THÊM");
+        btnAdd.setBackground(new Color(0x2FFC00));
+        btnAdd.setFont((new Font("FlatLaf.style", Font.PLAIN, 18)));
+        btnRemove = new JButton();
+        btnRemove.setBackground(new Color(0xFF0000));
+        btnRemove.setText("XÓA");
+        btnRemove.setFont((new Font("FlatLaf.style", Font.PLAIN, 18)));
+        btnEdit = new JButton();
+        btnEdit.setBackground(new Color(0x3EFF00));
+        btnEdit.setText("SỬA");
+        btnEdit.setFont((new Font("FlatLaf.style", Font.PLAIN, 18)));
+        panelBtn = new RoundedPanel();
+
+        panelBtn.setPreferredSize(new Dimension(300,80));
+        panelBtn.setLayout(new GridLayout(2,2));
+        panelBtn.add(btnAdd);
+        panelBtn.add(btnRemove);
+        panelBtn.setBackground(null);
+        panelBtn.add(btnEdit);
+        formDetail.add(panelBtn);
 
         rightContent.add(formDetail);
         rightContent.repaint();
@@ -215,38 +247,94 @@ public class ProductGUI extends Layout4 {
         bottom.repaint();
         bottom.revalidate();
 
+        btnAdd.addActionListener(e -> {
+            addBrand();
+        });
+        btnRemove.addActionListener(e -> {
+            if (products.size() != 0){
+                JOptionPane.showMessageDialog(null, "Tồn tại sản phẩm thuộc thương hiệu này!",
+                    "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else deleteBrand();
+        });
+        btnEdit.addActionListener(e -> {
+            editBrand();
+        });
+
         for (Brand brand : brandBLL.getBrandList()) {
             if (brand.getName().equals(cbbBrand.getSelectedItem())) {
-                loadDataTable(productBLL.findProductsBy(Map.of("brand_id", brand.getId())));
+                products = productBLL.findProductsBy(Map.of("brand_id", brand.getId()));
+                loadDataTable(products);
                 return;
             }
         }
+
     }
+    private List<Product> products;
 
     private void searchByCategory() {
         bottom.removeAll();
         formDetail.removeAll();
+        products = new ArrayList<>();
+        jTextFieldCategory = new ArrayList<>();
         JLabel title = new JLabel("THỂ LOẠI");
         title.setFont((new Font("FlatLaf.style", Font.BOLD, 23)));
+        title.setPreferredSize(new Dimension(300,50));
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        formDetail.add(title, "span 2 1, wrap");
+        formDetail.add(title);
 
         Category category1 = categoryBLL.getCategoryList().get(cbbCategory.getSelectedIndex());
-        for (String string : new String[] {"Tên thể loại:"}) {
+        for (String string : new String[] {" Tên thể loại:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
             label.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
-            formDetail.add(label, "wrap");
+            formDetail.add(label);
 
             JTextField textField = new JTextField();
             textField.setText(category1.getName());
 
-            textField.setPreferredSize(new Dimension(400, 50));
+            textField.setPreferredSize(new Dimension(300, 50));
             textField.setFont((new Font("FlatLaf.style", Font.PLAIN, 14)));
-            jTextFieldBrand.add(textField);
-            formDetail.add(textField, "wrap");
+            jTextFieldCategory.add(textField);
+            formDetail.add(textField);
         }
+
+        btnAdd = new JButton();
+        btnAdd.setText("THÊM");
+        btnAdd.setBackground(new Color(0x2FFC00));
+        btnAdd.setFont((new Font("FlatLaf.style", Font.PLAIN, 18)));
+        btnRemove = new JButton();
+        btnRemove.setBackground(new Color(0xFF0000));
+        btnRemove.setText("XÓA");
+        btnRemove.setFont((new Font("FlatLaf.style", Font.PLAIN, 18)));
+        btnEdit = new JButton();
+        btnEdit.setBackground(new Color(0x3EFF00));
+        btnEdit.setText("SỬA");
+        btnEdit.setFont((new Font("FlatLaf.style", Font.PLAIN, 18)));
+        panelBtn = new RoundedPanel();
+
+        panelBtn.setPreferredSize(new Dimension(300,80));
+        panelBtn.setLayout(new GridLayout(2,2));
+        panelBtn.add(btnAdd);
+        panelBtn.add(btnRemove);
+        panelBtn.setBackground(null);
+        panelBtn.add(btnEdit);
+        formDetail.add(panelBtn);
+
+        btnAdd.addActionListener(e -> {
+            addCategory();
+        });
+        btnRemove.addActionListener(e -> {
+            if (products.size() != 0){
+                JOptionPane.showMessageDialog(null, "Tồn tại sản phẩm thuộc thể loại này!",
+                    "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else deleteCategory();
+        });
+        btnEdit.addActionListener(e -> {
+            editCategory();
+        });
 
         rightContent.add(formDetail);
         rightContent.repaint();
@@ -257,7 +345,8 @@ public class ProductGUI extends Layout4 {
         bottom.revalidate();
         for (Category category : categoryBLL.getCategoryList()) {
             if (category.getName().equals(cbbCategory.getSelectedItem())) {
-                loadDataTable(productBLL.findProductsBy(Map.of("category_id", category.getId())));
+                products = productBLL.findProductsBy(Map.of("category_id", category.getId()));
+                loadDataTable(products);
                 return;
             }
         }
@@ -296,6 +385,109 @@ public class ProductGUI extends Layout4 {
 
     private void searchByQuantity() {
         loadDataTable(productBLL.searchProducts("deleted = 0", "`product`.quantity > 0 AND `product`.quantity <= 20"));
+    }
+
+    private void deleteCategory() {
+        List<Category> categories = categoryBLL.findCategoriesBy(Map.of("name",jTextFieldCategory.get(0).getText()));
+        if(categories.size() != 0) {
+            categoryBLL.deleteCategory(categories.get(0));
+            int selectedIndex = cbbCategory.getSelectedIndex();
+            comboBoxCategory.removeElementAt(selectedIndex);
+            cbbCategory.setSelectedIndex(0);
+            JOptionPane.showMessageDialog(null, "Xóa thể loại thành công!",
+                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else  {
+            JOptionPane.showMessageDialog(null, "Xóa thể loại thành công!",
+                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void deleteBrand() {
+        List<Brand> brands = brandBLL.findBrandsBy(Map.of("name",jTextFieldBrand.get(0).getText()));
+        String j = jTextFieldBrand.get(0).getText();
+        if(brands.size() != 0) {
+            brandBLL.deleteBrand(brands.get(0));
+            int selectedIndex = cbbBrand.getSelectedIndex();
+            comboBoxBrand.removeElementAt(selectedIndex);
+            cbbBrand.setSelectedIndex(0);
+            JOptionPane.showMessageDialog(null, "Xóa thương hiệu thành công!",
+                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "Không tồn tại thương hiệu trong cơ sở dữ liệu!",
+                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void addBrand() {
+        List<Brand> brands = brandBLL.findBrandsBy(Map.of("name",jTextFieldBrand.get(0).getText()));
+        SupplierBLL supplierBLL = new SupplierBLL();
+        List<Supplier> suppliers = supplierBLL.findSuppliersBy(Map.of("name",jTextFieldBrand.get(1).getText()));
+        if(suppliers.size() != 0) {
+            if (brands.size() != 0) {
+                JOptionPane.showMessageDialog(null, "Thương hiệu đã tồn tại!",
+                    "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                Brand brand = new Brand();
+                brand.setId(brandBLL.getAutoID(brandBLL.searchBrands()));
+                brand.setName(jTextFieldBrand.get(0).getText());
+                brand.setSupplier_id(suppliers.get(0).getId());
+                brand.setDeleted(false);
+                brandBLL.addBrand(brand);
+                cbbBrand.addItem(jTextFieldBrand.get(0).getText());
+                cbbBrand.setSelectedIndex(0);
+                JOptionPane.showMessageDialog(null, "Thêm thể loại thành công!",
+                    "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        else {
+            JOptionPane.showMessageDialog(null, "Không tồn tại nhà cung cấp!",
+                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void addCategory() {
+        List<Category> categories = categoryBLL.findCategoriesBy(Map.of("name",jTextFieldCategory.get(0).getText()));
+        if(categories.size() != 0) {
+            JOptionPane.showMessageDialog(null, "Thể loại đã tồn tại!",
+                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else {
+            Category category = new Category();
+            category.setId(categoryBLL.getAutoID(categoryBLL.searchCategorys()));
+            category.setName(jTextFieldCategory.get(0).getText());
+            category.setQuantity(0);
+            category.setDeleted(false);
+            categoryBLL.addCategory(category);
+            cbbCategory.addItem(jTextFieldBrand.get(0).getText());
+            cbbCategory.setSelectedIndex(0);
+            JOptionPane.showMessageDialog(null, "Thêm thể loại thành công!",
+                "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
+        }
+    }
+
+    private void editBrand() {
+        Brand brand1 = brandBLL.getBrandList().get(cbbBrand.getSelectedIndex());
+        brand1.setName(jTextFieldBrand.get(0).getText());
+        brandBLL.updateBrand(brand1);
+        comboBoxBrand.removeElementAt(cbbBrand.getSelectedIndex());
+        comboBoxBrand.insertElementAt(jTextFieldBrand.get(0).getText(), cbbBrand.getSelectedIndex());
+        cbbBrand.setSelectedIndex(0);
+        JOptionPane.showMessageDialog(null, "Chỉnh sửa thương hiệu thành công!",
+            "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void editCategory() {
+        Category category = categoryBLL.getCategoryList().get(cbbCategory.getSelectedIndex());
+        category.setName(jTextFieldBrand.get(0).getText());
+        categoryBLL.updateCategory(category);
+        comboBoxCategory.removeElementAt(cbbCategory.getSelectedIndex());
+        comboBoxCategory.insertElementAt(jTextFieldBrand.get(0).getText(), cbbCategory.getSelectedIndex());
+        cbbCategory.setSelectedIndex(0);
+        JOptionPane.showMessageDialog(null, "Chỉnh sửa thể loại thành công!",
+            "Thông báo", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void deleteProduct() {
