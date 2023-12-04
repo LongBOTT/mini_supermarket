@@ -45,10 +45,21 @@ public class FormAddProductGUI extends DialogForm{
     private JLabel labelImageProduct;
     private JLabel labelAddImage;
     private JFileChooser jFileChooser;
+    private List<Brand> brands;
 
     public FormAddProductGUI() {
         super();
         super.setTitle("Quản lý sản phẩm");
+        brands = brandBLL.getBrandList();
+        init();
+        containerButton.setBackground(new Color(0xFFFFFF));
+        setVisible(true);
+    }
+
+    public FormAddProductGUI(int supplierID) {
+        super();
+        super.setTitle("Quản lý sản phẩm");
+        brands = brandBLL.findBrandsBy(Map.of("supplier_id", supplierID));
         init();
         containerButton.setBackground(new Color(0xFFFFFF));
         setVisible(true);
@@ -298,7 +309,7 @@ public class FormAddProductGUI extends DialogForm{
         flag = true;
         Object[][] brandList = new Object[0][0];
         SupplierBLL supplierBLL = new SupplierBLL();
-        for (Brand brand : brandBLL.getBrandList()) {
+        for (Brand brand : brands) {
             Object[] object = new Object[3];
             object[0] = brand.getId();
             object[1] = brand.getName();
