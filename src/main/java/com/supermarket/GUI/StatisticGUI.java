@@ -121,6 +121,7 @@ public class StatisticGUI extends JPanel {
                         expenses = new ArrayList<>();
                         amount = new ArrayList<>();
                         labelText[0].setText("THỐNG KÊ THEO 3 NĂM GẦN NHẤT ");
+                        statisticYear.add(labelText[0], BorderLayout.NORTH);
                         chart.clear();
                         int currentYear = Year.now().getValue();
                         for (int i = currentYear - 2; i <= currentYear; i ++) {
@@ -157,6 +158,7 @@ public class StatisticGUI extends JPanel {
                         expenses = new ArrayList<>();
                         amount = new ArrayList<>();
                         labelText[1].setText("THỐNG KÊ THEO QUÝ TRONG NĂM " + currentYear);
+                        statisticMonth.add(labelText[1], BorderLayout.NORTH);
                         for (int i = 1; i <= currentQuarter; i++) {
                             XYChart.Series<String, Number> series1 = new XYChart.Series<>();
                             series1.setName("Quý " + i);
@@ -196,6 +198,7 @@ public class StatisticGUI extends JPanel {
                         expenses = new ArrayList<>();
                         amount = new ArrayList<>();
                         labelText[2].setText("THỐNG KÊ THEO THÁNG TRONG NĂM " + currentYear);
+                        statisticDay.add(labelText[2], BorderLayout.NORTH);
                         for (int i = 1; i <= currentMonth; i++) {
                             try {
                                 List<List<String>> inventory = MySQL.executeQueryStatistic("SELECT SUM(`import`.total) " +
@@ -238,7 +241,7 @@ public class StatisticGUI extends JPanel {
 
         for (int i = 0; i < labelText.length; i++) {
             labelText[i] = new JLabel();
-            labelText[i].setPreferredSize(new Dimension(getWidth(),80));
+            labelText[i].setPreferredSize(new Dimension(1000,50));
             labelText[i].setFont(new Font("Times New Roman",Font.PLAIN,16));
             labelText[i].setHorizontalAlignment(SwingConstants.CENTER);
         }
