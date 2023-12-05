@@ -1,14 +1,19 @@
 package com.supermarket.GUI.DialogGUI;
 
-import com.supermarket.BLL.*;
-import com.supermarket.DTO.*;
+import com.supermarket.BLL.BrandBLL;
+import com.supermarket.BLL.ImportBLL;
+import com.supermarket.BLL.ProductBLL;
+import com.supermarket.BLL.SupplierBLL;
+import com.supermarket.DTO.Brand;
+import com.supermarket.DTO.Import;
+import com.supermarket.DTO.Product;
+import com.supermarket.DTO.Supplier;
 import com.supermarket.GUI.HomeGUI;
 import com.supermarket.GUI.ProductGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
 import com.supermarket.utils.Date;
-import com.supermarket.utils.DateTime;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

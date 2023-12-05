@@ -2,12 +2,12 @@ package com.supermarket.GUI.DialogGUI;
 
 import com.supermarket.BLL.ImportBLL;
 import com.supermarket.BLL.ProductBLL;
-import com.supermarket.DTO.*;
+import com.supermarket.DTO.Import;
+import com.supermarket.DTO.Product;
 import com.supermarket.DTO.Shipment;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
-import com.toedter.calendar.JDateChooser;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;

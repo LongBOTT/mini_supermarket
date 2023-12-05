@@ -1,13 +1,10 @@
 package com.supermarket.BLL;
 
 import com.supermarket.DAL.SupplierDAL;
-import com.supermarket.DTO.Staff;
 import com.supermarket.DTO.Supplier;
-import com.supermarket.GUI.DialogGUI.SmallDialog;
 import com.supermarket.utils.VNString;
 import javafx.util.Pair;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

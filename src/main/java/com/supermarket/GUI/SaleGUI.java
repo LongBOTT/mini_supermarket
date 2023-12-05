@@ -9,17 +9,18 @@ import com.supermarket.GUI.components.RoundedScrollPane;
 import com.supermarket.GUI.components.SalePanel;
 import com.supermarket.utils.Date;
 import net.miginfocom.swing.MigLayout;
-import org.apache.poi.util.LocaleID;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
-
-import java.util.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.*;
 
 public class SaleGUI extends SalePanel {
     private final ProductBLL productBLL = new ProductBLL();

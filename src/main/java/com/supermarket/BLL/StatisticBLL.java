@@ -1,6 +1,6 @@
 package com.supermarket.BLL;
+
 import com.supermarket.DAL.StatisticDAL;
-import com.supermarket.DTO.Receipt;
 import com.supermarket.DTO.Statistic;
 
 import java.util.ArrayList;

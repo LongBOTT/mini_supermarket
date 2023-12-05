@@ -2,7 +2,6 @@ package com.supermarket.BLL;
 
 import com.supermarket.DAL.CustomerDAL;
 import com.supermarket.DTO.Customer;
-import com.supermarket.DTO.Staff;
 
 import javax.swing.*;
 import java.util.ArrayList;

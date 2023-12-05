@@ -1,7 +1,9 @@
 package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.*;
+import com.supermarket.BLL.ImportBLL;
+import com.supermarket.BLL.ProductBLL;
+import com.supermarket.BLL.ShipmentBLL;
 import com.supermarket.DTO.Function;
 import com.supermarket.DTO.Product;
 import com.supermarket.DTO.Shipment;

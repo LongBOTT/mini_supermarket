@@ -4,25 +4,19 @@ import com.supermarket.BLL.CustomerBLL;
 import com.supermarket.BLL.RoleBLL;
 import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DTO.Customer;
-import com.supermarket.DTO.Role;
-import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.CustomerGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
 import com.supermarket.utils.Date;
-import com.supermarket.utils.DateTime;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FormUpdateCustomerGUI extends DialogForm {
     private final CustomerBLL customerBLL = new CustomerBLL();

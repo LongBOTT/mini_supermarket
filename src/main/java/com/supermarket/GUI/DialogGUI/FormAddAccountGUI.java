@@ -7,7 +7,6 @@ import com.supermarket.DTO.Account;
 import com.supermarket.DTO.Role;
 import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.AccountGUI;
-import com.supermarket.GUI.LoginGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;

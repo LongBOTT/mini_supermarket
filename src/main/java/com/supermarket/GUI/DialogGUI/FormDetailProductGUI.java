@@ -1,12 +1,11 @@
 package com.supermarket.GUI.DialogGUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.CategoryBLL;
 import com.supermarket.BLL.BrandBLL;
+import com.supermarket.BLL.CategoryBLL;
 import com.supermarket.BLL.SupplierBLL;
 import com.supermarket.DTO.Brand;
 import com.supermarket.DTO.Category;
-import com.supermarket.DTO.Product;
 import com.supermarket.DTO.Product;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;

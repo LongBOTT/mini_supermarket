@@ -3,7 +3,6 @@ package com.supermarket.GUI;
 import com.supermarket.utils.Resource;
 import com.supermarket.utils.Settings;
 import net.miginfocom.swing.MigLayout;
-import org.apache.logging.log4j.core.config.properties.PropertiesConfiguration;
 
 import javax.swing.*;
 import java.awt.*;

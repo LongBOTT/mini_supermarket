@@ -1,8 +1,13 @@
 package com.supermarket.GUI.DialogGUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.*;
-import com.supermarket.DTO.*;
+import com.supermarket.BLL.BrandBLL;
+import com.supermarket.BLL.CategoryBLL;
+import com.supermarket.BLL.ProductBLL;
+import com.supermarket.BLL.SupplierBLL;
+import com.supermarket.DTO.Brand;
+import com.supermarket.DTO.Category;
+import com.supermarket.DTO.Product;
 import com.supermarket.GUI.ProductGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
@@ -17,8 +22,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class FormUpdateProductGUI extends DialogForm {
     private Product product;

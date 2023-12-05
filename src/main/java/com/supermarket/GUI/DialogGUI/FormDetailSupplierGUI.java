@@ -1,8 +1,8 @@
 package com.supermarket.GUI.DialogGUI;
 
 import com.supermarket.BLL.BrandBLL;
-import com.supermarket.DTO.Supplier;
 import com.supermarket.DTO.Brand;
+import com.supermarket.DTO.Supplier;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;

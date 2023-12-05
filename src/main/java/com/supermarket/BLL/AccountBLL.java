@@ -3,7 +3,6 @@ package com.supermarket.BLL;
 import com.supermarket.DAL.AccountDAL;
 import com.supermarket.DTO.Account;
 import com.supermarket.DTO.Staff;
-import com.supermarket.DTO.Supplier;
 import com.supermarket.GUI.DialogGUI.SmallDialog;
 import com.supermarket.utils.DateTime;
 import com.supermarket.utils.Email;
@@ -11,7 +10,6 @@ import com.supermarket.utils.Password;
 import com.supermarket.utils.VNString;
 import javafx.util.Pair;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

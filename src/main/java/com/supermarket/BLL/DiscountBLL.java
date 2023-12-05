@@ -2,12 +2,9 @@ package com.supermarket.BLL;
 
 import com.supermarket.DAL.DiscountDAL;
 import com.supermarket.DTO.Discount;
-import com.supermarket.DTO.Supplier;
-import com.supermarket.GUI.DialogGUI.SmallDialog;
 import com.supermarket.utils.VNString;
 import javafx.util.Pair;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +62,7 @@ public class DiscountBLL extends Manager<Discount> {
         if(!result.getKey()){
             return new Pair<>(false,result.getValue());
         }
-        
+
         discountList.set(getIndex(discount, "id", discountList), discount);
         discountDAL.updateDiscount(discount);
         return new Pair<>(true,"");

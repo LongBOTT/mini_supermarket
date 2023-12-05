@@ -2,7 +2,6 @@ package com.supermarket.BLL;
 
 import com.supermarket.DAL.RoleDAL;
 import com.supermarket.DTO.Role;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;

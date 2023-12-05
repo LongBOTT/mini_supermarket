@@ -5,15 +5,13 @@ import com.supermarket.BLL.Export_detailBLL;
 import com.supermarket.BLL.ProductBLL;
 import com.supermarket.BLL.ShipmentBLL;
 import com.supermarket.DTO.Export;
-import com.supermarket.DTO.Product;
 import com.supermarket.DTO.Export_detail;
+import com.supermarket.DTO.Product;
 import com.supermarket.DTO.Shipment;
 import com.supermarket.GUI.ExportGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
-import com.supermarket.utils.Date;
-import com.toedter.calendar.JDateChooser;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -23,8 +21,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class FormAddExport_DetailGUI extends DialogForm{
     private List<Integer> shipmentIDInExport;

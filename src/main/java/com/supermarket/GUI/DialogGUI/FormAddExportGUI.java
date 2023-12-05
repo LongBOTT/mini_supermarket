@@ -1,7 +1,11 @@
 package com.supermarket.GUI.DialogGUI;
 
-import com.supermarket.BLL.*;
-import com.supermarket.DTO.*;
+import com.supermarket.BLL.ExportBLL;
+import com.supermarket.BLL.ProductBLL;
+import com.supermarket.BLL.ShipmentBLL;
+import com.supermarket.DTO.Export;
+import com.supermarket.DTO.Product;
+import com.supermarket.DTO.Shipment;
 import com.supermarket.GUI.HomeGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
@@ -14,8 +18,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class FormAddExportGUI extends DialogForm{
     private Export newExport;

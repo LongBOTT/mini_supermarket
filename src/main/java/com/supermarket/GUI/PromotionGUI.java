@@ -1,6 +1,9 @@
 package com.supermarket.GUI;
 
-import com.supermarket.BLL.*;
+import com.supermarket.BLL.BrandBLL;
+import com.supermarket.BLL.CategoryBLL;
+import com.supermarket.BLL.ProductBLL;
+import com.supermarket.BLL.PromotionBLL;
 import com.supermarket.DTO.*;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout3;
@@ -19,8 +22,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class PromotionGUI extends Layout3 {
     private PromotionBLL promotionBLL = new PromotionBLL();

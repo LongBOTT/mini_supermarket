@@ -1,8 +1,12 @@
 package com.supermarket.GUI.DialogGUI;
 
-import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.*;
-import com.supermarket.DTO.*;
+import com.supermarket.BLL.ProductBLL;
+import com.supermarket.BLL.Receipt_detailBLL;
+import com.supermarket.BLL.StaffBLL;
+import com.supermarket.DTO.Product;
+import com.supermarket.DTO.Receipt;
+import com.supermarket.DTO.Receipt_detail;
+import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;

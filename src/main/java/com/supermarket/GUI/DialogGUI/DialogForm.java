@@ -1,7 +1,6 @@
 package com.supermarket.GUI.DialogGUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.AccountBLL;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.main.Mini_supermarketManagement;
 

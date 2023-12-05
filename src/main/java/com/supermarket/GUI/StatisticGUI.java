@@ -1,21 +1,16 @@
 package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.sun.javafx.application.PlatformImpl;
 import com.supermarket.BLL.ProductBLL;
 import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DAL.MySQL;
 import com.supermarket.DTO.Product;
 import com.supermarket.DTO.Staff;
-import com.supermarket.GUI.components.*;
+import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.chart.Chart;
 import com.supermarket.GUI.components.chart.ModelChart;
 import com.supermarket.GUI.components.chart.PanelBorderRadius;
 import com.supermarket.GUI.components.chart.PanelShadow;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import net.miginfocom.swing.MigLayout;
 
@@ -23,8 +18,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Year;

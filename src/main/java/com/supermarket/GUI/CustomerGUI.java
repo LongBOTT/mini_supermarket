@@ -2,15 +2,13 @@ package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.CustomerBLL;
-import com.supermarket.BLL.CustomerBLL;
 import com.supermarket.BLL.RoleBLL;
 import com.supermarket.BLL.StaffBLL;
-import com.supermarket.DTO.Customer;
 import com.supermarket.DTO.Function;
-import com.supermarket.DTO.Role;
-import com.supermarket.DTO.Staff;
-import com.supermarket.GUI.DialogGUI.*;
+import com.supermarket.GUI.DialogGUI.ExcelDialog;
 import com.supermarket.GUI.DialogGUI.FormAddCustomerGUI;
+import com.supermarket.GUI.DialogGUI.FormDetailCustomerGUI;
+import com.supermarket.GUI.DialogGUI.FormUpdateCustomerGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout1;
 import com.supermarket.GUI.components.RoundedScrollPane;

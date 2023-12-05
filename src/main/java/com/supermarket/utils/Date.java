@@ -1,6 +1,5 @@
 package com.supermarket.utils;
 
-import javax.swing.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;

@@ -1,9 +1,12 @@
 package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.*;
-import com.supermarket.DTO.*;
-import com.supermarket.GUI.DialogGUI.FormDetailProductGUI;
+import com.supermarket.BLL.CustomerBLL;
+import com.supermarket.BLL.ReceiptBLL;
+import com.supermarket.BLL.StaffBLL;
+import com.supermarket.DTO.Function;
+import com.supermarket.DTO.Receipt;
+import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.DialogGUI.FormDetailReceiptGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout2;
@@ -12,20 +15,16 @@ import com.supermarket.utils.Date;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class ReceiptGUI extends Layout2 {
     private ReceiptBLL receiptBLL = new ReceiptBLL();

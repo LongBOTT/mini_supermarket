@@ -1,29 +1,28 @@
 package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.*;
+import com.supermarket.BLL.BrandBLL;
+import com.supermarket.BLL.CategoryBLL;
+import com.supermarket.BLL.ProductBLL;
+import com.supermarket.BLL.SupplierBLL;
 import com.supermarket.DTO.*;
-import com.supermarket.GUI.DialogGUI.*;
+import com.supermarket.GUI.DialogGUI.FormAddProductGUI;
+import com.supermarket.GUI.DialogGUI.FormDetailProductGUI;
+import com.supermarket.GUI.DialogGUI.FormUpdateProductGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.Layout4;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
-import com.toedter.calendar.JDateChooser;
-import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class ProductGUI extends Layout4 {
     private ProductBLL productBLL = new ProductBLL();

@@ -1,20 +1,17 @@
 package com.supermarket.GUI.DialogGUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.ProductBLL;
-import com.supermarket.BLL.CategoryBLL;
 import com.supermarket.BLL.BrandBLL;
+import com.supermarket.BLL.CategoryBLL;
+import com.supermarket.BLL.ProductBLL;
 import com.supermarket.BLL.SupplierBLL;
-import com.supermarket.DTO.Product;
 import com.supermarket.DTO.Brand;
 import com.supermarket.DTO.Category;
-import com.supermarket.GUI.ManageBannersGUI;
+import com.supermarket.DTO.Product;
 import com.supermarket.GUI.ProductGUI;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
-import com.supermarket.main.Mini_supermarketManagement;
-import com.supermarket.utils.DateTime;
 import com.supermarket.utils.Resource;
 import net.miginfocom.swing.MigLayout;
 
@@ -25,8 +22,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class FormAddProductGUI extends DialogForm{
     private final ProductBLL productBLL = new ProductBLL();

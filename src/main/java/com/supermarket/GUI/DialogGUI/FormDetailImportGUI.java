@@ -1,6 +1,9 @@
 package com.supermarket.GUI.DialogGUI;
 
-import com.supermarket.BLL.*;
+import com.supermarket.BLL.ProductBLL;
+import com.supermarket.BLL.ShipmentBLL;
+import com.supermarket.BLL.StaffBLL;
+import com.supermarket.BLL.SupplierBLL;
 import com.supermarket.DTO.*;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;

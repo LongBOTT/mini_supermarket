@@ -1,6 +1,5 @@
 package com.supermarket.GUI.components;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class Layout1 extends RoundedPanel {

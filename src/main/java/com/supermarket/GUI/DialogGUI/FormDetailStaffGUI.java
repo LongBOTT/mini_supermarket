@@ -4,22 +4,16 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.supermarket.BLL.RoleBLL;
 import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DTO.Staff;
-import com.supermarket.DTO.Role;
-import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.components.DataTable;
 import com.supermarket.GUI.components.RoundedPanel;
 import com.supermarket.GUI.components.RoundedScrollPane;
-import com.supermarket.utils.Date;
 import com.toedter.calendar.JDateChooser;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FormDetailStaffGUI extends DialogForm{
     private final StaffBLL staffBLL = new StaffBLL();
