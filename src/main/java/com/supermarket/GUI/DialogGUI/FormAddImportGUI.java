@@ -143,7 +143,7 @@ public class FormAddImportGUI extends DialogForm{
         buttonAddProduct.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                new ProductGUI().setVisible(false);
+                new ProductGUI(List.of()).setVisible(false);
                 new FormAddProductGUI();
                 productBLL = new ProductBLL();
                 addImport();

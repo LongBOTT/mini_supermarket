@@ -47,7 +47,7 @@ public class AccountGUI extends Layout1 {
     public void init(List<Function> functions) {
         accountList = new Object[0][0];
         dataTable = new DataTable(new Object[][] {},
-            new String[] {"Mã tài khoản", "Tên tài khoản", "Mật khẩu", "Chức vụ", "Lần đăng nhập cuối", "Nhân viên"}, e -> {});
+            new String[] {"Mã tài khoản", "Tên tài khoản", "Chức vụ", "Lần đăng nhập cuối", "Nhân viên"}, e -> {});
         scrollPane = new RoundedScrollPane(dataTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         iconDetail = new JLabel();
         iconAdd = new JLabel();
@@ -252,8 +252,9 @@ public class AccountGUI extends Layout1 {
         for (Object[] object : objects) {
             int roleId = Integer.parseInt(object[3].toString());
             int staffId = Integer.parseInt(object[5].toString());
-            object[3] = roleBLL.findRolesBy(Map.of("id", roleId)).get(0).getName();
-            object[5] = staffBLL.findStaffsBy(Map.of("id", staffId)).get(0).getName();
+            object[2] = roleBLL.findRolesBy(Map.of("id", roleId)).get(0).getName();
+            object[3] = object[4];
+            object[4] = staffBLL.findStaffsBy(Map.of("id", staffId)).get(0).getName();
         }
 
         model.setRowCount(0);

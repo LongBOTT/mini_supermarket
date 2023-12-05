@@ -2,9 +2,12 @@ package com.supermarket.BLL;
 
 import com.supermarket.DAL.AccountDAL;
 import com.supermarket.DTO.Account;
+import com.supermarket.DTO.Staff;
 import com.supermarket.DTO.Supplier;
 import com.supermarket.GUI.DialogGUI.SmallDialog;
 import com.supermarket.utils.DateTime;
+import com.supermarket.utils.Email;
+import com.supermarket.utils.Password;
 import com.supermarket.utils.VNString;
 import javafx.util.Pair;
 
@@ -60,8 +63,21 @@ public class AccountBLL extends Manager<Account> {
             return new Pair<>(false,result.getValue());
         }
 
+        String password = Password.generateRandomPassword(8);
+        String hashedPassword = Password.hashPassword(password);
+        account.setPassword("first" + hashedPassword);
+        account.setLast_signed_in(DateTime.MIN);
+
+        if (accountDAL.addAccount(account) == 0)
+            return new Pair<>(false, "Thêm tài khoản không thành công.");
+
+        new Thread(() -> {
+            Staff staff = new StaffBLL().findStaffsBy(Map.of("id", account.getStaffID())).get(0);
+            String emailSubject = "Mật khẩu mặc định Bách Hóa Xanh";
+            String emailBody = "Không được cung cấp mật khẩu này cho bất cứ ai: " + password;
+            Email.sendOTP(staff.getEmail(), emailSubject, emailBody);
+        }).start();
         accountList.add(account);
-        accountDAL.addAccount(account);
         return new Pair<>(true,"");
     }
 

@@ -67,7 +67,7 @@ public class FormAddAccountGUI extends DialogForm{
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[]{"Mã tài khoản:", "Tên tài khoản:", "Mật khẩu:", "Mã chức vụ:", "Lần đăng nhập cuối:", "Mã nhân viên:"}) {
+        for (String string : new String[]{"Mã tài khoản:", "Tên tài khoản:", "Mã chức vụ:", "Lần đăng nhập cuối:", "Mã nhân viên:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -177,13 +177,12 @@ public class FormAddAccountGUI extends DialogForm{
         jTextFieldAccount.get(0).setText(String.valueOf(accountBLL.getAutoID(accountBLL.searchAccounts())));
         jTextFieldAccount.get(0).setEnabled(false);
         jTextFieldAccount.get(1).setText("");
+        jTextFieldAccount.get(2).setEnabled(true);
         jTextFieldAccount.get(2).setText("");
-        jTextFieldAccount.get(3).setEnabled(true);
-        jTextFieldAccount.get(3).setText("");
-        jTextFieldAccount.get(3).setEnabled(false);
-        jTextFieldAccount.get(5).setEnabled(true);
-        jTextFieldAccount.get(5).setText("");
-        jTextFieldAccount.get(5).setEnabled(false);
+        jTextFieldAccount.get(2).setEnabled(false);
+        jTextFieldAccount.get(4).setEnabled(true);
+        jTextFieldAccount.get(4).setText("");
+        jTextFieldAccount.get(4).setEnabled(false);
     }
 
     private void loadTableStaff() {
@@ -194,7 +193,7 @@ public class FormAddAccountGUI extends DialogForm{
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);
 
-        if (!jTextFieldAccount.get(5).getText().isEmpty()) {
+        if (!jTextFieldAccount.get(4).getText().isEmpty()) {
             Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(5).getText()))).get(0);
             int index = staffBLL.getIndex(staff, "id", staffBLL.getStaffList());
             dataTable.setRowSelectionInterval(index, index);
@@ -212,7 +211,7 @@ public class FormAddAccountGUI extends DialogForm{
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);
 
-        if (!jTextFieldAccount.get(3).getText().isEmpty()) {
+        if (!jTextFieldAccount.get(2).getText().isEmpty()) {
             Role role = roleBLL.findRolesBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(3).getText()))).get(0);
             int index = roleBLL.getIndex(role, "id", roleBLL.getRoleList());
             dataTable.setRowSelectionInterval(index, index);

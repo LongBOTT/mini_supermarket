@@ -66,7 +66,7 @@ public class FormUpdateAccountGUI extends DialogForm {
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[]{"Mã tài khoản:", "Tên tài khoản:", "Mật khẩu:", "Mã chức vụ:", "Lần đăng nhập cuối:", "Mã nhân viên:"}) {
+        for (String string : new String[]{"Mã tài khoản:", "Tên tài khoản:", "Mã chức vụ:", "Lần đăng nhập cuối:", "Mã nhân viên:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
@@ -82,9 +82,9 @@ public class FormUpdateAccountGUI extends DialogForm {
             if (string.equals("Tên tài khoản:")) {
                 textField.setText(account.getUsername());
             }
-            if (string.equals("Mật khẩu:")) {
-                textField.setText(account.getPassword());
-            }
+//            if (string.equals("Mật khẩu:")) {
+//                textField.setText(account.getPassword());
+//            }
             if (string.equals("Mã chức vụ:")) {
                 textField.setText(String.valueOf(account.getRoleID()));
                 textField.addMouseListener(new MouseAdapter() {
@@ -174,7 +174,7 @@ public class FormUpdateAccountGUI extends DialogForm {
                 AccountGUI.loadDataTable(accountBLL.getData());
                 dispose();
             } else {
-                SmallDialog.showResult(accountBLL.addAccount(account).getValue());
+                SmallDialog.showResult(accountBLL.updateAccount(account).getValue());
             }
         }
 
@@ -185,13 +185,12 @@ public class FormUpdateAccountGUI extends DialogForm {
         jTextFieldAccount.get(0).setText(String.valueOf(accountBLL.getAutoID(accountBLL.searchAccounts())));
         jTextFieldAccount.get(0).setEnabled(false);
         jTextFieldAccount.get(1).setText("");
+        jTextFieldAccount.get(2).setEnabled(true);
         jTextFieldAccount.get(2).setText("");
-        jTextFieldAccount.get(3).setEnabled(true);
-        jTextFieldAccount.get(3).setText("");
-        jTextFieldAccount.get(3).setEnabled(false);
-        jTextFieldAccount.get(5).setEnabled(true);
-        jTextFieldAccount.get(5).setText("");
-        jTextFieldAccount.get(5).setEnabled(false);
+        jTextFieldAccount.get(2).setEnabled(false);
+        jTextFieldAccount.get(4).setEnabled(true);
+        jTextFieldAccount.get(4).setText("");
+        jTextFieldAccount.get(4).setEnabled(false);
     }
 
     private void loadTableStaff() {
