@@ -98,7 +98,7 @@ public class DiscountBLL extends Manager<Discount> {
     }
 
     public Pair<Boolean, String> exists(Discount newDiscount){
-        List<Discount> discounts = discountDAL.searchDiscounts("id = '" + newDiscount.getId() + "'", "deleted = 0");
+        List<Discount> discounts = discountDAL.searchDiscounts("id = '" + newDiscount.getId() + "'");
         if(!discounts.isEmpty()){
             return new Pair<>(true, "Đợt khuyến mãi đã tồn tại.");
         }

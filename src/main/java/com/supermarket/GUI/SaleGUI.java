@@ -885,12 +885,22 @@ public class SaleGUI extends SalePanel {
     }
 
     public void loadProductDetail(Product product) {
-        List<Discount_detail> discountDetails = discountDetailBLL.findDiscount_detailsBy(Map.of("product_id", product.getId()));
+        List<Discount_detail> discountDetails = new ArrayList<>();
+
+        for (Discount discount : discountBLL.getDiscountList()){
+            if (!discount.isStatus()) {
+                for (Discount_detail discountDetail : discountDetailBLL.findDiscount_detailsBy(Map.of("discount_id", discount.getId()))) {
+                    if (discountDetail.getProduct_id() == product.getId())
+                        discountDetails.add(discountDetail);
+                }
+            }
+        }
+
         jTextFieldProductDetail.get(0).setText(product.getName());
         jTextFieldProductDetail.get(0).setCaretPosition(0);
         jTextFieldProductDetail.get(1).setText(brandBLL.findBrandsBy(Map.of("id", product.getBrand_id())).get(0).getName());
         if (!discountDetails.isEmpty()) {
-            Discount discount = discountBLL.findDiscountsBy(Map.of("id", discountDetails.get(discountDetails.size()-1).getDiscount_id())).get(0);
+            Discount discount = discountBLL.findDiscountsBy(Map.of("id", discountDetails.get(0).getDiscount_id())).get(0);
             jTextFieldProductDetail.get(3).setText(String.valueOf(product.getCost() - (product.getCost() * discount.getPercent() / 100)));
         } else {
             jTextFieldProductDetail.get(3).setText(String.valueOf(product.getCost()));

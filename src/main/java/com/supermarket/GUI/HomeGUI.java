@@ -1,10 +1,10 @@
 package com.supermarket.GUI;
 
+import com.supermarket.BLL.DiscountBLL;
+import com.supermarket.BLL.Discount_detailBLL;
 import com.supermarket.BLL.RoleBLL;
-import com.supermarket.DTO.Account;
+import com.supermarket.DTO.*;
 import com.supermarket.BLL.StaffBLL;
-import com.supermarket.DTO.Role;
-import com.supermarket.DTO.Staff;
 import com.supermarket.GUI.components.*;
 import com.supermarket.main.Mini_supermarketManagement;
 import com.supermarket.utils.Date;
@@ -215,6 +215,27 @@ public class HomeGUI extends JFrame {
             }
         });
         addBanner.add(addIcon);
+
+        checkDiscount();
+    }
+
+    private void checkDiscount() {
+        DiscountBLL discountBLL = new DiscountBLL();
+        Discount_detailBLL discountDetailBLL = new Discount_detailBLL();
+        for (Discount discount : discountBLL.getDiscountList()){
+            try {
+                if (discount.getEnd_date().isBefore(Date.parseDate(Date.dateNow()))) {
+                    discount.setStatus(true);
+                    discountBLL.updateDiscount(discount);
+                    for (Discount_detail discountDetail : discountDetailBLL.findDiscount_detailsBy(Map.of("discount_id", discount.getId()))) {
+                        discountDetail.setStatus(true);
+                        discountDetailBLL.updateDiscount_detail(discountDetail);
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private void initMenu() {
