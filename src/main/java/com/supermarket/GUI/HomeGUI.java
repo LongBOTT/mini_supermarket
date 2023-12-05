@@ -210,6 +210,27 @@ public class HomeGUI extends JFrame {
             }
         });
         addBanner.add(addIcon);
+
+        checkDiscount();
+    }
+
+    private void checkDiscount() {
+        DiscountBLL discountBLL = new DiscountBLL();
+        Discount_detailBLL discountDetailBLL = new Discount_detailBLL();
+        for (Discount discount : discountBLL.getDiscountList()){
+            try {
+                if (discount.getEnd_date().isBefore(Date.parseDate(Date.dateNow()))) {
+                    discount.setStatus(true);
+                    discountBLL.updateDiscount(discount);
+                    for (Discount_detail discountDetail : discountDetailBLL.findDiscount_detailsBy(Map.of("discount_id", discount.getId()))) {
+                        discountDetail.setStatus(true);
+                        discountDetailBLL.updateDiscount_detail(discountDetail);
+                    }
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private void initMenu() {

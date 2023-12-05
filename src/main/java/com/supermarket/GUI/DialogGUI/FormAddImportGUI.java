@@ -144,9 +144,21 @@ public class FormAddImportGUI extends DialogForm{
             @Override
             public void mousePressed(MouseEvent e) {
                 new ProductGUI(List.of()).setVisible(false);
-                new FormAddProductGUI();
+                new FormAddProductGUI(Integer.parseInt(jTextFieldImport.get(4).getText()));
                 productBLL = new ProductBLL();
-                addImport();
+                int supplierID = Integer.parseInt(jTextFieldImport.get(4).getText());
+                BrandBLL brandBLL = new BrandBLL();
+                List<Integer> brandList = new ArrayList<>();
+                for (Brand brand : brandBLL.findBrandsBy(Map.of("supplier_id", supplierID))) {
+                    brandList.add(brand.getId());
+                }
+                List<Product> list = new ArrayList<>();
+                for (Product product : productBLL.getProductList()) {
+                    if (brandList.contains(product.getBrand_id())) {
+                        list.add(product);
+                    }
+                }
+                loadTableProduct(list);
             }
         });
         formDetail.add(buttonAddProduct);
@@ -210,6 +222,7 @@ public class FormAddImportGUI extends DialogForm{
             buttonAddProduct.setVisible(true);
             JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm nhập", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
         } else {
+
             String[] options = new String[]{"Huỷ", "Xác nhận"};
             int choice = JOptionPane.showOptionDialog(null, "Xác nhận nhập các sản phẩm đã chọn?",
                 "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
@@ -273,6 +286,7 @@ public class FormAddImportGUI extends DialogForm{
     }
 
     private void loadTableSupplier() {
+        productIDInImport.removeAll(productIDInImport);
         flag = true;
         SupplierBLL staffBLL = new SupplierBLL();
         dataTable = new DataTable(staffBLL.getData(), new String[] {"Mã nhà cung cấp", "Tên nhà cung cấp", "Số điện thoại", "Địa chỉ", "Email"}, e -> selectRowTable());
