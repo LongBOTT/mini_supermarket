@@ -42,8 +42,8 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`id`, `username`, `password`, `role_id`, `staff_id`, `last_signed_in`, `deleted`) VALUES
-(1, 'admin', 'Admin123', 1, 1, '2023-10-23 07:49:42.983793', b'0'),
-(2, 'longbott', 'Long123', 2, 4, '2023-11-08 22:52:03.000000', b'0');
+(1, 'admin', '$2a$12$3x6Hm/dKh0zy5LWi9hAwYO.yw8ajHbQD220fq8gNvOMZ4ksx6Xgg2', 1, 1, '2023-10-23 07:49:42.983793', b'0'),
+(2, 'longbott', '$2a$12$ikddNwy/hKz/bdbCplb48O/yC0.375UxaLxQh4AdWkLTq6VsR/LdO', 2, 4, '2023-11-08 22:52:03.000000', b'0');
 
 -- --------------------------------------------------------
 

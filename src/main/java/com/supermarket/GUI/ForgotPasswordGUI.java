@@ -8,6 +8,7 @@ import com.supermarket.GUI.DialogGUI.SmallDialog;
 import com.supermarket.main.Mini_supermarketManagement;
 import com.supermarket.utils.DateTime;
 import com.supermarket.utils.Email;
+import com.supermarket.utils.Password;
 import com.supermarket.utils.VNString;
 import net.miginfocom.swing.MigLayout;
 
@@ -59,7 +60,14 @@ public class ForgotPasswordGUI extends JDialog {
                 cancel();
             }
         });
-        setVisible(true);
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     private void showEnterEmail() {
@@ -243,7 +251,7 @@ public class ForgotPasswordGUI extends JDialog {
             Mini_supermarketManagement.exit(1);
     }
 
-    private void toStep(int step){
+    public void toStep(int step){
         JPanel panel = new JPanel();
         switch (step) {
             case 1 -> { showEnterEmail(); panel = otpEnterEmail; }
@@ -327,8 +335,10 @@ public class ForgotPasswordGUI extends JDialog {
             JOptionPane.showMessageDialog(this, "Mật khẩu không được chứa khoảng trắng.\nMật khẩu phải chứa ít nhất 1 chữ cái thường, 1 chữ cái hoa and 1 chữ số");
             return;
         }
-        account.setPassword(password);
+        String hashedPassword = Password.hashPassword(password);
+        account.setPassword(hashedPassword);
         if (!new AccountBLL().updateAccountPassword(account)) {
+            JOptionPane.showMessageDialog(this, "Thay đổi mật khẩu không thành công. Vui lòng thử lại sau.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         JOptionPane.showMessageDialog(this, "Thay đổi mật khẩu thành công.");

@@ -6,6 +6,7 @@ import com.supermarket.BLL.AccountBLL;
 import com.supermarket.DTO.Account;
 import com.supermarket.main.Mini_supermarketManagement;
 import com.supermarket.utils.DateTime;
+import com.supermarket.utils.Password;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -218,7 +219,10 @@ public class LoginGUI extends JFrame {
             JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!accountList.get(0).getPassword().equals(passWord)) {
+        String hashedPassword = accountList.get(0).getPassword();
+        if (hashedPassword.startsWith("first"))
+            hashedPassword = hashedPassword.substring("first".length());
+        if (!Password.verifyPassword(passWord, hashedPassword)) {
             JOptionPane.showMessageDialog(this, "Mật khẩu không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -238,13 +242,19 @@ public class LoginGUI extends JFrame {
             dispose();
             System.gc();
             Mini_supermarketManagement.homeGUI.setVisible(true);
+            if (account.getPassword().startsWith("first")) {
+                ForgotPasswordGUI forgotPasswordGUI = new ForgotPasswordGUI();
+                forgotPasswordGUI.setAccount(account);
+                forgotPasswordGUI.toStep(3);
+                forgotPasswordGUI.setVisible(true);
+            }
         } catch (Exception ignored) {
 
         }
     }
 
     private void forgotPassword() {
-        new ForgotPasswordGUI();
+        new ForgotPasswordGUI().setVisible(true);
     }
 
     private void cancel() {
