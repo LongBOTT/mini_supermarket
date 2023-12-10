@@ -30,7 +30,7 @@ public class SupplierGUI extends Layout1 {
     private static DataTable dataTable;
     private RoundedScrollPane scrollPane;
     private JTextField jTextFieldSearch;
-    private JComboBox cbbAttributeProduct;
+    private JComboBox cbbAttributeSupplier;
     private Object[][] supplierList;
 
     public SupplierGUI() {
@@ -50,7 +50,7 @@ public class SupplierGUI extends Layout1 {
         iconPDF = new JLabel();
         iconExcel = new JLabel();
         jTextFieldSearch = new JTextField();
-        cbbAttributeProduct = new JComboBox(new String[] {"Tên nhà cung cấp", "SĐT", "Địa chỉ"});
+        cbbAttributeSupplier = new JComboBox(new String[] {"Tên nhà cung cấp", "SĐT", "Địa chỉ"});
 
         iconDetail.setIcon(new FlatSVGIcon("icon/detail.svg"));
         iconDetail.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -101,9 +101,9 @@ public class SupplierGUI extends Layout1 {
         iconExcel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         leftMenu.add(iconExcel);
 
-        cbbAttributeProduct.setPreferredSize(new Dimension(180, 30));
-        cbbAttributeProduct.addActionListener(e -> selectSearchFilter());
-        rightMenu.add(cbbAttributeProduct);
+        cbbAttributeSupplier.setPreferredSize(new Dimension(180, 30));
+        cbbAttributeSupplier.addActionListener(e -> selectSearchFilter());
+        rightMenu.add(cbbAttributeSupplier);
 
         jTextFieldSearch.setPreferredSize(new Dimension(200, 30));
         jTextFieldSearch.getDocument().addDocumentListener(new DocumentListener() {
@@ -152,9 +152,9 @@ public class SupplierGUI extends Layout1 {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Tên nhà cung cấp")) {
+        if (Objects.requireNonNull(cbbAttributeSupplier.getSelectedItem()).toString().contains("Tên nhà cung cấp")) {
             searchByName();
-        } else if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("SĐT")) {
+        } else if (Objects.requireNonNull(cbbAttributeSupplier.getSelectedItem()).toString().contains("SĐT")) {
             searchByPhone();
         } else {
             searchByAddress();
