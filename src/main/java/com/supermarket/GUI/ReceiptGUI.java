@@ -1,7 +1,7 @@
 package com.supermarket.GUI;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.supermarket.BLL.CustomerBLL;
+//import com.supermarket.BLL.CustomerBLL;
 import com.supermarket.BLL.ReceiptBLL;
 import com.supermarket.BLL.StaffBLL;
 import com.supermarket.DTO.Function;
@@ -29,7 +29,7 @@ import java.util.*;
 public class ReceiptGUI extends Layout2 {
     private ReceiptBLL receiptBLL = new ReceiptBLL();
     private StaffBLL staffBLL = new StaffBLL();
-    private CustomerBLL customerBLL = new CustomerBLL();
+//    private CustomerBLL customerBLL = new CustomerBLL();
     private static DataTable dataTable;
     private RoundedScrollPane scrollPane;
     private JLabel iconDetail;
@@ -242,7 +242,7 @@ public class ReceiptGUI extends Layout2 {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         receiptList = new Object[0][0];
         StaffBLL staffBLL = new StaffBLL();
-        CustomerBLL customerBLL = new CustomerBLL();
+//        CustomerBLL customerBLL = new CustomerBLL();
         for (Receipt receipt : receipts) {
             Object[] object = new Object[5];
             object[0] = receipt.getId();

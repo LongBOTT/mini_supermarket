@@ -149,7 +149,7 @@ public class FormUpdateAccountGUI extends DialogForm {
 
     private void updateAccount() {
         for (int i = 0; i < jTextFieldAccount.size(); i++) {
-            if (i != 4 && jTextFieldAccount.get(i).getText().isEmpty()) {
+            if (i != 3 && jTextFieldAccount.get(i).getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin tài khoản.",
                     "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -158,11 +158,10 @@ public class FormUpdateAccountGUI extends DialogForm {
 
         int id = Integer.parseInt(jTextFieldAccount.get(0).getText());
         String username = jTextFieldAccount.get(1).getText();
-        String password = jTextFieldAccount.get(2).getText();
-        int roleID = Integer.parseInt(jTextFieldAccount.get(3).getText());
-        int staffID = Integer.parseInt(jTextFieldAccount.get(5).getText());
+        int roleID = Integer.parseInt(jTextFieldAccount.get(2).getText());
+        int staffID = Integer.parseInt(jTextFieldAccount.get(4).getText());
 
-        Account account = new Account(id, username, password, roleID, staffID, DateTime.parseDateTime(String.valueOf(new DateTime())), false);
+        Account account = new Account(id, username, "", roleID, staffID, DateTime.parseDateTime(String.valueOf(new DateTime())), false);
 
         String[] options = new String[]{"Huỷ", "Xác nhận"};
         int choice = JOptionPane.showOptionDialog(null, "Xác nhận cập nhật tài khoản?",
@@ -200,7 +199,7 @@ public class FormUpdateAccountGUI extends DialogForm {
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);
 
-        Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(5).getText()))).get(0);
+        Staff staff = staffBLL.findStaffsBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(4).getText()))).get(0);
         int index = staffBLL.getIndex(staff, "id", staffBLL.getStaffList());
         dataTable.setRowSelectionInterval(index, index);
 
@@ -215,7 +214,7 @@ public class FormUpdateAccountGUI extends DialogForm {
         containerTable.add(dataTable.getTableHeader(), BorderLayout.NORTH);
         containerTable.add(dataTable, BorderLayout.CENTER);
 
-        Role role = roleBLL.findRolesBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(3).getText()))).get(0);
+        Role role = roleBLL.findRolesBy(Map.of("id", Integer.parseInt(jTextFieldAccount.get(2).getText()))).get(0);
         int index = roleBLL.getIndex(role, "id", roleBLL.getRoleList());
         dataTable.setRowSelectionInterval(index, index);
 
@@ -229,8 +228,8 @@ public class FormUpdateAccountGUI extends DialogForm {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         int indexRow = dataTable.getSelectedRow();
         id = model.getDataVector().elementAt(indexRow).get(0).toString();
-        jTextFieldAccount.get(3).setEnabled(true);
-        jTextFieldAccount.get(3).setText(id);
-        jTextFieldAccount.get(3).setEnabled(false);
+        jTextFieldAccount.get(2).setEnabled(true);
+        jTextFieldAccount.get(2).setText(id);
+        jTextFieldAccount.get(2).setEnabled(false);
     }
 }

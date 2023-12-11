@@ -27,7 +27,7 @@ public class SaleGUI extends SalePanel {
     private final CategoryBLL categoryBLL = new CategoryBLL();
     private final BrandBLL brandBLL = new BrandBLL();
     private final StaffBLL staffBLL = new StaffBLL();
-    private final CustomerBLL customerBLL = new CustomerBLL();
+//    private final CustomerBLL customerBLL = new CustomerBLL();
     private final DiscountBLL discountBLL = new DiscountBLL();
     private final Discount_detailBLL discountDetailBLL = new Discount_detailBLL();
     private final PromotionBLL promotionBLL = new PromotionBLL();
@@ -438,22 +438,22 @@ public class SaleGUI extends SalePanel {
     }
 
     private void calculateExcess() {
-        if (Objects.equals(jTextFieldBill.get(3).getText(), ""))
+        if (Objects.equals(jTextFieldBill.get(2).getText(), ""))
             return;
-        double received = Double.parseDouble(jTextFieldBill.get(4).getText());
-        double total = Double.parseDouble(jTextFieldBill.get(3).getText().replace(" vnđ", ""));
+        double received = Double.parseDouble(jTextFieldBill.get(3).getText());
+        double total = Double.parseDouble(jTextFieldBill.get(2).getText().replace(" vnđ", ""));
         double excess = received - total;
-        jTextFieldBill.get(5).setText(excess + " vnđ");
+        jTextFieldBill.get(4).setText(excess + " vnđ");
     }
 
     private void payBill() {
-        if (Objects.equals(jTextFieldBill.get(5).getText(), ""))  {
+        if (Objects.equals(jTextFieldBill.get(4).getText(), ""))  {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập số tiền nhận và nhấn Enter.",
                 "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        if (jTextFieldBill.get(5).getText().contains("-"))  {
+        if (jTextFieldBill.get(4).getText().contains("-"))  {
             JOptionPane.showMessageDialog(null, "Chưa đủ tiền thanh toán.",
                 "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
@@ -484,13 +484,13 @@ public class SaleGUI extends SalePanel {
 //        }
 
         try {
-            receipt.setInvoice_date(Date.parseDate(jTextFieldBill.get(2).getText()));
+            receipt.setInvoice_date(Date.parseDate(jTextFieldBill.get(1).getText()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        receipt.setTotal(Double.parseDouble(jTextFieldBill.get(3).getText().replace(" vnđ", "")));
-        receipt.setReceived(Double.parseDouble(jTextFieldBill.get(4).getText()));
-        receipt.setExcess(Double.parseDouble(jTextFieldBill.get(5).getText().replace(" vnđ", "")));
+        receipt.setTotal(Double.parseDouble(jTextFieldBill.get(2).getText().replace(" vnđ", "")));
+        receipt.setReceived(Double.parseDouble(jTextFieldBill.get(3).getText()));
+        receipt.setExcess(Double.parseDouble(jTextFieldBill.get(4).getText().replace(" vnđ", "")));
         receiptBLL.addReceipt(receipt);
 
         Receipt_detailBLL receiptDetailBLL = new Receipt_detailBLL();
@@ -520,12 +520,12 @@ public class SaleGUI extends SalePanel {
         quantityBillDetail.removeAll((quantityBillDetail));
         containerProductsBuy.removeAll();
         productsBuy.removeAll(productsBuy);
-        jTextFieldBill.get(1).setText("");
+//        jTextFieldBill.get(1).setText("");
+        jTextFieldBill.get(2).setText("");
         jTextFieldBill.get(3).setEditable(true);
         jTextFieldBill.get(3).setText("");
+        jTextFieldBill.get(4).setEditable(true);
         jTextFieldBill.get(4).setText("");
-        jTextFieldBill.get(5).setEditable(true);
-        jTextFieldBill.get(5).setText("");
         containerProductsBuy.repaint();
         containerProductsBuy.revalidate();
     }
@@ -611,18 +611,18 @@ public class SaleGUI extends SalePanel {
                 containerProductsBuy.add(panel, "wrap");
             }
 
-            jTextFieldBill.get(3).setText(total + " vnđ");
+            jTextFieldBill.get(2).setText(total + " vnđ");
         }
         cancelAllCartShopping();
     }
 
-    private void searchCustomerByPhone() {
-        if (jTextFieldSearchCustomer.getText().isEmpty())
-            return;
-        List<Customer> customers = customerBLL.findCustomersBy(Map.of("phone", jTextFieldSearchCustomer.getText()));
-        if (!customers.isEmpty())
-            jTextFieldBill.get(1).setText(customers.get(0).getName());
-    }
+//    private void searchCustomerByPhone() {
+//        if (jTextFieldSearchCustomer.getText().isEmpty())
+//            return;
+//        List<Customer> customers = customerBLL.findCustomersBy(Map.of("phone", jTextFieldSearchCustomer.getText()));
+//        if (!customers.isEmpty())
+//            jTextFieldBill.get(1).setText(customers.get(0).getName());
+//    }
 
     private void selectSearchFilter() {
         if (Objects.requireNonNull(cbbAttributeProduct.getSelectedItem()).toString().contains("Thương hiệu")) {
@@ -771,55 +771,55 @@ public class SaleGUI extends SalePanel {
         }
         Object[] objects;
         gifts = new Object[0][0];
-        for (Promotion promotion : promotionBLL.getPromotionList()) {
-            int min = 1000;
-            List<Integer> listItemInCart = new ArrayList<>();
-            List<Promotion_item> promotionItems = promotionItemBLL.findPromotion_itemsBy(Map.of("promotion_id", promotion.getId()));
-            List<Promotion_gift> promotionGifts = promotionGiftBLL.findPromotion_giftsBy(Map.of("promotion_id", promotion.getId()));
-            for (Promotion_item promotionItem : promotionItems) {
-                if (productsInCart.contains(promotionItem.getProduct_id())) {
-                    int indexRow = productsInCart.indexOf(promotionItem.getProduct_id());
-                    double quantity = Double.parseDouble(products[indexRow][3].toString());
-                    if (quantity >= promotionItem.getQuantity()) {
-                        listItemInCart.add(promotionItem.getProduct_id());
-                        int quantityGift = (int) quantity / (int) promotionItem.getQuantity();
-                        if (quantityGift < min)
-                            min = quantityGift;
-                    }
-                }
-            }
-
-            int i = 0;
-            if (listItemInCart.size() == promotionItems.size() ) {
-                for (Promotion_gift promotionGift : promotionGifts) {
-                    Product product = productBLL.findProductsBy(Map.of("id", promotionGift.getProduct_id())).get(0);
-                    if (product.getQuantity() < promotionGift.getQuantity() * min) {
-                        JOptionPane.showMessageDialog(this, "Sản phẩm " + product.getName() + " không đủ để khuyến mãi.",
-                            "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        loadCartShopping(products);
-                        jTextFieldProductDetail.get(0).setText("");
-                        jTextFieldProductDetail.get(1).setText("");
-                        jTextFieldProductDetail.get(2).setText("");
-                        jTextFieldProductDetail.get(3).setText("");
-                        jTextFieldProductDetail.get(4).setText("");
-                        jTextFieldProductDetail.get(5).setText("");
-                        index = -1;
-                        return;
-                    }
-                    objects = new Object[5];
-                    objects[0] = "Khuyến mãi: " + product.getName();
-                    objects[1] = brandBLL.findBrandsBy(Map.of("id", product.getBrand_id())).get(0).getName();
-                    objects[2] = categoryBLL.findCategoriesBy(Map.of("id", product.getCategory_id())).get(0).getName();
-                    objects[3] = promotionGift.getQuantity() * min;
-                    objects[4] = 0.0;
-                    gifts = Arrays.copyOf(gifts, gifts.length + 1);
-                    gifts[gifts.length - 1] = objects;
-                    giftsInCart.add(promotionGift.getProduct_id());
-                    i += 1;
-                }
-            }
-
-        }
+//        for (Promotion promotion : promotionBLL.getPromotionList()) {
+//            int min = 1000;
+//            List<Integer> listItemInCart = new ArrayList<>();
+//            List<Promotion_item> promotionItems = promotionItemBLL.findPromotion_itemsBy(Map.of("promotion_id", promotion.getId()));
+//            List<Promotion_gift> promotionGifts = promotionGiftBLL.findPromotion_giftsBy(Map.of("promotion_id", promotion.getId()));
+//            for (Promotion_item promotionItem : promotionItems) {
+//                if (productsInCart.contains(promotionItem.getProduct_id())) {
+//                    int indexRow = productsInCart.indexOf(promotionItem.getProduct_id());
+//                    double quantity = Double.parseDouble(products[indexRow][3].toString());
+//                    if (quantity >= promotionItem.getQuantity()) {
+//                        listItemInCart.add(promotionItem.getProduct_id());
+//                        int quantityGift = (int) quantity / (int) promotionItem.getQuantity();
+//                        if (quantityGift < min)
+//                            min = quantityGift;
+//                    }
+//                }
+//            }
+//
+//            int i = 0;
+//            if (listItemInCart.size() == promotionItems.size() ) {
+//                for (Promotion_gift promotionGift : promotionGifts) {
+//                    Product product = productBLL.findProductsBy(Map.of("id", promotionGift.getProduct_id())).get(0);
+//                    if (product.getQuantity() < promotionGift.getQuantity() * min) {
+//                        JOptionPane.showMessageDialog(this, "Sản phẩm " + product.getName() + " không đủ để khuyến mãi.",
+//                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+//                        loadCartShopping(products);
+//                        jTextFieldProductDetail.get(0).setText("");
+//                        jTextFieldProductDetail.get(1).setText("");
+//                        jTextFieldProductDetail.get(2).setText("");
+//                        jTextFieldProductDetail.get(3).setText("");
+//                        jTextFieldProductDetail.get(4).setText("");
+//                        jTextFieldProductDetail.get(5).setText("");
+//                        index = -1;
+//                        return;
+//                    }
+//                    objects = new Object[5];
+//                    objects[0] = "Khuyến mãi: " + product.getName();
+//                    objects[1] = brandBLL.findBrandsBy(Map.of("id", product.getBrand_id())).get(0).getName();
+//                    objects[2] = categoryBLL.findCategoriesBy(Map.of("id", product.getCategory_id())).get(0).getName();
+//                    objects[3] = promotionGift.getQuantity() * min;
+//                    objects[4] = 0.0;
+//                    gifts = Arrays.copyOf(gifts, gifts.length + 1);
+//                    gifts[gifts.length - 1] = objects;
+//                    giftsInCart.add(promotionGift.getProduct_id());
+//                    i += 1;
+//                }
+//            }
+//
+//        }
 
         loadCartShopping(products);
         jTextFieldProductDetail.get(0).setText("");

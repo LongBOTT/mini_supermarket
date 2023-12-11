@@ -40,9 +40,11 @@ public class AccountGUI extends Layout1 {
     private JComboBox cbbRole;
     private JComboBox cbbStaff;
     private Object[][] accountList;
+    List<Function> functions ;
 
     public AccountGUI(List<Function> functions) {
         super();
+        this.functions = functions;
         init(functions);
     }
 
@@ -198,6 +200,7 @@ public class AccountGUI extends Layout1 {
 
     private void addAccount() {
         new FormAddAccountGUI();
+        new AccountGUI(functions);
     }
 
     private void showDetailAccount() {
@@ -235,7 +238,7 @@ public class AccountGUI extends Layout1 {
         int choice = JOptionPane.showOptionDialog(null, "Xác nhận xoá tài khoản?",
             "Thông báo", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
         if (choice == 1) {
-            if (accountBLL.deleteAccount(accountBLL.findAccountsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))).get(0))) {
+            if (accountBLL.deleteAccount(accountBLL.findAccountsBy(Map.of("id", Integer.parseInt(model.getValueAt(dataTable.getSelectedRow(), 0).toString()))). get(0))) {
                 JOptionPane.showMessageDialog(null, "Xoá tài khoản thành công!",
                     "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 

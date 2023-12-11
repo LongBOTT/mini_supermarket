@@ -60,7 +60,7 @@ public class FormDetailAccountGUI extends DialogForm{
         formDetail.setBackground(new Color(0xFFBDD2DB));
         formDetail.setLayout(new MigLayout("", "50[]20[]10", "20[]20[]"));
 
-        for (String string : new String[]{"Mã tài khoản:", "Tên tài khoản:", "Mật khẩu:", "Mã chức vụ:", "Lần đăng nhập cuối:", "Mã nhân viên:"}) {
+        for (String string : new String[]{"Mã tài khoản:", "Tên tài khoản:", "Mã chức vụ:", "Lần đăng nhập cuối:", "Mã nhân viên:"}) {
             JLabel label = new JLabel();
             label.setPreferredSize(new Dimension(170, 30));
             label.setText(string);
