@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2023 at 03:13 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: Dec 14, 2023 at 04:12 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 7.4.29
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,15 +35,15 @@ CREATE TABLE `account` (
   `staff_id` bigint(20) DEFAULT NULL,
   `last_signed_in` datetime(6) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `account`
 --
 
 INSERT INTO `account` (`id`, `username`, `password`, `role_id`, `staff_id`, `last_signed_in`, `deleted`) VALUES
-(1, 'admin', '$2a$12$3x6Hm/dKh0zy5LWi9hAwYO.yw8ajHbQD220fq8gNvOMZ4ksx6Xgg2', 1, 1, '2023-10-23 07:49:42.983793', b'0'),
-(2, 'longbott', '$2a$12$ikddNwy/hKz/bdbCplb48O/yC0.375UxaLxQh4AdWkLTq6VsR/LdO', 2, 4, '2023-11-08 22:52:03.000000', b'0');
+(1, 'admin', '$2a$12$SZB/1vXADdqe.9TNF41z4.1HDXdmzc74Ts6vmWvRKTm6Ji6/P.1lW', 1, 1, '2023-12-14 22:11:35.017008', b'0'),
+(2, 'longbott', '$2a$12$HFoTs4o0lCrdCECFaM6xGuS5ZUTriWifilWSEcjT7HHksytiJewvq', 2, 4, '2023-12-11 08:00:00.458726', b'0');
 
 -- --------------------------------------------------------
 
@@ -56,7 +56,7 @@ CREATE TABLE `brand` (
   `name` varchar(255) DEFAULT NULL,
   `supplier_id` bigint(20) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `brand`
@@ -93,7 +93,7 @@ CREATE TABLE `category` (
   `name` varchar(255) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `category`
@@ -101,7 +101,7 @@ CREATE TABLE `category` (
 
 INSERT INTO `category` (`id`, `name`, `quantity`, `deleted`) VALUES
 (1, 'Sữa nước', 16, b'0'),
-(2, 'Mì ăn liền', 2, b'0'),
+(2, 'Mì ăn liền', 3, b'0'),
 (3, 'Nước ngọt', 8, b'0'),
 (4, 'Sữa chua', 6, b'0'),
 (5, 'Sữa bột', 2, b'0'),
@@ -119,7 +119,7 @@ CREATE TABLE `decentralization` (
   `role_id` bigint(20) NOT NULL,
   `module_id` bigint(20) NOT NULL,
   `function_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `decentralization`
@@ -244,7 +244,7 @@ CREATE TABLE `discount` (
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `status` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `discount`
@@ -255,7 +255,7 @@ INSERT INTO `discount` (`id`, `percent`, `start_date`, `end_date`, `status`) VAL
 (2, 15, '2023-09-20', '2023-09-26', b'1'),
 (3, 30, '2023-11-16', '2023-11-18', b'1'),
 (4, 15, '2023-11-15', '2023-11-30', b'1'),
-(5, 50, '2023-11-22', '2023-11-30', b'0');
+(5, 50, '2023-11-22', '2023-12-29', b'0');
 
 -- --------------------------------------------------------
 
@@ -267,23 +267,23 @@ CREATE TABLE `discount_detail` (
   `discount_id` bigint(20) NOT NULL,
   `product_id` bigint(20) NOT NULL,
   `status` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `discount_detail`
 --
 
 INSERT INTO `discount_detail` (`discount_id`, `product_id`, `status`) VALUES
-(1, 1, b'0'),
-(1, 2, b'0'),
-(3, 1, b'0'),
-(3, 2, b'0'),
-(3, 3, b'0'),
-(3, 9, b'0'),
-(3, 11, b'0'),
-(3, 12, b'0'),
-(4, 5, b'0'),
-(4, 6, b'0'),
+(1, 1, b'1'),
+(1, 2, b'1'),
+(3, 1, b'1'),
+(3, 2, b'1'),
+(3, 3, b'1'),
+(3, 9, b'1'),
+(3, 11, b'1'),
+(3, 12, b'1'),
+(4, 5, b'1'),
+(4, 6, b'1'),
 (5, 5, b'0'),
 (5, 6, b'0');
 
@@ -300,7 +300,7 @@ CREATE TABLE `export` (
   `total` bigint(20) DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `export`
@@ -331,7 +331,7 @@ CREATE TABLE `export_detail` (
   `shipment_id` bigint(20) NOT NULL,
   `quantity` double DEFAULT NULL,
   `total` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `export_detail`
@@ -357,7 +357,7 @@ CREATE TABLE `function` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `function`
@@ -384,22 +384,22 @@ CREATE TABLE `import` (
   `received_date` date DEFAULT NULL,
   `total` bigint(20) DEFAULT NULL,
   `supplier_id` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `import`
 --
 
 INSERT INTO `import` (`id`, `staff_id`, `received_date`, `total`, `supplier_id`) VALUES
-(4, 2, '2023-11-19', 200000, 1),
-(5, 3, '2023-11-17', 200000, 2),
-(6, 3, '2023-11-14', 200000, 1),
-(7, 1, '2023-11-12', 200000, 3),
-(8, 2, '2023-11-10', 200000, 1),
-(9, 1, '2023-11-08', 200000, 2),
-(10, 3, '2023-11-06', 200000, 1),
-(11, 2, '2023-11-04', 200000, 3),
-(12, 1, '2023-11-02', 200000, 2),
+(4, 2, '2023-12-19', 200000, 1),
+(5, 3, '2023-12-17', 200000, 2),
+(6, 3, '2023-12-14', 200000, 1),
+(7, 1, '2023-12-12', 200000, 3),
+(8, 2, '2023-12-10', 200000, 1),
+(9, 1, '2023-12-08', 200000, 2),
+(10, 3, '2023-12-06', 200000, 1),
+(11, 2, '2023-12-04', 200000, 3),
+(12, 1, '2023-12-02', 200000, 2),
 (13, 3, '2023-10-31', 200000, 1),
 (14, 1, '2023-10-29', 200000, 3),
 (15, 2, '2023-10-27', 200000, 1),
@@ -421,8 +421,8 @@ INSERT INTO `import` (`id`, `staff_id`, `received_date`, `total`, `supplier_id`)
 (31, 1, '2023-09-25', 200000, 2),
 (32, 3, '2023-09-23', 200000, 3),
 (33, 2, '2023-09-21', 200000, 1),
-(34, 1, '2023-11-27', 14, 3),
-(35, 1, '2023-11-27', 14, 3);
+(34, 1, '2023-12-27', 14, 3),
+(35, 1, '2023-12-27', 14, 3);
 
 -- --------------------------------------------------------
 
@@ -434,7 +434,7 @@ CREATE TABLE `module` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `module`
@@ -472,117 +472,56 @@ CREATE TABLE `product` (
   `image` varchar(255) DEFAULT NULL,
   `barcode` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `product`
 --
 
 INSERT INTO `product` (`id`, `name`, `brand_id`, `category_id`, `unit`, `cost`, `quantity`, `image`, `barcode`, `deleted`) VALUES
-(1, 'Lốc 4 hộp sữa tươi 110ml Vinamilk có đường', 3, 1, 'Lốc', 21500, 10, 'img/Pro1.svg', '', b'0'),
+(1, 'Lốc 4 hộp sữa tươi 110ml Vinamilk có đường', 3, 1, 'Lốc', 21500, 20, 'img/Pro1.svg', '', b'0'),
 (2, 'Lốc 4 hộp sữa tươi 110ml Vinamilk ít đường', 3, 1, 'Lốc', 21500, 20, 'img/Pro2.svg', '', b'0'),
-(3, 'Lốc 4 hộp sữa tươi 110ml Vinamilk không đường', 3, 1, 'Lốc', 21500, 0, 'img/Pro3.svg', '', b'0'),
-(4, 'Lốc 4 hộp sữa tươi 180ml Vinamilk có đường', 3, 1, 'Lốc', 29900, 0, 'img/Pro4.svg', '', b'0'),
-(5, 'Lốc 4 hộp sữa tươi 180ml Vinamilk ít đường', 3, 1, 'Lốc', 29900, 4, 'img/Pro5.svg', '', b'0'),
-(6, 'Lốc 4 hộp sữa tươi 180ml Vinamilk không đường', 3, 1, 'Lốc', 29900, 4, 'img/Pro6.svg', '', b'0'),
-(7, 'Sữa bột Vinamilk Sure Prevent Gold lon 900g', 2, 5, 'Lon', 625000, 0, 'img/Pro7.svg', '', b'0'),
-(8, '6 chai sữa pha sẵn Sure Prevent Gold 200ml', 2, 5, 'Lốc', 168000, 0, 'img/Pro8.svg', '', b'0'),
-(9, 'Nước ép cam Vfresh 1 lít', 1, 6, 'Hộp', 50000, 4, 'img/Pro9.svg', '', b'0'),
-(10, 'Nước ép cam không đường Vfresh 1 lít', 1, 6, 'Hộp', 50000, 4, 'img/Pro10.svg', '', b'0'),
-(11, 'Nước ép đào Vfresh 1 lít', 1, 6, 'Hộp', 42000, 0, 'img/Pro11.svg', '', b'0'),
-(12, 'Nước ép đào không đường Vfresh 1 lít', 1, 6, 'Hộp', 42000, 0, 'img/Pro12.svg', '', b'0'),
-(13, 'Trà Atiso Vfresh 1 lít', 1, 6, 'Hộp', 20000, 0, 'img/Pro1.svg', '', b'0'),
-(14, 'Trà Atiso ít đường Vfresh 1 lít', 1, 6, 'Hộp', 20000, 0, 'img/Pro1.svg', '', b'0'),
-(15, 'Lốc 4 hộp sữa tươi 110ml TH true Milk có đường ', 4, 1, 'Lốc', 24000, 0, 'img/Pro1.svg', '', b'0'),
-(16, 'Lốc 4 hộp sữa tươi 110ml TH true Milk ít đường ', 4, 1, 'Lốc', 24000, 0, 'img/Pro1.svg', '', b'0'),
-(17, 'Lốc 4 hộp sữa tươi 110ml TH true Milk không đường ', 4, 1, 'Lốc', 24000, 0, 'img/Pro1.svg', '', b'0'),
-(18, 'Lốc 4 hộp sữa tươi 180ml TH true Milk có đường ', 4, 1, 'Lốc', 36000, 0, 'img/Pro1.svg', '', b'0'),
-(19, 'Lốc 4 hộp sữa tươi 180ml TH true Milk ít đường ', 4, 1, 'Lốc', 36000, 0, 'img/Pro1.svg', '', b'0'),
-(20, 'Lốc 4 hộp sữa tươi 180ml TH true Milk không đường ', 4, 1, 'Lốc', 36000, 0, 'img/Pro1.svg', '', b'0'),
-(21, 'Lốc 4 hộp sữa tươi 180ml TH true Milk dâu', 4, 1, 'Lốc', 36000, 0, 'img/Pro1.svg', '', b'0'),
-(22, 'Lốc 4 hộp sữa tươi 180ml TH true Milk socola', 4, 1, 'Lốc', 36000, 0, 'img/Pro1.svg', '', b'0'),
-(23, 'Sữa tươi TH true Milk có đường hộp 1 lít', 4, 1, 'Hộp', 37000, 0, 'img/Pro1.svg', '', b'0'),
-(24, 'Sữa tười TH true Milk ít đường hộp 1 lít ', 4, 1, 'Hộp', 37000, 0, 'img/Pro1.svg', '', b'0'),
-(25, 'Lốc 4 hộp sữa chua 180ml TH true Yogurt việt quất', 5, 4, 'Lốc', 32500, 0, 'img/Pro1.svg', '', b'0'),
-(26, 'Lốc 4 hộp sữa chua 180ml TH true Yogurt cam', 5, 4, 'Lốc', 32500, 0, 'img/Pro1.svg', '', b'0'),
-(27, 'Lốc 4 hộp sữa chua 180ml TH true Yogurt dâu', 5, 4, 'Lốc', 32500, 0, 'img/Pro1.svg', '', b'0'),
-(28, 'Lốc 4 chai sữa chua 180ml TH true Yogourt việt quất', 5, 4, 'Lốc', 31000, 0, 'img/Pro1.svg', '', b'0'),
-(29, 'Lốc 4 chai sữa chua 180ml TH true Yogurt cam', 5, 4, 'Lốc', 31000, 0, 'img/Pro1.svg', '', b'0'),
-(30, 'Lốc 4 chai sữa chua 180ml TH true Yogurt dâu', 5, 4, 'Lốc', 31000, 0, 'img/Pro1.svg', '', b'0'),
-(31, 'Nước ngọt Coca Cola lon 320ml', 6, 3, 'Lon', 10600, 0, 'img/Pro1.svg', '', b'0'),
-(32, 'Nước ngọt Coca Cola chai 390ml', 6, 3, 'Chai', 7800, 0, 'img/Pro1.svg', '', b'0'),
-(33, 'Nước ngọt Coca Cola chai 1.5 lít', 6, 3, 'Chai', 20200, 0, 'img/Pro1.svg', '', b'0'),
-(34, 'Nước ngọt Coca Cola Zero lon 320ml', 6, 3, 'Lon', 10600, 0, 'img/Pro1.svg', '', b'0'),
-(35, 'Nước ngọt Coca Cola Zero chai 390ml', 6, 3, 'Chai', 7800, 0, 'img/Pro1.svg', '', b'0'),
-(36, 'Nước ngọt Coca Cola Zero chai 1.5 lít', 6, 3, 'Chai', 20200, 0, 'img/Pro1.svg', '', b'0'),
-(37, 'Nước ngọt Fanta cam chai 390ml', 7, 3, 'Chai', 7800, 0, 'img/Pro1.svg', '', b'0'),
-(38, 'Nước ngọt Fanta xá xị chai 390ml', 7, 3, 'Chai', 7800, 0, 'img/Pro1.svg', '', b'0'),
-(39, 'Mì Hảo Hảo tôm chua cay gói 75g', 13, 2, 'Gói', 4400, 0, 'img/Pro1.svg', '', b'0'),
-(40, 'Mì Handy Hảo Hảo tôm chua cay ly 67g', 13, 2, 'Ly', 9500, 0, 'img/Pro1.svg', '', b'0'),
-(41, 'abc', 9, 7, 'Lốc', 3, 3333, 'Pro7.svg', 'asd', b'1'),
-(42, 'asd', 14, 7, 'Lốc', 33, 333, 'img/Pro1.svg', '3333fafs', b'1');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `promotion`
---
-
-CREATE TABLE `promotion` (
-  `id` bigint(20) NOT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `status` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `promotion`
---
-
-INSERT INTO `promotion` (`id`, `start_date`, `end_date`, `status`) VALUES
-(1, '2023-09-25', '2023-10-01', b'0'),
-(2, '2023-09-27', '2023-10-01', b'1'),
-(3, '2023-09-22', '2023-09-29', b'1');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `promotion_gift`
---
-
-CREATE TABLE `promotion_gift` (
-  `promotion_id` bigint(20) NOT NULL,
-  `product_id` bigint(20) NOT NULL,
-  `quantity` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `promotion_gift`
---
-
-INSERT INTO `promotion_gift` (`promotion_id`, `product_id`, `quantity`) VALUES
-(1, 9, 1),
-(1, 10, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `promotion_item`
---
-
-CREATE TABLE `promotion_item` (
-  `promotion_id` bigint(20) NOT NULL,
-  `product_id` bigint(20) NOT NULL,
-  `quantity` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `promotion_item`
---
-
-INSERT INTO `promotion_item` (`promotion_id`, `product_id`, `quantity`) VALUES
-(1, 5, 2),
-(1, 6, 2);
+(3, 'Lốc 4 hộp sữa tươi 110ml Vinamilk không đường', 3, 1, 'Lốc', 21500, 20, 'img/Pro3.svg', '', b'0'),
+(4, 'Lốc 4 hộp sữa tươi 180ml Vinamilk có đường', 3, 1, 'Lốc', 29900, 20, 'img/Pro4.svg', '', b'0'),
+(5, 'Lốc 4 hộp sữa tươi 180ml Vinamilk ít đường', 3, 1, 'Lốc', 29900, 20, 'img/Pro5.svg', '', b'0'),
+(6, 'Lốc 4 hộp sữa tươi 180ml Vinamilk không đường', 3, 1, 'Lốc', 29900, 20, 'img/Pro6.svg', '', b'0'),
+(7, 'Sữa bột Vinamilk Sure Prevent Gold lon 900g', 2, 5, 'Lon', 625000, 20, 'img/Pro7.svg', '', b'0'),
+(8, '6 chai sữa pha sẵn Sure Prevent Gold 200ml', 2, 5, 'Lốc', 168000, 20, 'img/Pro8.svg', '', b'0'),
+(9, 'Nước ép cam Vfresh 1 lít', 1, 6, 'Hộp', 50000, 20, 'img/Pro9.svg', '', b'0'),
+(10, 'Nước ép cam không đường Vfresh 1 lít', 1, 6, 'Hộp', 50000, 20, 'img/Pro10.svg', '', b'0'),
+(11, 'Nước ép đào Vfresh 1 lít', 1, 6, 'Hộp', 42000, 20, 'img/Pro11.svg', '', b'0'),
+(12, 'Nước ép đào không đường Vfresh 1 lít', 1, 6, 'Hộp', 42000, 20, 'img/Pro12.svg', '', b'0'),
+(13, 'Trà Atiso Vfresh 1 lít', 1, 6, 'Hộp', 20000, 20, 'img/Pro1.svg', '', b'0'),
+(14, 'Trà Atiso ít đường Vfresh 1 lít', 1, 6, 'Hộp', 20000, 20, 'img/Pro1.svg', '', b'0'),
+(15, 'Lốc 4 hộp sữa tươi 110ml TH true Milk có đường ', 4, 1, 'Lốc', 24000, 20, 'img/Pro1.svg', '', b'0'),
+(16, 'Lốc 4 hộp sữa tươi 110ml TH true Milk ít đường ', 4, 1, 'Lốc', 24000, 20, 'img/Pro1.svg', '', b'0'),
+(17, 'Lốc 4 hộp sữa tươi 110ml TH true Milk không đường ', 4, 1, 'Lốc', 24000, 20, 'img/Pro1.svg', '', b'0'),
+(18, 'Lốc 4 hộp sữa tươi 180ml TH true Milk có đường ', 4, 1, 'Lốc', 36000, 20, 'img/Pro1.svg', '', b'0'),
+(19, 'Lốc 4 hộp sữa tươi 180ml TH true Milk ít đường ', 4, 1, 'Lốc', 36000, 20, 'img/Pro1.svg', '', b'0'),
+(20, 'Lốc 4 hộp sữa tươi 180ml TH true Milk không đường ', 4, 1, 'Lốc', 36000, 20, 'img/Pro1.svg', '', b'0'),
+(21, 'Lốc 4 hộp sữa tươi 180ml TH true Milk dâu', 4, 1, 'Lốc', 36000, 20, 'img/Pro1.svg', '', b'0'),
+(22, 'Lốc 4 hộp sữa tươi 180ml TH true Milk socola', 4, 1, 'Lốc', 36000, 20, 'img/Pro1.svg', '', b'0'),
+(23, 'Sữa tươi TH true Milk có đường hộp 1 lít', 4, 1, 'Hộp', 37000, 20, 'img/Pro1.svg', '', b'0'),
+(24, 'Sữa tười TH true Milk ít đường hộp 1 lít ', 4, 1, 'Hộp', 37000, 20, 'img/Pro1.svg', '', b'0'),
+(25, 'Lốc 4 hộp sữa chua 180ml TH true Yogurt việt quất', 5, 4, 'Lốc', 32500, 20, 'img/Pro1.svg', '', b'0'),
+(26, 'Lốc 4 hộp sữa chua 180ml TH true Yogurt cam', 5, 4, 'Lốc', 32500, 20, 'img/Pro1.svg', '', b'0'),
+(27, 'Lốc 4 hộp sữa chua 180ml TH true Yogurt dâu', 5, 4, 'Lốc', 32500, 20, 'img/Pro1.svg', '', b'0'),
+(28, 'Lốc 4 chai sữa chua 180ml TH true Yogourt việt quất', 5, 4, 'Lốc', 31000, 20, 'img/Pro1.svg', '', b'0'),
+(29, 'Lốc 4 chai sữa chua 180ml TH true Yogurt cam', 5, 4, 'Lốc', 31000, 20, 'img/Pro1.svg', '', b'0'),
+(30, 'Lốc 4 chai sữa chua 180ml TH true Yogurt dâu', 5, 4, 'Lốc', 31000, 20, 'img/Pro1.svg', '', b'0'),
+(31, 'Nước ngọt Coca Cola lon 320ml', 6, 3, 'Lon', 10600, 20, 'img/Pro1.svg', '', b'0'),
+(32, 'Nước ngọt Coca Cola chai 390ml', 6, 3, 'Chai', 7800, 20, 'img/Pro1.svg', '', b'0'),
+(33, 'Nước ngọt Coca Cola chai 1.5 lít', 6, 3, 'Chai', 20200, 20, 'img/Pro1.svg', '', b'0'),
+(34, 'Nước ngọt Coca Cola Zero lon 320ml', 6, 3, 'Lon', 10600, 20, 'img/Pro1.svg', '', b'0'),
+(35, 'Nước ngọt Coca Cola Zero chai 390ml', 6, 3, 'Chai', 7800, 20, 'img/Pro1.svg', '', b'0'),
+(36, 'Nước ngọt Coca Cola Zero chai 1.5 lít', 6, 3, 'Chai', 20200, 20, 'img/Pro1.svg', '', b'0'),
+(37, 'Nước ngọt Fanta cam chai 390ml', 7, 3, 'Chai', 7800, 20, 'img/Pro1.svg', '', b'0'),
+(38, 'Nước ngọt Fanta xá xị chai 390ml', 7, 3, 'Chai', 7800, 20, 'img/Pro1.svg', '', b'0'),
+(39, 'Mì Hảo Hảo tôm chua cay gói 75g', 13, 2, 'Gói', 4400, 20, 'img/Pro1.svg', '', b'0'),
+(40, 'Mì Handy Hảo Hảo tôm chua cay ly 67g', 13, 2, 'Ly', 9500, 20, 'img/Pro1.svg', '', b'0'),
+(41, 'abc', 9, 7, 'Lốc', 3, 20, 'Pro7.svg', 'asd', b'1'),
+(42, 'asd', 14, 7, 'Lốc', 33, 20, 'img/Pro1.svg', '3333fafs', b'1'),
+(43, 'a', 14, 2, 'Lốc', 12, 20, 'img/Pro1.svg', 'abc', b'0');
 
 -- --------------------------------------------------------
 
@@ -597,7 +536,7 @@ CREATE TABLE `receipt` (
   `total` bigint(20) DEFAULT NULL,
   `received` bigint(20) DEFAULT NULL,
   `excess` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `receipt`
@@ -614,10 +553,10 @@ INSERT INTO `receipt` (`id`, `staff_id`, `invoice_date`, `total`, `received`, `e
 (8, 4, '2023-11-22', 400000, 400000, 0),
 (9, 4, '2023-11-23', 280000, 280000, 0),
 (10, 4, '2023-11-24', 320000, 320000, 0),
-(11, 4, '2023-11-15', 180000, 180000, 0),
-(12, 4, '2023-11-16', 210000, 210000, 0),
-(13, 4, '2023-11-17', 320000, 320000, 0),
-(14, 4, '2023-11-18', 280000, 280000, 0),
+(11, 4, '2023-12-15', 180000, 180000, 0),
+(12, 4, '2023-12-16', 210000, 210000, 0),
+(13, 4, '2023-12-17', 320000, 320000, 0),
+(14, 4, '2023-12-18', 280000, 280000, 0),
 (31, 4, '2023-09-05', 120000, 120000, 0),
 (32, 4, '2023-09-12', 180000, 180000, 0),
 (33, 4, '2023-09-20', 250000, 250000, 0),
@@ -637,11 +576,12 @@ INSERT INTO `receipt` (`id`, `staff_id`, `invoice_date`, `total`, `received`, `e
 (47, 4, '2023-10-14', 280000, 280000, 0),
 (48, 4, '2023-10-21', 320000, 320000, 0),
 (49, 4, '2023-10-27', 180000, 180000, 0),
-(50, 4, '2023-11-03', 220000, 220000, 0),
-(51, 4, '2023-11-09', 150000, 150000, 0),
-(52, 4, '2023-11-16', 220000, 220000, 0),
-(53, 4, '2023-11-23', 180000, 180000, 0),
-(54, 4, '2023-11-30', 250000, 250000, 0);
+(50, 4, '2023-12-03', 220000, 220000, 0),
+(51, 4, '2023-12-09', 150000, 150000, 0),
+(52, 4, '2023-12-16', 220000, 220000, 0),
+(53, 4, '2023-12-23', 180000, 180000, 0),
+(54, 4, '2023-12-30', 250000, 250000, 0),
+(55, 4, '2023-12-11', 43000, 50000, 7000);
 
 -- --------------------------------------------------------
 
@@ -654,7 +594,7 @@ CREATE TABLE `receipt_detail` (
   `product_id` bigint(20) NOT NULL,
   `quantity` double DEFAULT NULL,
   `total` double DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `receipt_detail`
@@ -736,7 +676,8 @@ INSERT INTO `receipt_detail` (`receipt_id`, `product_id`, `quantity`, `total`) V
 (53, 5, 1, 29900),
 (53, 6, 1, 29900),
 (54, 7, 2, 125000),
-(54, 8, 1, 168000);
+(54, 8, 1, 168000),
+(55, 1, 2, 43000);
 
 -- --------------------------------------------------------
 
@@ -748,7 +689,7 @@ CREATE TABLE `role` (
   `id` bigint(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `role`
@@ -759,7 +700,8 @@ INSERT INTO `role` (`id`, `name`, `deleted`) VALUES
 (1, 'Admin', b'0'),
 (2, 'Quản lý cửa hàng', b'0'),
 (3, 'Nhân viên bán hàng', b'0'),
-(4, 'Nhân viên kho', b'0');
+(4, 'Nhân viên kho', b'0'),
+(5, 'f', b'0');
 
 -- --------------------------------------------------------
 
@@ -778,7 +720,7 @@ CREATE TABLE `shipment` (
   `sku` varchar(255) DEFAULT NULL,
   `import_id` bigint(20) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `shipment`
@@ -816,19 +758,19 @@ CREATE TABLE `staff` (
   `email` varchar(255) DEFAULT NULL,
   `entry_date` date DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `staff`
 --
 
 INSERT INTO `staff` (`id`, `name`, `gender`, `birthdate`, `phone`, `address`, `email`, `entry_date`, `deleted`) VALUES
-(1, 'ADMIN', b'0', '1000-01-01', '096333946', '514/26 Lê Đức Thọ P17 Gò Vấp TPHCM', 'colong30082003@gmail.com', '1000-01-01', b'0'),
+(1, 'ADMIN', b'0', '1000-01-01', '096333946', '514/26 Lê Đức Thọ P17 Gò Vấp TPHCM', 'colongg30082003@gmail.com', '1000-01-01', b'0'),
 (2, 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '0834527892', '531 Nguyễn Oanh, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', 'dungboi@gmail.com', '1000-01-01', b'0'),
 (3, 'ĐINH QUANG DUY', b'1', '2003-01-20', '0359872569', '1A Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', 'quangduy@gmail.com', '1000-01-01', b'0'),
 (4, 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '0970352875', '514/26 Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', 'colong30082003@gmail.com', '1000-01-01', b'0'),
 (5, 'NGUYỄN HOÀNG MINH', b'1', '2003-03-06', '0367834257', '153 Lê Hoàng Phái, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', 'hoangminh@gmail.com', '1000-01-01', b'0'),
-(6, 'NGUYỄN PHƯỚC SANG', b'1', '2002-09-20', '0935627488', '242 Nguyễn Văn Lượng, Phường 10, Gò Vấp, Thành phố Hồ Chí Minh', 'phuocsang@gmail.com', '1000-01-01', b'0'),
+(6, 'NGUYỄN PHƯỚC SANG', b'0', '2002-09-20', '0935627488', '242 Nguyễn Văn Lượng, Phường 10, Gò Vấp, Thành phố Hồ Chí Minh', 'phuocsang@gmail.com', '1000-01-01', b'0'),
 (7, 'NGUYỄN THỊ XUÂN MAI', b'0', '2002-06-19', '0825367498', '168 Lê Đức Thọ, Phường 15, Gò Vấp, Thành phố Hồ Chí Minh', 'xuanmai@gmail.com', '2023-09-15', b'0'),
 (8, 'NGUYỄN THỊ LỆ GIANG', b'0', '2000-05-27', '0963527895', '190 Quang Trung, Phường 10, Gò Vấp, Thành phố Hồ Chí Minh', 'legiang@gmail.com', '2023-09-28', b'0'),
 (9, 'ĐẶNG VĂN LÂM', b'1', '2001-02-18', '0340734629', '7 Phan Văn Trị, Phường 10, Gò Vấp, Thành phố Hồ Chí Minh', 'vanlam@gmail.com', '2023-06-27', b'0'),
@@ -846,7 +788,7 @@ CREATE TABLE `statistic` (
   `amount` double DEFAULT NULL,
   `expenses` double DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -861,17 +803,17 @@ CREATE TABLE `supplier` (
   `address` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `deleted` bit(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `supplier`
 --
 
 INSERT INTO `supplier` (`id`, `name`, `phone`, `address`, `email`, `deleted`) VALUES
-(1, 'Vinamilk', '02854155555', 'Số 10, Đường Tân Trào, phường Tân Phú, quận 7, Tp. HCM', 'vinamilk@vinamilk.com.vn', b'0'),
-(2, 'TH true Milk', '02862918888', 'Tháp B, Tầng 6 - Tòa nhà Viettel, Số 285 Cách Mạng Tháng 8, P.12, Q.10, TP.HCM', 'chamsockhachhang@thmilk.vn', b'0'),
-(3, 'Coca-Cola', '1900555584', 'Xa lộ Hà Nội, Phường Linh Trung, Quận Thủ Đức, Thành phố Hồ Chí Minh', 'trucle@coca-cola.com', b'0'),
-(4, 'Acecook', '02838154064', 'Lô số II-3,Đường số 11,Nhóm CN II, Khu Công nghiệp Tân Bình, Phường Tây Thạnh, Quận Tân Phú, Thành phố Hồ Chí Minh', 'info@acecookvietnam.com', b'0');
+(1, 'Vinamilk', '0962251753', 'Số 10, Đường Tân Trào, phường Tân Phú, quận 7, Tp. HCM', 'vinamilk@gmail.com.vn', b'0'),
+(2, 'TH true Milk', '0963335712', 'Tháp B, Tầng 6 - Tòa nhà Viettel, Số 285 Cách Mạng Tháng 8, P.12, Q.10, TP.HCM', 'chamsockhachhang@gmail.com', b'0'),
+(3, 'CocaCola', '0963333948', 'Xa lộ Hà Nội, Phường Linh Trung, Quận Thủ Đức, Thành phố Hồ Chí Minh', 'trucle@gmail.com', b'0'),
+(4, 'Acecook', '0963333946', 'Lô số II-3,Đường số 11,Nhóm CN II, Khu Công nghiệp Tân Bình, Phường Tây Thạnh, Quận Tân Phú, Thành phố Hồ Chí Minh', 'info@acecookvietnam.com', b'0');
 
 --
 -- Indexes for dumped tables
@@ -962,26 +904,6 @@ ALTER TABLE `product`
   ADD KEY `FK_CATEGORY` (`category_id`);
 
 --
--- Indexes for table `promotion`
---
-ALTER TABLE `promotion`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `promotion_gift`
---
-ALTER TABLE `promotion_gift`
-  ADD PRIMARY KEY (`promotion_id`,`product_id`),
-  ADD KEY `FK_PRODUCT1` (`product_id`);
-
---
--- Indexes for table `promotion_item`
---
-ALTER TABLE `promotion_item`
-  ADD PRIMARY KEY (`promotion_id`,`product_id`),
-  ADD KEY `FK_PRODUCT2` (`product_id`);
-
---
 -- Indexes for table `receipt`
 --
 ALTER TABLE `receipt`
@@ -1035,7 +957,7 @@ ALTER TABLE `supplier`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `brand`
@@ -1083,13 +1005,7 @@ ALTER TABLE `module`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
-
---
--- AUTO_INCREMENT for table `promotion`
---
-ALTER TABLE `promotion`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `receipt`
@@ -1101,7 +1017,7 @@ ALTER TABLE `receipt`
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `shipment`
@@ -1185,20 +1101,6 @@ ALTER TABLE `import`
 ALTER TABLE `product`
   ADD CONSTRAINT `FK_BRAND` FOREIGN KEY (`brand_id`) REFERENCES `brand` (`id`),
   ADD CONSTRAINT `FK_CATEGORY` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`);
-
---
--- Constraints for table `promotion_gift`
---
-ALTER TABLE `promotion_gift`
-  ADD CONSTRAINT `FK_PRODUCT1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
-  ADD CONSTRAINT `FK_PROMOTION` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`);
-
---
--- Constraints for table `promotion_item`
---
-ALTER TABLE `promotion_item`
-  ADD CONSTRAINT `FK_PRODUCT2` FOREIGN KEY (`product_id`) REFERENCES `product` (`id`),
-  ADD CONSTRAINT `FK_PROMOTION1` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`);
 
 --
 -- Constraints for table `receipt`
